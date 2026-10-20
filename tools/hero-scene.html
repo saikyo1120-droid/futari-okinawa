@@ -1,0 +1,338 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const SIZE = +(new URLSearchParams(location.search).get('size') || 1600);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(SIZE, SIZE);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 900);
+camera.position.set(0, 8.6, 20); camera.lookAt(0, 0, -11.5);
+
+/* ---------- 光 ---------- */
+const sun = new THREE.DirectionalLight(0xfff1d6, 2.3);
+sun.position.set(-26, 46, 22); sun.castShadow = true;
+sun.shadow.mapSize.set(4096, 4096);
+Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, near: 1, far: 160 });
+sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.02; sun.shadow.radius = 3; sun.shadow.intensity = 0.62;
+scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xcdeeff, 0xf3dfb0, 1.15));
+scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+scene.fog = new THREE.Fog(0xd6f0fb, 70, 520);
+
+/* ---------- レイヤー ---------- */
+const L = { back: new THREE.Group(), foam: new THREE.Group(), front: new THREE.Group(), water: new THREE.Group(), sky: new THREE.Group() };
+Object.values(L).forEach(g => scene.add(g));
+
+/* ---------- 素材 ---------- */
+const mat = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.95, metalness: 0, ...o });
+const M = {
+  sandDry: mat(0xf6e8c3), sandWet: mat(0xe6d1a0),
+  grass: mat(0x8fd654), grass2: mat(0x74c447), earth: mat(0xd9b46a),
+  wallWhite: mat(0xfff9ef), wallCream: mat(0xfff0c8), wallMint: mat(0x9fe3d2), wallPink: mat(0xffb6cf), wallBlue: mat(0xa9d8f5), wallYellow: mat(0xffe08a),
+  roofRed: mat(0xd94a35), roofRed2: mat(0xb63a28), roofBlue: mat(0x3f7fc6), roofGreen: mat(0x3fae49), roofOrange: mat(0xf08a3c), roofDark: mat(0x4a5568),
+  wood: mat(0xc98a4b), woodDark: mat(0xa5703a), trunk: mat(0xb7834b), frond: mat(0x4fae46), frond2: mat(0x7fd254),
+  white: mat(0xffffff), black: mat(0x23314f), glass: mat(0xbfe9ff, { roughness: 0.3 }), red: mat(0xe2473a), yellow: mat(0xffd23f), pink: mat(0xff5c93), orange: mat(0xf5a524), sky: mat(0x5cc9f5),
+  road: mat(0x8a8d96), roadLine: mat(0xfff6d8), rock: mat(0x9aa0a8), shisa: mat(0xe0893a), ice: mat(0xfff0f5),
+  cloud: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, emissive: 0x334455, emissiveIntensity: 0.12 }),
+};
+const add = (g, mesh, { shadow = true } = {}) => { mesh.castShadow = shadow; mesh.receiveShadow = true; g.add(mesh); return mesh; };
+const box = (w, h, d, m, r = 0.06) => new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2, h / 2, d / 2)), m);
+const cyl = (rt, rb, h, m, seg = 24) => new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), m);
+const sph = (r, m, ws = 20, hs = 14) => new THREE.Mesh(new THREE.SphereGeometry(r, ws, hs), m);
+const at = (mesh, x, y, z, ry = 0) => { mesh.position.set(x, y, z); mesh.rotation.y = ry; return mesh; };
+
+/* ---------- 砂浜・海 ---------- */
+function sandTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+  g.fillStyle = '#f6e8c3'; g.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 14000; i++) { g.fillStyle = `rgba(${200 + Math.random() * 40 | 0},${170 + Math.random() * 40 | 0},${110 + Math.random() * 40 | 0},${0.08 + Math.random() * 0.12})`; const x = Math.random() * 512, y = Math.random() * 512; g.fillRect(x, y, 1.5, 1.5); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(12, 12); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+function waterTexture() {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 2048; const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 2048, 0, 0);   // v=0 (岸) → v=1 (沖)
+  gr.addColorStop(0.000, '#c9f5f0'); gr.addColorStop(0.012, '#9cefe9'); gr.addColorStop(0.035, '#5fdbe0'); gr.addColorStop(0.08, '#2ec6d9'); gr.addColorStop(0.2, '#18aecd'); gr.addColorStop(0.5, '#1193b7'); gr.addColorStop(1, '#0d82a6');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 2048);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+{
+  const sand = new THREE.Mesh(new THREE.PlaneGeometry(200, 60, 1, 1), new THREE.MeshStandardMaterial({ map: sandTexture(), roughness: 1 }));
+  sand.rotation.x = -Math.PI / 2; sand.position.set(0, 0, 24); add(L.back, sand, { shadow: false });
+  // 波打ち際の濡れた砂
+  const wet = new THREE.Mesh(new THREE.PlaneGeometry(200, 2.2), new THREE.MeshStandardMaterial({ color: 0xe8d6a8, roughness: 1, transparent: true, opacity: 0.75 }));
+  wet.rotation.x = -Math.PI / 2; wet.position.set(0, 0.005, -5.2); add(L.back, wet, { shadow: false });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(900, 420, 1, 1), new THREE.MeshStandardMaterial({ map: waterTexture(), roughness: 0.55, metalness: 0.05 }));
+  water.rotation.x = -Math.PI / 2; water.position.set(0, -0.02, -6 - 210); add(L.water, water, { shadow: false });
+  // 沖の小さな白波
+  for (let i = 0; i < 26; i++) { const w = 1.5 + Math.random() * 3; const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 0.12), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 + Math.random() * 0.4 }));
+    m.rotation.x = -Math.PI / 2; m.position.set(-60 + Math.random() * 120, 0.01, -22 - Math.random() * 90); L.back.add(m); }
+}
+/* 泡（岸の白いライン） */
+function foamRibbon() {
+  const N = 240, pts = [], uv = [], idx = [];
+  const c = document.createElement('canvas'); c.width = 8; c.height = 128; const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.95)'); gr.addColorStop(0.6, 'rgba(255,255,255,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 8, 128);
+  const tex = new THREE.CanvasTexture(c);
+  for (let i = 0; i <= N; i++) { const t = i / N, x = -100 + 200 * t; const z0 = -5.6 + Math.sin(x * 0.35) * 0.35 + Math.sin(x * 1.3) * 0.15; const w = 1.1 + Math.sin(x * 0.7) * 0.3;
+    pts.push(x, 0.02, z0 - w, x, 0.02, z0 + w); uv.push(t * 20, 0, t * 20, 1);
+    if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); geo.setIndex(idx); geo.computeVertexNormals();
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })); L.foam.add(mesh);
+  // 砂の上に残る薄い泡
+  for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(new THREE.CircleGeometry(0.15 + Math.random() * 0.35, 12), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }));
+    m.rotation.x = -Math.PI / 2; m.position.set(-40 + Math.random() * 80, 0.015, -4.6 + Math.random() * 1.6); L.foam.add(m); }
+}
+foamRibbon();
+
+/* ---------- 岬（緑の陸地） ---------- */
+function blobShape(rx, rz, wob = 0.18, n = 28) {
+  const s = new THREE.Shape(); for (let i = 0; i <= n; i++) { const a = i / n * Math.PI * 2; const r = 1 + Math.sin(a * 3 + 1) * wob * 0.6 + Math.sin(a * 5 + 2) * wob * 0.4; const x = Math.cos(a) * rx * r, y = Math.sin(a) * rz * r; if (i) s.lineTo(x, y); else s.moveTo(x, y); } return s;
+}
+function cape(x, z, rx, rz, h, rot = 0) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rot;
+  const rim = new THREE.Mesh(new THREE.ExtrudeGeometry(blobShape(rx * 1.12, rz * 1.12, 0.16), { depth: h * 0.5, bevelEnabled: true, bevelSize: 0.6, bevelThickness: 0.3, bevelSegments: 3 }), M.sandDry);
+  rim.rotation.x = -Math.PI / 2; rim.position.y = -0.15; add(g, rim);
+  const land = new THREE.Mesh(new THREE.ExtrudeGeometry(blobShape(rx, rz, 0.16), { depth: h, bevelEnabled: true, bevelSize: 0.8, bevelThickness: 0.5, bevelSegments: 4 }), M.grass);
+  land.rotation.x = -Math.PI / 2; land.position.y = 0; add(g, land);
+  L.back.add(g); return g;
+}
+
+/* ---------- 建物 ---------- */
+function house({ w = 3, d = 2.6, h = 1.8, wall = M.wallWhite, roof = M.roofRed, ridge = M.roofRed2, shisa = true, door = 0xa5703a, windows = 2 } = {}) {
+  const g = new THREE.Group();
+  add(g, at(box(w, h, d, wall, 0.08), 0, h / 2, 0));
+  // 寄棟屋根（四角錐台）
+  const rh = 0.9 + h * 0.15;
+  const r = new THREE.Mesh(new THREE.CylinderGeometry(0.35, Math.hypot(w, d) / 2 * 1.08, rh, 4), roof); r.rotation.y = Math.PI / 4; r.scale.set(w / Math.hypot(w, d) * 1.42, 1, d / Math.hypot(w, d) * 1.42); r.position.y = h + rh / 2 - 0.02; add(g, r);
+  add(g, at(box(w * 0.45, 0.16, 0.22, ridge, 0.05), 0, h + rh - 0.05, 0));
+  // 軒先の白いライン
+  add(g, at(box(w + 0.3, 0.12, d + 0.3, M.wallWhite, 0.04), 0, h + 0.02, 0));
+  // 窓・ドア
+  for (let i = 0; i < windows; i++) { const wx = (i - (windows - 1) / 2) * (w / (windows + 0.3)); add(g, at(box(0.55, 0.5, 0.08, M.white, 0.02), wx, h * 0.6, d / 2 + 0.02)); add(g, at(box(0.42, 0.38, 0.1, M.glass, 0.02), wx, h * 0.6, d / 2 + 0.05)); }
+  add(g, at(box(0.5, 0.8, 0.08, mat(door), 0.03), w * 0.33, 0.4, d / 2 + 0.03));
+  if (shisa) { const s = shisaFig(0.22); s.position.set(-w * 0.32, h + rh * 0.55, d * 0.22); g.add(s); }
+  return g;
+}
+function shop({ w = 3.2, d = 2.4, h = 1.7, wall = M.wallMint, roof = M.roofOrange, awning = [0xff5c93, 0xffffff], sign = M.yellow, signText = null } = {}) {
+  const g = house({ w, d, h, wall, roof, ridge: roof, shisa: false, windows: 1 });
+  // 日よけ（しましま）
+  const c = document.createElement('canvas'); c.width = 128; c.height = 16; const ctx = c.getContext('2d');
+  for (let i = 0; i < 8; i++) { ctx.fillStyle = '#' + awning[i % 2].toString(16).padStart(6, '0'); ctx.fillRect(i * 16, 0, 16, 16); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  const aw = new THREE.Mesh(new THREE.BoxGeometry(w * 0.9, 0.08, 1.1), new THREE.MeshStandardMaterial({ map: t, roughness: 1 })); aw.rotation.x = 0.35; aw.position.set(0, h * 0.78, d / 2 + 0.5); add(g, aw);
+  // 看板
+  add(g, at(box(w * 0.7, 0.5, 0.12, sign, 0.1), 0, h + 0.4, d / 2 + 0.1));
+  add(g, at(box(0.08, 0.5, 0.08, M.woodDark, 0.02), -w * 0.3, h + 0.2, d / 2 + 0.1)); add(g, at(box(0.08, 0.5, 0.08, M.woodDark, 0.02), w * 0.3, h + 0.2, d / 2 + 0.1));
+  return g;
+}
+function shisaFig(s = 1) {
+  const g = new THREE.Group();
+  add(g, at(sph(0.9 * s, M.shisa), 0, 0.9 * s, 0)).scale.set(1, 0.85, 1.1);
+  add(g, at(sph(0.62 * s, M.shisa), 0, 1.85 * s, 0.25 * s));
+  add(g, at(sph(0.2 * s, M.shisa), -0.45 * s, 2.3 * s, 0.1 * s)); add(g, at(sph(0.2 * s, M.shisa), 0.45 * s, 2.3 * s, 0.1 * s));
+  const mane = new THREE.Mesh(new THREE.TorusGeometry(0.62 * s, 0.18 * s, 8, 16), M.roofRed2); mane.rotation.x = Math.PI / 2; mane.position.set(0, 1.4 * s, 0.1 * s); add(g, mane);
+  add(g, at(sph(0.09 * s, M.black, 8, 6), -0.22 * s, 1.95 * s, 0.8 * s)); add(g, at(sph(0.09 * s, M.black, 8, 6), 0.22 * s, 1.95 * s, 0.8 * s));
+  return g;
+}
+function lighthouse(h = 7) {
+  const g = new THREE.Group();
+  add(g, at(cyl(2.2, 2.6, 0.7, M.rock, 12), 0, 0.35, 0));
+  add(g, at(cyl(0.95, 1.25, h, M.white, 24), 0, h / 2 + 0.7, 0));
+  add(g, at(cyl(1.08, 1.12, 0.9, M.red, 24), 0, h * 0.42 + 0.7, 0));
+  add(g, at(cyl(1.3, 1.3, 0.25, M.black, 24), 0, h + 0.8, 0));
+  add(g, at(cyl(0.8, 0.8, 1.1, M.glass, 16), 0, h + 1.45, 0));
+  add(g, at(cyl(0.02, 1.15, 0.9, M.red, 24), 0, h + 2.4, 0));
+  add(g, at(cyl(1.5, 1.5, 0.15, M.white, 24), 0, h + 0.95, 0));
+  return g;
+}
+function palm({ h = 6, lean = 0.9, dir = 0, fronds = 9, scale = 1 } = {}) {
+  const g = new THREE.Group(); const seg = 9;
+  const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0, 0, 0), new THREE.Vector3(Math.cos(dir) * lean * 0.6, h * 0.55, Math.sin(dir) * lean * 0.6), new THREE.Vector3(Math.cos(dir) * lean * 1.6, h, Math.sin(dir) * lean * 1.6));
+  const pts = curve.getPoints(seg);
+  for (let i = 0; i < seg; i++) { const a = pts[i], b = pts[i + 1]; const len = a.distanceTo(b); const r0 = 0.32 - i * 0.02, r1 = 0.32 - (i + 1) * 0.02;
+    const c = cyl(r1, r0, len * 1.08, M.trunk, 10); c.position.copy(a).lerp(b, 0.5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()); add(g, c);
+    if (i % 2) { const ring = new THREE.Mesh(new THREE.TorusGeometry(r0 * 1.02, 0.05, 6, 12), M.woodDark); ring.position.copy(a); ring.quaternion.copy(c.quaternion); ring.rotateX(Math.PI / 2); g.add(ring); } }
+  const top = pts[seg]; const crown = new THREE.Group(); crown.position.copy(top);
+  for (let i = 0; i < fronds; i++) { const a = i / fronds * Math.PI * 2 + 0.3; const f = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 8), i % 2 ? M.frond : M.frond2);
+    f.scale.set(2.6, 0.22, 0.75); f.position.set(Math.cos(a) * 2.2, -0.35 - Math.random() * 0.4, Math.sin(a) * 2.2); f.rotation.y = -a; f.rotation.z = -0.45 - Math.random() * 0.25; add(crown, f);
+    // 葉の切れ込みっぽい細い葉
+    for (let k = 0; k < 4; k++) { const leaf = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 6), i % 2 ? M.frond2 : M.frond); leaf.scale.set(0.9, 0.08, 0.26); const t = 0.35 + k * 0.17; leaf.position.set(Math.cos(a) * 2.2 * (t + 0.6), -0.35 - t * 0.9, Math.sin(a) * 2.2 * (t + 0.6)); leaf.rotation.y = -a + (k % 2 ? 0.5 : -0.5); leaf.rotation.z = -0.5 - t * 0.5; add(crown, leaf); } }
+  for (let i = 0; i < 3; i++) add(crown, at(sph(0.26, M.woodDark, 10, 8), Math.cos(i * 2.1) * 0.35, -0.3, Math.sin(i * 2.1) * 0.35));
+  add(crown, at(sph(0.5, M.frond, 10, 8), 0, 0.1, 0));
+  g.add(crown); g.scale.setScalar(scale); return g;
+}
+function pier(x, z, len = 9, w = 2.2) {
+  const g = new THREE.Group(); g.position.set(x, 0, z);
+  const n = Math.floor(len / 0.55);
+  for (let i = 0; i < n; i++) add(g, at(box(w, 0.14, 0.42, i % 3 ? M.wood : M.woodDark, 0.03), 0, 0.42, -i * 0.55));
+  for (let i = 0; i <= n; i += 4) { add(g, at(cyl(0.14, 0.16, 1.4, M.woodDark, 10), -w / 2 + 0.2, 0, -i * 0.55)); add(g, at(cyl(0.14, 0.16, 1.4, M.woodDark, 10), w / 2 - 0.2, 0, -i * 0.55)); }
+  // 手すり
+  add(g, at(box(0.07, 0.07, len, M.woodDark, 0.02), -w / 2 + 0.2, 1.1, -len / 2 + 0.3)); add(g, at(box(0.07, 0.07, len, M.woodDark, 0.02), w / 2 - 0.2, 1.1, -len / 2 + 0.3));
+  for (let i = 0; i <= n; i += 4) { add(g, at(box(0.08, 0.7, 0.08, M.woodDark, 0.02), -w / 2 + 0.2, 0.8, -i * 0.55)); add(g, at(box(0.08, 0.7, 0.08, M.woodDark, 0.02), w / 2 - 0.2, 0.8, -i * 0.55)); }
+  L.back.add(g); return g;
+}
+function boat(x, z, ry = 0, color = M.white, stripe = M.roofBlue) {
+  const g = new THREE.Group(); g.position.set(x, 0.05, z); g.rotation.y = ry;
+  const hull = sph(1, color, 16, 10); hull.scale.set(2.1, 0.55, 0.9); hull.position.y = 0.2; add(g, hull);
+  const s = sph(1, stripe, 16, 10); s.scale.set(2.12, 0.14, 0.92); s.position.y = 0.42; add(g, s);
+  const cut = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.5, 16), M.wood); cut.scale.set(1.9, 1, 0.65); cut.position.y = 0.5; add(g, cut);
+  add(g, at(box(0.9, 0.55, 0.6, color, 0.08), -0.3, 0.9, 0)); add(g, at(box(0.5, 0.3, 0.62, M.glass, 0.03), -0.3, 1.0, 0));
+  add(g, at(box(0.14, 1.6, 0.14, M.woodDark, 0.03), 0.7, 1.3, 0)); add(g, at(box(0.5, 0.35, 0.05, M.red, 0.02), 0.95, 1.95, 0));
+  L.back.add(g); return g;
+}
+function car(x, z, ry = 0, color = M.white) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry;
+  add(g, at(box(1.5, 0.45, 0.85, color, 0.12), 0, 0.42, 0)); add(g, at(box(0.95, 0.42, 0.8, color, 0.14), -0.05, 0.82, 0)); add(g, at(box(0.9, 0.3, 0.82, M.glass, 0.05), -0.05, 0.86, 0));
+  for (const [dx, dz] of [[-0.5, 0.42], [0.5, 0.42], [-0.5, -0.42], [0.5, -0.42]]) { const w = cyl(0.17, 0.17, 0.12, M.black, 12); w.rotation.x = Math.PI / 2; w.position.set(dx, 0.17, dz); add(g, w); }
+  L.back.add(g); return g;
+}
+function parasol(x, z, c1 = 0xee4b3a, c2 = 0xffffff) {
+  const g = new THREE.Group(); g.position.set(x, 0, z);
+  add(g, at(cyl(0.04, 0.05, 2.4, M.white, 8), 0, 1.2, 0));
+  const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 16; const ctx = canvas.getContext('2d');
+  for (let i = 0; i < 16; i++) { ctx.fillStyle = '#' + (i % 2 ? c1 : c2).toString(16).padStart(6, '0'); ctx.fillRect(i * 16, 0, 16, 16); }
+  const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace;
+  const top = new THREE.Mesh(new THREE.ConeGeometry(1.5, 0.55, 16, 1, true), new THREE.MeshStandardMaterial({ map: t, roughness: 1, side: THREE.DoubleSide })); top.position.y = 2.25; add(g, top);
+  add(g, at(sph(0.08, M.yellow, 8, 6), 0, 2.55, 0));
+  L.back.add(g); return g;
+}
+function chair(x, z, ry = 0, fabric = M.wallBlue) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry;
+  add(g, at(box(0.6, 0.08, 1.1, M.white, 0.02), 0, 0.3, 0)); add(g, at(box(0.6, 0.9, 0.08, M.white, 0.02), 0, 0.72, -0.5)).rotation.x = -0.4;
+  add(g, at(box(0.5, 0.06, 1.0, fabric, 0.02), 0, 0.36, 0)); add(g, at(box(0.5, 0.82, 0.06, fabric, 0.02), 0, 0.74, -0.46)).rotation.x = -0.4;
+  for (const [dx, dz] of [[-0.25, 0.45], [0.25, 0.45], [-0.25, -0.45], [0.25, -0.45]]) add(g, at(box(0.06, 0.3, 0.06, M.white, 0.01), dx, 0.15, dz));
+  L.back.add(g); return g;
+}
+function bush(x, z, r = 0.9, flowers = 5, flowerColor = M.pink) {
+  const g = new THREE.Group(); g.position.set(x, 0, z);
+  for (let i = 0; i < 5; i++) add(g, at(sph(r * (0.6 + Math.random() * 0.4), i % 2 ? M.frond : M.frond2, 12, 9), (Math.random() - 0.5) * r, r * 0.5 + Math.random() * r * 0.3, (Math.random() - 0.5) * r));
+  for (let i = 0; i < flowers; i++) { const a = Math.random() * Math.PI * 2; const f = sph(r * 0.2, flowerColor, 8, 6); f.position.set(Math.cos(a) * r * 0.8, r * 0.7 + Math.random() * r * 0.4, Math.sin(a) * r * 0.8); add(g, f); add(g, at(sph(r * 0.07, M.yellow, 6, 4), f.position.x, f.position.y + r * 0.1, f.position.z + r * 0.12)); }
+  L.back.add(g); return g;
+}
+function cloud(x, y, z, s = 1) {
+  const g = new THREE.Group(); g.position.set(x, y, z);
+  const parts = [[0, 0, 0, 2.2], [1.8, 0.3, 0.2, 1.6], [-1.9, 0.1, 0.1, 1.5], [0.6, 0.9, -0.3, 1.5], [-0.8, 0.8, 0.3, 1.3], [3.1, -0.2, 0, 1.1], [-3.2, -0.2, 0, 1.0]];
+  for (const [px, py, pz, r] of parts) { const m = sph(r, M.cloud, 16, 12); m.position.set(px, py, pz); m.castShadow = false; m.receiveShadow = false; g.add(m); }
+  g.scale.setScalar(s); L.sky.add(g); return g;
+}
+function island(x, z, rx, rz, h, m = M.grass2) {
+  const g = new THREE.Group(); g.position.set(x, -0.4, z);
+  const land = sph(1, m, 20, 12); land.scale.set(rx, h, rz); land.castShadow = false; g.add(land);
+  const peak = sph(1, M.frond, 16, 10); peak.scale.set(rx * 0.5, h * 1.4, rz * 0.5); peak.position.set(rx * 0.15, 0, 0); peak.castShadow = false; g.add(peak);
+  L.back.add(g); return g;
+}
+function road(points, w = 1.6) {
+  const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0], p[1], p[2])));
+  const pts = curve.getPoints(80); const pos = [], idx = [];
+  for (let i = 0; i < pts.length; i++) { const p = pts[i], q = pts[Math.min(i + 1, pts.length - 1)]; const d = q.clone().sub(p).setY(0).normalize(); const n = new THREE.Vector3(-d.z, 0, d.x);
+    pos.push(p.x + n.x * w / 2, p.y, p.z + n.z * w / 2, p.x - n.x * w / 2, p.y, p.z - n.z * w / 2); if (i < pts.length - 1) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx); geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, M.road); m.receiveShadow = true; L.back.add(m); return m;
+}
+function footprints(x0, z0, x1, z1, n = 7) {
+  for (let i = 0; i < n; i++) { const t = i / (n - 1); const m = new THREE.Mesh(new THREE.CircleGeometry(0.17, 10), new THREE.MeshBasicMaterial({ color: 0xcdb27a, transparent: true, opacity: 0.55 })); m.rotation.x = -Math.PI / 2; m.scale.set(0.7, 1.3, 1);
+    m.position.set(x0 + (x1 - x0) * t + (i % 2 ? 0.25 : -0.25), 0.006, z0 + (z1 - z0) * t); L.back.add(m); }
+}
+function starfish(x, z, c = M.orange) { const g = new THREE.Group(); g.position.set(x, 0.02, z); for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; const arm = sph(1, c, 8, 6); arm.scale.set(0.42, 0.1, 0.14); arm.position.set(Math.cos(a) * 0.28, 0, Math.sin(a) * 0.28); arm.rotation.y = -a; add(g, arm); } add(g, at(sph(0.17, c, 8, 6), 0, 0, 0)).scale.y = 0.5; L.back.add(g); return g; }
+function shell(x, z) { const m = sph(0.22, M.ice, 10, 8); m.scale.set(1, 0.45, 0.8); m.position.set(x, 0.02, z); m.rotation.y = Math.random() * 3; add(L.back, m); }
+function surfboard(x, z, ry, c = M.wallYellow) { const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; const b = sph(1, c, 12, 10); b.scale.set(0.45, 1.5, 0.08); b.position.y = 1.3; b.rotation.z = 0.12; add(g, b); const st = box(0.12, 2.2, 0.05, M.roofBlue, 0.02); st.position.set(0, 1.3, 0.06); st.rotation.z = 0.12; add(g, st); L.back.add(g); return g; }
+function kiosk(x, z, ry) { // アイスのスタンド
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry;
+  add(g, at(box(2.2, 1.3, 1.4, M.wallPink, 0.1), 0, 0.65, 0)); add(g, at(box(2.4, 0.12, 1.6, M.white, 0.04), 0, 1.3, 0));
+  const c = document.createElement('canvas'); c.width = 128; c.height = 16; const ctx = c.getContext('2d'); for (let i = 0; i < 8; i++) { ctx.fillStyle = i % 2 ? '#13b5c8' : '#ffffff'; ctx.fillRect(i * 16, 0, 16, 16); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  const aw = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.08, 1.0), new THREE.MeshStandardMaterial({ map: t, roughness: 1 })); aw.rotation.x = 0.3; aw.position.set(0, 1.42, 1.1); add(g, aw);
+  add(g, at(box(1.9, 0.7, 0.12, M.white, 0.04), 0, 0.9, 0.72)); // カウンター窓
+  const cone = cyl(0.01, 0.3, 0.9, M.wood, 12); cone.position.set(0, 2.1, 0); add(g, cone); add(g, at(sph(0.36, M.wallPink, 12, 9), 0, 2.65, 0)); add(g, at(sph(0.3, M.wallMint, 12, 9), 0.12, 3.05, 0.05));
+  L.back.add(g); return g;
+}
+
+/* ---------- 配置 ---------- */
+// 岬：左と右（カメラの見える幅：z=-20で±14、z=-36で±22）
+const capeL = cape(-16, -31, 17, 14, 1.2);
+const capeR = cape(16.5, -29, 12, 11, 1.1);
+// 左の村
+const hA = house({ w: 3.4, d: 2.8, h: 2.0, wall: M.wallWhite, roof: M.roofRed }); hA.position.set(-7.5, 1.2, -22.5); hA.rotation.y = 0.35; L.back.add(hA);
+const hB = shop({ w: 3.0, d: 2.4, h: 1.8, wall: M.wallMint, roof: M.roofOrange, awning: [0xff5c93, 0xffffff], sign: M.yellow }); hB.position.set(-12.5, 1.2, -21); hB.rotation.y = 0.45; L.back.add(hB);
+const hC = house({ w: 2.8, d: 2.3, h: 1.7, wall: M.wallCream, roof: M.roofBlue, ridge: M.roofBlue, shisa: false, windows: 1 }); hC.position.set(-17.5, 1.2, -25); hC.rotation.y = 0.2; L.back.add(hC);
+const hD = shop({ w: 3.4, d: 2.6, h: 1.9, wall: M.wallYellow, roof: M.roofGreen, awning: [0x3fae49, 0xffffff], sign: M.red }); hD.position.set(-22.5, 1.2, -31); hD.rotation.y = 0.1; L.back.add(hD);
+const hE = house({ w: 2.9, d: 2.4, h: 1.8, wall: M.wallPink, roof: M.roofRed }); hE.position.set(-11, 1.2, -29); hE.rotation.y = -0.3; L.back.add(hE);
+const hF = house({ w: 3.0, d: 2.6, h: 1.9, wall: M.wallWhite, roof: M.roofRed }); hF.position.set(-27, 1.2, -26.5); hF.rotation.y = 0.6; L.back.add(hF);
+road([[-33, 1.22, -24], [-25, 1.22, -24.5], [-18, 1.22, -21.5], [-11, 1.22, -18.5], [-4, 1.22, -19.5], [1, 1.22, -24]], 1.5);
+car(-21, -23.8, 0.2, M.white); car(-6.2, -18.8, -0.2, M.wallBlue);
+const shisaL = shisaFig(0.5); shisaL.position.set(-5.9, 1.2, -20.2); L.back.add(shisaL); const shisaR = shisaFig(0.5); shisaR.position.set(-4.3, 1.2, -20.8); L.back.add(shisaR);
+for (const [x, z, h, lean, dir] of [[-2.8, -26.5, 5.5, 0.9, 0.4], [-15.5, -17.5, 5, 0.8, 0.2], [-25, -20.5, 5.5, 1.0, 0.9], [-30, -31, 5, 0.8, 2.5], [-18, -36, 6, 1.0, 1.3], [-6, -34, 5.5, 0.9, 2.0]]) { const p = palm({ h, lean, dir, scale: 0.8 }); p.position.set(x, 1.2, z); L.back.add(p); }
+bush(-10, -17.4, 0.9, 6); bush(-15, -23.5, 0.8, 4, M.red); bush(-25.5, -28.5, 1.0, 5, M.yellow); bush(-3.5, -23, 0.8, 4);
+// 右の岬：灯台と小さな店
+const lh = lighthouse(6.5); lh.position.set(18.5, 1.1, -36); L.back.add(lh);
+const hG = house({ w: 3.2, d: 2.6, h: 1.9, wall: M.wallWhite, roof: M.roofRed }); hG.position.set(13.5, 1.1, -26); hG.rotation.y = -0.45; L.back.add(hG);
+const hH = shop({ w: 2.8, d: 2.2, h: 1.7, wall: M.wallBlue, roof: M.roofRed2, awning: [0xffd23f, 0xffffff], sign: M.wallPink }); hH.position.set(9.2, 1.1, -21.5); hH.rotation.y = -0.7; L.back.add(hH);
+const hI = house({ w: 2.6, d: 2.2, h: 1.6, wall: M.wallCream, roof: M.roofGreen, ridge: M.roofGreen, shisa: false, windows: 1 }); hI.position.set(19.5, 1.1, -24.5); hI.rotation.y = -0.2; L.back.add(hI);
+road([[6.5, 1.12, -19], [12, 1.12, -23], [18, 1.12, -27.5], [22, 1.12, -30.5]], 1.3);
+car(15.2, -25.4, -0.75, M.wallPink);
+for (const [x, z, h, lean, dir] of [[6, -27.5, 5.5, 0.9, 2.8], [11.5, -33, 6, 1.0, 2.3], [23, -26, 5, 0.8, 3.3], [14, -37.5, 5.5, 1.0, 1.6]]) { const p = palm({ h, lean, dir, scale: 0.8 }); p.position.set(x, 1.1, z); L.back.add(p); }
+bush(10.5, -18.6, 0.9, 5, M.red); bush(20, -28.5, 0.9, 4);
+// 桟橋とボート
+pier(6.8, -5.5, 9.5, 2.0);
+boat(9.8, -12.5, 0.25); boat(-6, -14.5, -2.6, M.wallYellow, M.red);
+// 浜辺の小物（後景）
+parasol(-5.2, 1.0, 0xee4b3a, 0xffffff); chair(-6.4, 2.2, 0.5, M.wallBlue); chair(-4.3, 2.5, -0.3, M.wallPink);
+add(L.back, at(box(0.7, 0.5, 0.5, M.roofBlue, 0.08), -3.6, 0.25, 1.6));
+bush(5.4, 0.4, 0.75, 6); surfboard(6.4, -0.8, -0.5); surfboard(6.95, -0.5, 0.2, M.wallPink);
+kiosk(7.6, -3.2, -0.55);
+starfish(-1.8, 7.2); starfish(3.4, 0.4, M.pink); shell(1.4, 2.3); shell(-3.1, 5.6); shell(4.4, 5.2);
+footprints(1.0, -3.5, 1.8, 6);
+// ウミガメ
+{ const g = new THREE.Group(); g.position.set(3.2, -0.05, -9.5); g.rotation.y = 0.6;
+  add(g, at(sph(0.6, M.roofGreen, 12, 9), 0, 0.1, 0)).scale.set(1.3, 0.45, 1); add(g, at(sph(0.5, M.frond2, 12, 9), 0, 0.12, 0)).scale.set(1.2, 0.3, 0.9);
+  add(g, at(sph(0.25, M.frond, 10, 8), 0.95, 0.05, 0)); for (const [dx, dz] of [[0.5, 0.7], [0.5, -0.7], [-0.6, 0.6], [-0.6, -0.6]]) add(g, at(sph(0.3, M.frond, 8, 6), dx, 0, dz)).scale.set(1, 0.3, 0.5);
+  L.back.add(g); }
+// 遠くの島
+island(-120, -300, 60, 20, 14); island(160, -330, 80, 26, 20); island(30, -380, 30, 10, 7, M.sky);
+// 雲
+cloud(-45, 26, -210, 2.0); cloud(15, 30, -250, 2.4); cloud(70, 24, -230, 1.8); cloud(-95, 22, -200, 1.5); cloud(120, 28, -300, 2.0);
+// 前景（Miiの前に来るもの）：手前のヤシの木と葉
+{ const p = palm({ h: 11.8, lean: 2.6, dir: Math.PI * 0.02, fronds: 9, scale: 0.9 }); p.position.set(-9.2, 0, 9); L.front.add(p);
+  const q = palm({ h: 11.2, lean: 2.4, dir: Math.PI * 0.98, fronds: 8, scale: 0.85 }); q.position.set(9.7, 0, 8.6); L.front.add(q);
+  // 砂のお城・ビーチタオル
+  const sc = new THREE.Group(); sc.position.set(4.6, 0, 6.2); add(sc, at(cyl(0.55, 0.65, 0.5, M.sandWet, 12), 0, 0.25, 0)); add(sc, at(cyl(0.3, 0.38, 0.5, M.sandWet, 12), 0, 0.75, 0)); add(sc, at(cyl(0.01, 0.3, 0.4, M.red, 12), 0, 1.2, 0)); for (let i = 0; i < 4; i++) add(sc, at(cyl(0.12, 0.14, 0.4, M.sandWet, 8), Math.cos(i * 1.57) * 0.55, 0.65, Math.sin(i * 1.57) * 0.55)); L.back.add(sc);
+  const towel = box(1.1, 0.04, 1.8, M.wallYellow, 0.01); towel.position.set(-3.0, 0.02, 3.6); towel.rotation.y = 0.3; add(L.back, towel); const towel2 = box(0.9, 0.05, 0.7, M.wallPink, 0.01); towel2.position.set(-3.3, 0.05, 3.1); towel2.rotation.y = 0.3; add(L.back, towel2);
+  const b = bush(6.6, 8.6, 0.9, 5, M.red); L.back.remove(b); L.front.add(b);
+  const s = starfish(-6.4, 9.0, M.orange); L.back.remove(s); L.front.add(s); }
+
+/* ---------- 空 ---------- */
+function skyTexture() { const c = document.createElement('canvas'); c.width = 16; c.height = 512; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#3fb4ee'); gr.addColorStop(0.45, '#7fd0f7'); gr.addColorStop(0.8, '#c9ecfb'); gr.addColorStop(1, '#e8f6fd'); g.fillStyle = gr; g.fillRect(0, 0, 16, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+const skyDome = new THREE.Mesh(new THREE.SphereGeometry(800, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: skyTexture(), side: THREE.BackSide, fog: false })); skyDome.position.y = -40; L.sky.add(skyDome);
+
+/* ---------- レイヤー描画 ---------- */
+function show(names) { for (const [k, g] of Object.entries(L)) g.visible = names.includes(k); }
+window.renderLayer = (name) => {
+  if (name === 'back') show(['back', 'water', 'sky']);
+  else if (name === 'foam') show(['foam']);
+  else if (name === 'front') show(['front']);
+  else if (name === 'water') { show(['water']); }
+  else if (name === 'all') show(['back', 'water', 'sky', 'foam', 'front']);
+  // 影を落とす側は常に全体（前景の木の影が砂に落ちるように）
+  const HIDE = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false });
+  if (name === 'back') { L.front.visible = true; L.front.traverse(o => { if (o.isMesh) { o._m = o.material; o.material = HIDE; } }); }
+  if (name === 'water') { L.water.traverse(o => { if (o.isMesh) { o._m = o.material; o.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); } }); }
+  renderer.render(scene, camera);
+  if (name === 'back') { L.front.traverse(o => { if (o.isMesh && o._m) { o.material = o._m; o._m = null; } }); }
+  if (name === 'water') { L.water.traverse(o => { if (o.isMesh && o._m) { o.material = o._m; } }); }
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script>
+</body></html>
