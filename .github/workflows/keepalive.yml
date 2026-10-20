@@ -12,5 +12,5 @@ jobs:
           curl -s -o /dev/null -w "%{http_code}\n" "${SUPABASE_URL}/rest/v1/docs?select=id&limit=1" \
             -H "apikey: ${SUPABASE_KEY}" -H "Authorization: Bearer ${SUPABASE_KEY}"
         env:
-          SUPABASE_URL: __SB_URL__
-          SUPABASE_KEY: __SB_KEY__
+          SUPABASE_URL: https://rplymvjbetvjsfihozpp.supabase.co
+          SUPABASE_KEY: sb_publishable_nqGwemzuILxckcYS8rtIGQ_4kwkulhH

@@ -1227,7 +1227,7 @@ skyMode();renderCount();setInterval(()=>{skyMode();renderCount()},60e3);
   setTimeout(()=>{confetti();beep("open");cheer(b==="yui"?"ゆいちゃん、誕生日おめでとう！":"今日はおれの誕生日！",b==="yui"?"今日はわたしの誕生日〜！":"さいけう、おめでとう！")},1600)})();
 render();
 /* ---------- Supabase ---------- */
-const SB_URL="__SB_URL__",SB_KEY="__SB_KEY__";
+const SB_URL="https://rplymvjbetvjsfihozpp.supabase.co",SB_KEY="sb_publishable_nqGwemzuILxckcYS8rtIGQ_4kwkulhH";
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 const BUCKET="photos";
 async function ensureUrls(ids){
