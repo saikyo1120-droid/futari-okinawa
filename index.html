@@ -187,7 +187,7 @@ main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* ============ 行程エディター ============ */
-.modal .box.editor{text-align:left;max-width:560px;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;background:#fff}
+.modal .box.editor{text-align:left;max-width:560px;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;background:#fff}
 .ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .ed-head h2{font-size:20px;color:var(--c)}
 .ed-head .x{border:3px solid var(--ink);background:#fff;border-radius:50%;width:36px;height:36px;font-family:var(--pop);font-size:18px;line-height:1;box-shadow:0 3px 0 var(--ink)}
@@ -199,6 +199,9 @@ main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.
 .ed-stops{display:grid;gap:8px;margin:6px 0 10px}
 .ed-stop{background:var(--sand);border:2px solid var(--ink);border-radius:14px;padding:8px;display:grid;gap:6px}
 .ed-stop-row{display:grid;grid-template-columns:72px 1fr auto;gap:6px;align-items:center}
+@media (max-width:480px){.ed-stop-row{grid-template-columns:64px 1fr}.ed-stop-row .ed-btns{grid-column:1/-1;justify-content:flex-end}}
+/* iPhoneは16px未満の入力欄にフォーカスすると画面が勝手に拡大するので、入力欄は16px */
+@media (max-width:760px){.fld input,.fld textarea,.ed-stop input,.pk-search input,.pk-paste-in input,.iadd input,.iadd select,.page textarea,.letter textarea,.treasure textarea{font-size:16px}}
 .ed-stop-row2{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
 @media (max-width:480px){.ed-stop-row2{grid-template-columns:1fr}}
 .ed-btns{display:flex;gap:4px}
@@ -259,7 +262,7 @@ main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.
 .letter .sealed{min-height:80px;text-align:center;color:var(--muted);font-weight:700;display:grid;place-items:center}
 /* ============ グルメ図鑑 ============ */
 .bar.green i{background:repeating-linear-gradient(45deg,var(--leaf) 0 10px,#7ccb45 10px 20px)}
-.foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;margin-top:12px}
 .food{background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--ink);display:grid;grid-template-rows:auto 1fr}
 .food.got{border-color:var(--leaf)}
 .food-pic{position:relative;aspect-ratio:4/3;border:0;background:var(--foam);padding:0;overflow:hidden;display:grid;place-items:center;width:100%}
@@ -314,7 +317,7 @@ section.view{position:relative}
 /* 吹き出し付きのMiiコメント */
 .say{display:flex;gap:8px;align-items:flex-end;margin:10px 0}
 .say img{width:46px;flex:0 0 auto}
-.say .b{background:#fff;border:3px solid var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;font-weight:700;min-width:0}
+.say .b{background:#fff;border:3px solid var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;font-weight:700;min-width:0;white-space:pre-line}
 
 /* ============ 島めぐりマップ ============ */
 .mapbox{display:grid;grid-template-columns:minmax(0,350px) 1fr;gap:16px;align-items:start}
@@ -323,6 +326,7 @@ section.view{position:relative}
 @media (min-width:761px){.map-col{position:sticky;top:12px}}
 .map{background:#17a2c4;border:3px solid var(--ink);border-radius:22px;overflow:hidden;box-shadow:0 5px 0 var(--ink);position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .map.touchmode{touch-action:none;box-shadow:0 5px 0 var(--ink),0 0 0 4px var(--sun) inset}
+.map{-webkit-touch-callout:none}
 .map-ctrl{position:absolute;right:8px;bottom:8px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .map-ctrl button{min-width:36px;height:36px;border-radius:12px;border:2.5px solid var(--ink);background:#fff;font-family:var(--pop);font-size:16px;box-shadow:0 3px 0 var(--ink);padding:0 8px;color:var(--ink)}
 .map-ctrl button.wide{font-size:12px}
@@ -332,7 +336,7 @@ section.view{position:relative}
 .ed-place .pl.ok{color:#2e7d32}
 .ed-place .pl.ok::before{content:"● ";}
 .st-badge.off{background:#fff;color:var(--shu);border:2px solid var(--shu)}
-.modal .box.picker{text-align:left;max-width:560px;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
+.modal .box.picker{text-align:left;max-width:560px;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
 .pk-search{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
 .pk-search input,.pk-paste-in input{width:100%;border:2px solid var(--ink);border-radius:10px;padding:7px 9px;font:inherit;font-size:14px;min-width:0}
 .pk-results{display:grid;gap:6px;margin:4px 0}
@@ -343,7 +347,7 @@ section.view{position:relative}
 .pk-paste summary{font-size:12.5px;font-weight:900;cursor:pointer}
 .pk-paste-in{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0 4px}
 .pk-map{touch-action:none}
-.pk-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pk-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap;position:sticky;bottom:0;background:#fff;padding:8px 0 4px}
 .pk-btns{display:flex;gap:6px;margin-left:auto}
 .map>svg{width:100%;height:auto;display:block}
 .okimap{--k:1}
@@ -402,8 +406,9 @@ section.view{position:relative}
 .stops{list-style:none;margin:0;padding:0;position:relative}
 .stops::before{content:"";position:absolute;left:27px;top:18px;bottom:18px;border-left:3px dotted var(--sand-deep)}
 .stops li{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:10px 0;position:relative}
-.stops .t{font-size:12.5px;font-weight:900;background:#fff;border:2px solid var(--ink);border-radius:10px;text-align:center;height:max-content;position:relative;z-index:1;font-variant-numeric:tabular-nums;padding:1px 0}
+.stops .t{font-size:12.5px;font-weight:900;background:#fff;border:2px solid var(--ink);border-radius:10px;text-align:center;height:max-content;position:relative;z-index:1;font-variant-numeric:tabular-nums;padding:1px 2px;overflow-wrap:anywhere;line-height:1.4}
 .stops .n{font-weight:900}
+.stops .pno{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;color:#fff;font-family:var(--pop);font-size:11px;margin-right:5px;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--ink);vertical-align:2px}
 .stops .d{font-size:13px;color:var(--muted);font-weight:700}
 .stops a{font-size:12px}
 .infobox{background:#fff;border:2px dashed var(--line);border-radius:14px;padding:8px 12px;font-size:13px;display:grid;gap:6px}
@@ -442,6 +447,7 @@ section.view{position:relative}
 .spot .top{display:flex;gap:6px;align-items:center}
 .spot .day{font-size:11px;font-weight:900;color:#fff;background:var(--c);border-radius:999px;padding:0 9px;line-height:1.7}
 .spot .nm{font-weight:900;font-size:15px;line-height:1.35}
+.spot:has(.stampmark) .nm{padding-right:80px}
 .slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .slot{aspect-ratio:1;border:3px dashed #cfd8e6;border-radius:14px;display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted);overflow:hidden;position:relative;background:var(--foam);padding:0;max-width:100%}
 .slot img.ph{width:100%;height:100%;object-fit:cover}
@@ -449,7 +455,7 @@ section.view{position:relative}
 .slot .who{position:absolute;left:5px;top:5px;background:var(--ink);color:#fff;font-size:10px;font-weight:900;border-radius:99px;padding:0 7px;z-index:1}
 .slot.mine{border-color:var(--sea);color:var(--sea-deep);font-weight:900;cursor:pointer;background:#e3fafb}
 .slot.mine span.plus{font-family:var(--pop);font-size:26px;line-height:1}
-.stampmark{position:absolute;right:6px;top:4px;width:96px;height:96px;pointer-events:none;transform:rotate(-14deg);opacity:.92}
+.stampmark{position:absolute;right:4px;top:2px;width:86px;height:86px;pointer-events:none;transform:rotate(-14deg);opacity:.92}
 .stampmark.new{animation:thump .6s cubic-bezier(.2,1.6,.4,1)}
 @keyframes thump{0%{transform:rotate(-14deg) scale(2.6);opacity:0}60%{opacity:1}100%{transform:rotate(-14deg) scale(1)}}
 .treasure{margin-top:16px;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;box-shadow:0 4px 0 var(--ink)}
@@ -514,7 +520,7 @@ section.view{position:relative}
 .dayres .c h4{margin:0 0 4px;font-family:var(--pop);font-weight:400;font-size:14px;color:var(--c)}
 
 /* ============ モーダル等 ============ */
-.modal{position:fixed;inset:0;z-index:60;background:rgba(10,60,80,.55);display:grid;place-items:center;padding:20px}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(10,60,80,.55);display:grid;place-items:center;padding:20px;overflow:auto}
 .modal.top{z-index:65}
 /* ============ 思い出ムービー ============ */
 .show{position:fixed;inset:0;z-index:80;background:#071a26;color:#fff;overflow:hidden;font-family:var(--body)}
@@ -541,10 +547,11 @@ section.view{position:relative}
 .show .sl.intro .introcap small{display:block;font-size:12px;opacity:.8}
 .show .sl.diary{background:linear-gradient(160deg,#ff5c93,#8a5cf6);padding:20px}
 .show .sl.diary .pages{display:grid;gap:12px;width:min(92%,640px)}
-.show .sl.diary .pg{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:36vh;overflow:hidden}
+.show .sl.diary .pg{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:36vh;overflow:auto}
 .show .sl.diary .pg h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-family:var(--pop);font-size:14px;color:var(--hibiscus)}
 .show .sl.diary .pg h4 img{height:34px;width:auto}
-.show .sl.ending{background:linear-gradient(180deg,#1d3a8a,#2f4fb5);text-align:center;padding:24px 24px 120px}
+.show .sl.ending{background:linear-gradient(180deg,#1d3a8a,#2f4fb5);text-align:center;padding:24px 24px 120px;overflow:auto}
+@media (max-height:720px){.show .sl.ending .miis img{height:90px!important}.show .sl.ending .rows{gap:4px}.show .sl.title .miis img{height:110px}}
 .show .sl.ending h2{font-family:var(--pop);font-size:clamp(24px,8vw,44px);color:#ffd23f;margin:0 0 8px}
 .show .sl.ending .rows{display:grid;gap:6px;width:min(88%,420px);margin:12px auto}
 .show .sl.ending .rows div{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 12px;font-weight:900}
@@ -566,7 +573,7 @@ section.view{position:relative}
 .movie-box .btn{margin-left:auto}
 .sysbar{margin:0 0 12px;background:#fff3c4;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;font-weight:900;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 4px 0 var(--ink)}
 .sysbar .btn{margin-left:auto}
-.modal .box.diag{max-width:520px;text-align:left;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
+.modal .box.diag{max-width:520px;text-align:left;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
 .diag-list{list-style:none;margin:10px 0;padding:0;display:grid;gap:6px}
 .diag-list li{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;background:var(--sand);border-radius:12px;padding:8px 10px;font-size:13.5px;font-weight:900}
 .diag-list li i{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--ink);background:#fff;font-style:normal;font-family:var(--pop);font-size:13px}
@@ -805,7 +812,7 @@ const SAY=(w,t)=>`<div class="say"><img src="${MII[w]}" alt="${NAME[w]}"><div cl
 /* ---------- 効果音（WebAudio、ミュート可） ---------- */
 let actx=null;const SND={on:ls.get("snd")!=="off"};
 function beep(kind){
-  if(!SND.on)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+  if(!SND.on)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state!=="running")actx.resume().catch(()=>{});
     const t=actx.currentTime,g=actx.createGain();g.connect(actx.destination);g.gain.value=.0001;
     const notes={tap:[[660,.06]],stamp:[[523,.08],[659,.08],[784,.14]],gacha:[[392,.05],[494,.05],[587,.05],[784,.12]],clear:[[784,.07],[1046,.16]],open:[[523,.06],[659,.06],[784,.06],[1046,.2]]}[kind]||[[660,.06]];
     let at=t;for(const [f,d] of notes){const o=actx.createOscillator();o.type="triangle";o.frequency.value=f;o.connect(g);o.start(at);o.stop(at+d);g.gain.setValueAtTime(.12,at);g.gain.exponentialRampToValueAtTime(.0001,at+d);at+=d}
@@ -815,7 +822,7 @@ function beep(kind){
 /* ---------- 波の音（合成の環境音） ---------- */
 const WAVE={on:false,nodes:null};
 function wavesStart(){
-  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state!=="running")actx.resume().catch(()=>{});
     const sr=actx.sampleRate,len=sr*6,buf=actx.createBuffer(2,len,sr);
     for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);let last=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.5}}
     const src=actx.createBufferSource();src.buffer=buf;src.loop=true;
@@ -828,10 +835,12 @@ function wavesStart(){
     lfo.connect(lg).connect(g.gain);lfo2.connect(lg2).connect(g.gain);base.connect(g.gain);
     src.connect(hp).connect(lp).connect(g).connect(actx.destination);
     src.start();lfo.start();lfo2.start();base.start();
-    WAVE.nodes={src,lfo,lfo2,base,g};WAVE.on=true;
+    WAVE.nodes={src,lfo,lfo2,base,g,lg,lg2};WAVE.on=true;
   }catch(e){console.warn(e);toast("この端末では波の音を再生できませんでした")}
 }
-function wavesStop(){if(!WAVE.nodes)return;const {src,lfo,lfo2,base,g}=WAVE.nodes;try{g.gain.cancelScheduledValues(actx.currentTime);g.gain.setTargetAtTime(0,actx.currentTime,.3);setTimeout(()=>{try{src.stop();lfo.stop();lfo2.stop();base.stop()}catch{}},900)}catch{}WAVE.nodes=null;WAVE.on=false}
+function wavesStop(){if(!WAVE.nodes)return;const {src,lfo,lfo2,base,lg,lg2}=WAVE.nodes;try{const t0=actx.currentTime;for(const prm of [base.offset,lg.gain,lg2.gain]){prm.cancelScheduledValues(t0);prm.setTargetAtTime(0,t0,.3)}setTimeout(()=>{try{src.stop();lfo.stop();lfo2.stop();base.stop()}catch{}},1200)}catch{}WAVE.nodes=null;WAVE.on=false}
+// 電話や画面ロックのあと、音が止まったままにならないように
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&actx&&actx.state!=="running"&&(WAVE.on||SND.on))actx.resume().catch(()=>{})});
 
 /* ---------- 状態 ---------- */
 const S={db:null,assets:null,user:null,uid:null,who:null,photos:[],missions:{},diary:{},secret:null,members:{},items:null,letters:{},
@@ -842,13 +851,14 @@ const ITEMS=()=>S.items?.items||DEFAULT_ITEMS;
 function foodPhoto(id){return S.photos.find(p=>p.food===id)}
 const relTime=t=>{const s=(Date.now()-t)/1e3;if(s<60)return"たった今";if(s<3600)return Math.floor(s/60)+"分前";if(s<86400)return Math.floor(s/3600)+"時間前";const d=Math.floor(s/86400);return d===1?"昨日":d+"日前"};
 
-function toast(t){const el=document.createElement("div");el.className="toast";el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
+function toast(t){const el=document.createElement("div");el.className="toast";el.setAttribute("role","status");el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
 /* エラーを「何が起きたか」で分類して、人間向けの説明にする */
 function errInfo(e,where){
   const m=String(e?.message||e?.error_description||e?.error||e||"");const code=String(e?.code||e?.statusCode||e?.status||"");
-  const net=e instanceof TypeError||/Failed to fetch|NetworkError|Load failed|network|timeout|ECONN/i.test(m);
+  if(e?.code==="not_ready")return {kind:"busy",msg:e.message,fix:null};
+  const net=(e instanceof TypeError&&/fetch|Load failed|network/i.test(m))||/Failed to fetch|NetworkError|Load failed|network|timeout|ECONN/i.test(m)||e?.status===0;
   if(net)return {kind:"network",msg:"電波がとどいていないみたい。少し待ってもう一度試してね",fix:"net"};
-  if(/does not exist|42P01|42883/i.test(m+code))return {kind:"setup",msg:/docs/i.test(m)?"保存先の表（docs）がまだ作られていません":"保存先の設定（表や関数）がまだ作られていません",fix:"sql"};
+  if(/does not exist|42P01|42883|PGRST205|PGRST202|schema cache/i.test(m+code))return {kind:"setup",msg:/docs/i.test(m)?"保存先の表（docs）がまだ作られていません":"保存先の設定（表や関数）がまだ作られていません",fix:"sql"};
   if(where==="storage"&&(/Bucket not found|not found/i.test(m)||code==="404"))return {kind:"setup",msg:"写真の保存場所（photos）がまだ作られていません",fix:"sql"};
   if(/row-level security|permission denied|42501|not authorized|Unauthorized/i.test(m+code)||code==="403")return {kind:"setup",msg:"保存の許可（ポリシー）が設定されていないか、このアカウントは対象外です",fix:"sql"};
   if(/JWT|expired|token|PGRST301|invalid claim/i.test(m+code)||code==="401")return {kind:"auth",msg:"ログインの期限が切れていました。もう一度ログインしてね",fix:"login"};
@@ -903,7 +913,13 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
 // 入力中は再描画を待つ（相手の保存で自分の下書きが消えないように）
 function safeRender(){const a=document.activeElement;if(a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT")&&a.closest("main")){S.pendingRender=true;return}render()}
 document.querySelector("main").addEventListener("focusout",()=>{setTimeout(()=>{const a=document.activeElement;if(S.pendingRender&&!(a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT")&&a.closest("main"))){S.pendingRender=false;render()}},50)});
-function render(){S.pendingRender=false;({plan:renderPlan,stamp:renderStamp,diary:renderDiary,album:renderAlbum,zukan:renderZukan,result:renderResult})[S.view]()}
+S.drafts={};
+document.querySelector("main").addEventListener("input",e=>{const el=e.target;if(!el||!el.id)return;
+  if(el.id==="diary-in")S.drafts["diary:"+S.diaryDay]=el.value;else if(el.id==="letter-in")S.drafts.letter=el.value;else if(el.id==="secret-in")S.drafts.secret=el.value});
+function render(){S.pendingRender=false;const keep={};
+  document.querySelectorAll("main textarea[id],main input[id]:not([type=checkbox]):not([type=file])").forEach(el=>{if(el.value!==el.defaultValue)keep[el.id]=el.value});
+  ({plan:renderPlan,stamp:renderStamp,diary:renderDiary,album:renderAlbum,zukan:renderZukan,result:renderResult})[S.view]();
+  for(const [id,v] of Object.entries(keep)){const el=document.getElementById(id);if(el&&el.value!==v)el.value=v}}
 
 /* ---------- 沖縄グルメ図鑑 ---------- */
 let pendingFood=null;
@@ -913,13 +929,13 @@ function renderZukan(){
   ${HEAD("沖縄グルメ図鑑","var(--leaf)",`${got} / ${FOODS.length}`)}
   <div class="prog-row"><div class="bar green"><i style="width:${got/FOODS.length*100}%"></i></div><span class="num">${Math.round(got/FOODS.length*100)}%</span></div>
   ${SAY(S.who==="yui"?"sai":"yui",all?"ぜんぶ食べた！沖縄グルメマスター！":"食べたら写真をあげて「ゲット」しよう。どっちが先に見つけるかな？")}
-  <div class="foods">${FOODS.map(f=>{const p=foodPhoto(f.id);const can=!p&&S.canWrite&&S.assets;
+  <div class="foods">${FOODS.map(f=>{const p=foodPhoto(f.id);const busy=S.busy?.["food:"+f.id];const can=!p&&S.canWrite&&S.assets&&!busy;
     return `<div class="food ${p?"got":""}">
-      <button class="food-pic" ${can?`data-food="${f.id}"`:p?`data-fopen="${p.id}"`:"disabled"} aria-label="${p?"写真をひらく":"写真をあげてゲット"}">
+      <button class="food-pic" ${can?`data-food="${f.id}"`:p?`data-fopen="${p.id}"`:"disabled"} aria-label="${p?"写真をひらく":busy?"アップロード中":"写真をあげてゲット"}">
         ${p?`<img src="${blob(p.thumb||p.full)}" alt="${esc(f.n)}" loading="lazy">`:`<svg viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="48" rx="30" ry="14" fill="#fff" stroke="#23314f" stroke-width="3"/><ellipse cx="40" cy="44" rx="18" ry="8" fill="#e9fbfb" stroke="#23314f" stroke-width="2"/><text x="40" y="36" text-anchor="middle" font-family="Mochiy Pop One,sans-serif" font-size="26" fill="#23314f">?</text></svg>`}
-        ${p?`<span class="got-badge">たべた！</span>`:can?`<span class="get-hint">＋ 写真</span>`:""}
+        ${p?`<span class="got-badge">たべた！</span>`:busy?`<span class="get-hint">送信中…</span>`:can?`<span class="get-hint">＋ 写真</span>`:""}
       </button>
-      <div class="food-in"><div class="food-n">${esc(f.n)}</div><div class="food-d">${esc(f.d)}</div><div class="food-w">${p?`${NAME[p.who]}がゲット（DAY${p.day||"?"}）`:`どこで：${esc(f.w)}`}</div></div>
+      <div class="food-in"><div class="food-n">${esc(f.n)}</div><div class="food-d">${esc(f.d)}</div><div class="food-w">${p?`${NAME[p.who]}がゲット${p.day?`（DAY${p.day}）`:""}`:`どこで：${esc(f.w)}`}</div></div>
     </div>`}).join("")}</div>
   <div class="treasure" style="margin-top:14px"><svg viewBox="0 0 64 56" aria-hidden="true"><ellipse cx="32" cy="40" rx="26" ry="10" fill="#fff" stroke="#23314f" stroke-width="3"/><path d="M14 38 q18 -30 36 0" fill="#ffb347" stroke="#23314f" stroke-width="3"/><circle cx="24" cy="30" r="3" fill="#ee4b3a"/><circle cx="36" cy="26" r="3" fill="#3fae49"/><circle cx="42" cy="33" r="3" fill="#ffd23f"/></svg>
     <div><h3 style="font-size:17px">${all?"沖縄グルメマスター！":"コンプリートすると…"}</h3><div class="small muted">${all?`${FOODS.length}品ぜんぶ制覇。リザルトに「グルメマスター」の称号がつきます。`:`${FOODS.length}品ぜんぶ食べると「グルメマスター」、半分で「食いしんぼうペア」の称号がつきます。`}</div></div></div>`;
@@ -930,9 +946,10 @@ $("#v-zukan").addEventListener("click",e=>{
   else if(t.dataset.fopen){const list=S.photos.filter(p=>p.food);openLB(list,list.findIndex(p=>p.id===t.dataset.fopen))}
 });
 $("#f-food").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingFood)return;
-  const fd=FOODBY[pendingFood];toast(`「${fd.n}」をアップロード中…`);const day=tripDay()>=1&&tripDay()<=6?tripDay():0;
-  try{await uploadPhoto(f,{food:pendingFood,day});confetti();beep("stamp");say(S.who||"sai",`${fd.n}ゲット！`);
-    if(FOODS.every(x=>foodPhoto(x.id)))setTimeout(()=>{beep("open");cheer("グルメマスター！","ぜんぶ食べた〜！")},600)}catch(err){upErr(err)}});
+  const id=pendingFood,fd=FOODBY[id];if(!fd)return;S.busy=S.busy||{};if(S.busy["food:"+id])return;S.busy["food:"+id]=true;if(S.view==="zukan")renderZukan();toast(`「${fd.n}」をアップロード中…`);const day=tripDay()>=1&&tripDay()<=6?tripDay():0;
+  try{await uploadPhoto(f,{food:id,day});confetti();beep("stamp");say(S.who||"sai",`${fd.n}ゲット！`);
+    if(FOODS.every(x=>foodPhoto(x.id)))setTimeout(()=>{beep("open");cheer("グルメマスター！","ぜんぶ食べた〜！")},600)}catch(err){upErr(err)}
+  finally{delete S.busy["food:"+id];if(S.view==="zukan")safeRender()}});
 function dayPicker(sel,attr){const td=tripDay();return `<div class="daytabs">${DAYS().map(d=>`<button class="${d.n===td?"today":""} ${bdayOf(d)?"bday-tab":""}" style="--c:${DC(d.n)}" data-${attr}="${d.n}" aria-pressed="${d.n===sel}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>`}
 
 /* ---------- ステータス（Lv・仲良し度） ---------- */
@@ -1006,7 +1023,8 @@ function mapSVG(sel,o={}){
     castle:`<path d="M-11 9 L-11 -1 L-7 -7 L7 -7 L11 -1 L11 9z" fill="#ee4b3a" stroke="#23314f" stroke-width="1.6" stroke-linejoin="round"/><rect x="-3" y="1" width="6" height="8" fill="#fff6e3" stroke="#23314f" stroke-width="1.2"/>`};
   const marks=LANDMARKS.map(l=>`<g class="lm" transform="translate(${f(MX(l.lng))} ${f(MY(l.lat))}) scale(${f(k)})"><circle r="16" fill="#fff" stroke="#23314f" stroke-width="2"/>${glyph[l.k]}</g>`).join("");
   // ピン：全日の予定（座標があるもの）
-  const pins=[];for(const d of days){(d.stops||[]).forEach((s,i)=>{const c=coordOf(s);if(!c)return;pins.push({d:d.n,i,s,c,x:MX(c.lng),y:MY(c.lat)})})}
+  const pins=[];for(const d of days){let no=0;(d.stops||[]).forEach((s,i)=>{const c=coordOf(s);if(!c)return;no++;pins.push({d:d.n,i:no-1,s,c,x:MX(c.lng),y:MY(c.lat)})})}
+  const sid=o.pick?"pk":"mn";
   const selPins=pins.filter(p=>p.d===sel),otherPins=pins.filter(p=>p.d!==sel);
   // 近すぎるピン同士は少し離して描く（同じ場所に2つあっても両方見えるように）
   for(let it=0;it<6;it++){for(let i=0;i<selPins.length;i++)for(let j=i+1;j<selPins.length;j++){const a=selPins[i],b=selPins[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);const min=26*k;
@@ -1029,22 +1047,22 @@ function mapSVG(sel,o={}){
       let sc=0;for(const o of boxes)sc+=overlap(b,o);const out=Math.max(0,vx+4*k-b.x0)+Math.max(0,b.x1-(vx+vw-4*k))+Math.max(0,vy+4*k-b.y0)+Math.max(0,b.y1-(vy+vh-4*k));sc+=out*th;
       if(!best||sc<best.sc)best={...c,b,sc};if(sc===0)break}
     boxes.push(best.b);return {...p,focus,fs,name,lx:best.x,ly:best.y,anchor:best.a}});
-  const otherHTML=otherPins.map(p=>`<g class="pin other" data-pin="${p.d}:${p.s.id}"><title>DAY${p.d}：${esc(p.s.n)}</title><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f((p.s.stamp?8:6)*k)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(2.5*k)}"/></g>`).join("");
+  const otherHTML=otherPins.map(p=>`<g class="pin other" data-pin="${p.d}:${p.s.id}"><title>DAY${p.d}：${esc(p.s.n)}</title><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(16*k)}" fill="transparent"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f((p.s.stamp?8:6)*k)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(2.5*k)}"/></g>`).join("");
   const selHTML=labels.map(p=>{const r=pinR(p);
     return `<g class="pin sel ${p.focus?"focus":""}" data-pin="${p.d}:${p.s.id}" tabindex="0" role="button" aria-label="${esc(p.s.n)}">
-      <circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(3.5*k)}"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="none" stroke="#23314f" stroke-width="${f(1.5*k)}"/>
+      <circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(Math.max(r*1.8,22*k))}" fill="transparent"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(3.5*k)}"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="none" stroke="#23314f" stroke-width="${f(1.5*k)}"/>
       <text class="no" x="${f(p.x)}" y="${f(p.y+5.5*k)}">${p.i+1}</text>
       <text class="lb" x="${f(p.lx)}" y="${f(p.ly)}" text-anchor="${p.anchor}">${esc(p.name)}</text></g>`}).join("");
   const pick=o.pick?`<g class="pickpin" transform="translate(${f(MX(o.pick.lng))} ${f(MY(o.pick.lat))}) scale(${f(k)})"><circle r="30" class="me-ring"/><path d="M0 2 C-14 -16 -14 -34 0 -34 C14 -34 14 -16 0 2z" fill="#ee4b3a" stroke="#fff" stroke-width="3.5"/><path d="M0 2 C-14 -16 -14 -34 0 -34 C14 -34 14 -16 0 2z" fill="none" stroke="#23314f" stroke-width="1.5"/><circle cy="-21" r="6" fill="#fff" stroke="#23314f" stroke-width="1.5"/></g>`:"";
-  const me=S.me?`<g class="me" transform="translate(${f(MX(S.me.lng))} ${f(MY(S.me.lat))}) scale(${f(k)})"><circle r="26" class="me-ring"/><circle r="17" fill="#fff" stroke="#23314f" stroke-width="2.5"/><clipPath id="meclip"><circle r="15"/></clipPath><image href="${MII[S.who||"sai"]}" x="-15" y="-16" width="30" height="42" clip-path="url(#meclip)" preserveAspectRatio="xMidYMin slice"/><text class="lb" x="22" y="6">いまここ</text></g>`:"";
+  const me=S.me?`<g class="me" transform="translate(${f(MX(S.me.lng))} ${f(MY(S.me.lat))}) scale(${f(k)})"><circle r="26" class="me-ring"/><circle r="17" fill="#fff" stroke="#23314f" stroke-width="2.5"/><clipPath id="meclip-${sid}"><circle r="15"/></clipPath><image href="${MII[S.who||"sai"]}" x="-15" y="-16" width="30" height="42" clip-path="url(#meclip-${sid})" preserveAspectRatio="xMidYMin slice"/><text class="lb" x="22" y="6">いまここ</text></g>`:"";
   const inset=full?`<text class="ttl" x="${f(vx+24)}" y="${f(vy+58)}">OKINAWA</text><text class="ttl2" x="${f(vx+26)}" y="${f(vy+82)}">沖縄本島 ・ 5泊6日</text>`:
     `<svg class="inset" tabindex="0" x="${f(vx+10*k)}" y="${f(vy+10*k)}" width="${f(150*k)}" height="${f(188*k)}" viewBox="20 60 740 930" role="button" aria-label="島ぜんたいを見る"><title>島ぜんたいを見る</title>
       <rect x="20" y="60" width="740" height="930" rx="60" fill="#0e7f9b" stroke="#fff" stroke-width="14"/><g fill="#8fd654" stroke="#fff" stroke-width="5">${land}</g>
       <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" rx="24" fill="rgba(255,255,255,.25)" stroke="#ffd23f" stroke-width="16"/></svg>`;
-  return `<svg class="okimap ${full?"full":"zoom"}" viewBox="${vb.join(" ")}" style="--k:${f(k)}" role="img" aria-label="沖縄本島の地図と旅の行き先">
-    <defs><linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fb9d6"/><stop offset="1" stop-color="#17a2c4"/></linearGradient>
-      <pattern id="wav" width="${f(90*k)}" height="${f(70*k)}" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><g transform="scale(${f(k)})"><path d="M8 20 q7 -8 14 0 M50 48 q7 -8 14 0 M70 12 q6 -7 12 0" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/></g></pattern></defs>
-    <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#seaG)"/><rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#wav)"/>
+  return `<svg class="okimap ${full?"full":"zoom"}" viewBox="${vb.join(" ")}" style="--k:${f(k)}" role="group" aria-label="沖縄本島の地図と旅の行き先">
+    <defs><linearGradient id="seaG-${sid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fb9d6"/><stop offset="1" stop-color="#17a2c4"/></linearGradient>
+      <pattern id="wav-${sid}" width="${f(90*k)}" height="${f(70*k)}" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><g transform="scale(${f(k)})"><path d="M8 20 q7 -8 14 0 M50 48 q7 -8 14 0 M70 12 q6 -7 12 0" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/></g></pattern></defs>
+    <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#seaG-${sid})"/><rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#wav-${sid})"/>
     <g fill="none" stroke="#9fe7e9" stroke-width="${f(30*k)}" stroke-linejoin="round" opacity=".75">${land}</g>
     <g fill="none" stroke="#fbe7b5" stroke-width="${f(9*k)}" stroke-linejoin="round">${land}</g>
     <g fill="#8fd654" stroke="#5aa83f" stroke-width="${f(3*k)}" stroke-linejoin="round">${land}</g>
@@ -1058,12 +1076,14 @@ function mapSVG(sel,o={}){
   </svg>`;
 }
 function mapCtrlHTML(){return mapCtrlHTMLFor(MAIN_CTL)}
-function redrawMap(){const m=document.querySelector("#v-plan .map");if(!m)return;m.innerHTML=mapSVG(S.planDay)+mapCtrlHTML();initMapGestures(m);S.mapVB=m.querySelector(".okimap")?.getAttribute("viewBox")||S.mapVB}
+function redrawMap(){const m=document.querySelector("#v-plan .map");if(!m)return;m.innerHTML=mapSVG(S.planDay)+mapCtrlHTML();initMapGestures(m);S.mapVB=m.querySelector(".okimap")?.getAttribute("viewBox")||S.mapVB;const z=$("#mapzoom");if(z)z.textContent=S.mapAll?"この日にズーム":"島ぜんたい"}
 const MAIN_CTL={touch:()=>!!S.mapTouch,commit:vb=>{S.mapView=vb;S.mapAll=false;redrawMap()},reset:()=>{S.mapView=null;S.mapAll=false;redrawMap()},
   toggleTouch:()=>{S.mapTouch=!S.mapTouch;redrawMap();toast(S.mapTouch?"指で動かしたり、2本指で広げたりできます":"ふつうの表示にもどしました")},
   tap:(e,el)=>{const pin=el?.closest?.(".pin");if(pin){pinTap(pin);return true}if(el?.closest?.(".inset")){beep("tap");S.mapAll=true;S.mapView=null;renderPlan();return true}return false}};
 function initMapGestures(m,ctl=MAIN_CTL){
   const svg=m.querySelector("svg.okimap");if(!svg)return;m.ctl=ctl;
+  m._gest?.abort();const ac=m._gest=new AbortController(),sig={signal:ac.signal};   // 前のリスナーを必ず外す
+  S.mapDragUntil=0;
   m.classList.toggle("touchmode",!!ctl.touch());
   const P=new Map();let st=null,moved=false,wheelT=null,lastTap=0,lastTapAt=null;
   const getVB=()=>svg.getAttribute("viewBox").split(" ").map(Number),setVB=v=>svg.setAttribute("viewBox",v.join(" "));
@@ -1073,23 +1093,26 @@ function initMapGestures(m,ctl=MAIN_CTL){
   m.zoomAt=zoomAt;m.commit=commit;m.toSvg=(cx,cy)=>toSvg(cx,cy,getVB());
   const begin=()=>{const pts=[...P.values()];const c=pts.length>=2?[(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2]:pts[0];const vb=getVB();st={vb,c,s0:toSvg(c[0],c[1],vb),d:pts.length>=2?Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]):0}};
   m.addEventListener("pointerdown",e=>{if(e.target.closest(".map-ctrl"))return;if(e.pointerType==="touch"&&!ctl.touch())return;if(e.pointerType==="mouse"&&e.button!==0)return;
-    try{m.setPointerCapture(e.pointerId)}catch{}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===1)moved=false;begin()});
+    if(S.mapAnim){cancelAnimationFrame(S.mapAnim);S.mapAnim=null}
+    try{m.setPointerCapture(e.pointerId)}catch{}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===1)moved=false;begin()},sig);
   m.addEventListener("pointermove",e=>{if(!P.has(e.pointerId)||!st)return;P.set(e.pointerId,[e.clientX,e.clientY]);const pts=[...P.values()];const r=svg.getBoundingClientRect();
     const c=pts.length>=2?[(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2]:pts[0];const d=pts.length>=2?Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]):0;
-    if(Math.hypot(c[0]-st.c[0],c[1]-st.c[1])>5||(st.d&&Math.abs(d-st.d)>5))moved=true;if(!moved)return;S.mapDragging=true;
+    if(Math.hypot(c[0]-st.c[0],c[1]-st.c[1])>5||(st.d&&Math.abs(d-st.d)>5))moved=true;if(!moved)return;S.mapDragUntil=Date.now()+600;
     let f=(st.d&&d)?d/st.d:1;let w=st.vb[2]/f;w=Math.max(MAP_MINW,Math.min(MAP_MAXW,w));f=st.vb[2]/w;const h=st.vb[3]/f;
-    setVB(clampView([st.s0[0]-(c[0]-r.left)/r.width*w,st.s0[1]-(c[1]-r.top)/r.height*h,w,h]))});
+    setVB(clampView([st.s0[0]-(c[0]-r.left)/r.width*w,st.s0[1]-(c[1]-r.top)/r.height*h,w,h]))},sig);
   const end=e=>{if(!P.has(e.pointerId))return;P.delete(e.pointerId);
     if(P.size){begin();return}
-    st=null;if(moved){setTimeout(()=>{S.mapDragging=false},50);commit();return}
+    st=null;if(e.type==="pointercancel"){if(moved)commit();return}
+    if(moved){S.mapDragUntil=Date.now()+300;commit();return}
     // 動かしていなければタップ扱い（ポインターキャプチャ中は click がピンに届かないので自前で）
     const el=document.elementFromPoint(e.clientX,e.clientY);m._tapAt=Date.now();if(ctl.tap(e,el))return;
     // ダブルタップで拡大
     const now=Date.now();if(now-lastTap<320&&lastTapAt&&Math.hypot(e.clientX-lastTapAt[0],e.clientY-lastTapAt[1])<30){lastTap=0;zoomAt(e.clientX,e.clientY,1.8);commit()}else{lastTap=now;lastTapAt=[e.clientX,e.clientY]}};
-  m.addEventListener("pointerup",end);m.addEventListener("pointercancel",end);
+  m.addEventListener("pointerup",end,sig);m.addEventListener("pointercancel",end,sig);
   // ポインターで処理したタップの直後に来る click は二重処理しない
-  m.addEventListener("click",e=>{if(Date.now()-(m._tapAt||0)<600&&!e.target.closest(".map-ctrl")){e.stopPropagation();e.preventDefault()}},true);
-  m.addEventListener("wheel",e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.18:1/1.18);clearTimeout(wheelT);wheelT=setTimeout(commit,220)},{passive:false});
+  m.addEventListener("click",e=>{if(Date.now()-(m._tapAt||0)<600&&!e.target.closest(".map-ctrl")){e.stopPropagation();e.preventDefault()}},{capture:true,signal:ac.signal});
+  // ホイール：Ctrl（Macのトラックピッチ）か「動かす」モードのときだけ拡大縮小（ふつうのスクロールを邪魔しない）
+  m.addEventListener("wheel",e=>{if(!(e.ctrlKey||e.metaKey||ctl.touch()))return;e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.18:1/1.18);clearTimeout(wheelT);wheelT=setTimeout(commit,220)},{passive:false,signal:ac.signal});
 }
 document.addEventListener("click",e=>{const mz=e.target.closest("[data-mz]");if(!mz)return;const m=mz.closest(".map");if(!m||!m.ctl)return;const r=m.getBoundingClientRect();beep("tap");
   if(mz.dataset.mz==="in"){m.zoomAt(r.left+r.width/2,r.top+r.height/2,1.5);m.commit()}else if(mz.dataset.mz==="out"){m.zoomAt(r.left+r.width/2,r.top+r.height/2,1/1.5);m.commit()}
@@ -1100,8 +1123,8 @@ function animateMap(){
   const svg=document.querySelector(".okimap");if(!svg)return;const vb=svg.getAttribute("viewBox");
   if(S.mapVB&&S.mapVB!==vb&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
     const a=S.mapVB.split(" ").map(Number),b=vb.split(" ").map(Number),t0=performance.now();
-    const step=now=>{const u=Math.min(1,(now-t0)/520),e=1-Math.pow(1-u,3);svg.setAttribute("viewBox",a.map((v,i)=>v+(b[i]-v)*e).join(" "));if(u<1&&svg.isConnected)requestAnimationFrame(step)};
-    requestAnimationFrame(step);
+    const step=now=>{const u=Math.min(1,(now-t0)/520),e=1-Math.pow(1-u,3);svg.setAttribute("viewBox",a.map((v,i)=>v+(b[i]-v)*e).join(" "));S.mapAnim=(u<1&&svg.isConnected)?requestAnimationFrame(step):null};
+    if(S.mapAnim)cancelAnimationFrame(S.mapAnim);S.mapAnim=requestAnimationFrame(step);
   }
   S.mapVB=vb;
 }
@@ -1110,7 +1133,7 @@ async function locateMe(){
   toast("位置を調べています…");
   navigator.geolocation.getCurrentPosition(pos=>{const {latitude:lat,longitude:lng}=pos.coords;
     if(lat<25.9||lat>27||lng<127.5||lng>128.5){toast("沖縄本島の外にいるみたい。旅行中にまた試してね");return}
-    S.me={lat,lng,at:Date.now()};renderPlan();beep("tap")},err=>{toast(err.code===1?"位置情報の許可が必要です":"位置を取得できませんでした")},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+    S.me={lat,lng,at:Date.now()};redrawMap();beep("tap");const vb=dayBox(S.planDay);const x=MX(lng),y=MY(lat);if(x<vb[0]||x>vb[0]+vb[2]||y<vb[1]||y>vb[1]+vb[3])toast("いまの表示範囲の外にいます。「島ぜんたい」で見えます")},err=>{toast(err.code===1?"位置情報の許可が必要です":"位置を取得できませんでした")},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
 }
 async function geocodeMissing(){
   if(S.geocoded||!S.plan||!S.db||!navigator.onLine)return;S.geocoded=true;const found={};
@@ -1142,8 +1165,8 @@ function renderPlan(){
         <div class="inner">
           ${bdayOf(d)?`<div class="bday">${CAKE()}<div><b>${NAME[bdayOf(d)]}の誕生日！</b><span>今日の主役は${NAME[bdayOf(d)]}。ガチャには誕生日のお題が出ます</span></div>${CAKE("r")}</div>`:""}
           ${sun?`<div class="sunrow"><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="5" fill="#ffd23f" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M12 3v3M5 7l2 2M19 7l-2 2" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の出 ${sun[0]}</span><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="5" fill="#ff8a5c" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M8 21h8" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の入り ${sun[1]}</span><span class="sr">${moonSVG(sun[2])}${moonName(sun[2])}${d.n===6?"（最終日の夜はほぼ満月）":""}</span></div>`:""}
-          <ul class="stops">${(d.stops||[]).map((s,i,arr)=>{const prev=i?coordOf(arr[i-1]):null,cur=coordOf(s);const dr=prev&&cur?driveEstimate(prev,cur):null;
-            return `${dr?`<li class="drive"><span class="t"></span><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg>車で約${minText(dr.min)}・${dr.km}km（目安）</div></li>`:""}<li class="${S.mapFocus===s.id?"focus":""}" data-stop="${s.id}"><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}${!coordOf(s)&&(s.stamp||s.q)?`<span class="st-badge off">地図の位置なし</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリでひらく</a>`:""}</div></li>`}).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
+          <ul class="stops">${(()=>{let last=null,no=0;return (d.stops||[]).map((s,i,arr)=>{const cur=coordOf(s);const dr=last&&cur?driveEstimate(last,cur):null;if(cur){last=cur;no++}const link=stopMapUrl(s);
+            return `${dr?`<li class="drive"><span class="t"></span><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg>車で約${minText(dr.min)}・${dr.km}km（目安）</div></li>`:""}<li class="${S.mapFocus===s.id?"focus":""}" data-stop="${s.id}"><span class="t">${esc(s.t)}</span><div><div class="n">${cur?`<span class="pno" style="background:${DC(d.n)}">${no}</span>`:""}${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}${!cur&&(s.stamp||s.q)?`<span class="st-badge off">地図の位置なし</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${link?`<a href="${link}" target="_blank" rel="noopener">地図アプリでひらく</a>`:""}</div></li>`}).join("")})()||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
           ${driveTotalHTML(d)}
           ${(fl||d.stay||d.hotel)?`<div class="infobox">${fl?`<div class="row"><span class="k">${d.n===1?"行きの飛行機":"帰りの飛行機"}</span><span class="v">${d.flight?esc(d.flight):`<span class="muted">便名と時間を入れてね</span>`}</span></div>`:""}${(d.stay||d.hotel)?`<div class="row"><span class="k">今夜の宿</span><span class="v">${d.hotel?esc(d.hotel):`<span class="muted">${esc(d.stay)}エリア（ホテル名を入れてね）</span>`}</span></div>`:""}</div>`:""}
         </div>
@@ -1170,15 +1193,17 @@ function itemsHTML(){
   </div>`;
 }
 async function saveItems(items){try{await S.db.doc("prep/items").set({items,at:Date.now()})}catch(err){writeErr(err)}}
+const stopMapUrl=s=>{const c=coordOf(s);return (s.pinned&&c)?mapUrl(`${c.lat},${c.lng}`):s.q?mapUrl(s.q):c?mapUrl(`${c.lat},${c.lng}`):""};
+const stopNo=(d,id)=>{let n=0;for(const s of (d.stops||[])){if(coordOf(s))n++;if(s.id===id)return coordOf(s)?n:0}return 0};
 function driveTotalHTML(d){
-  let km=0,min=0,n=0;const st=d.stops||[];for(let i=1;i<st.length;i++){const a=coordOf(st[i-1]),b=coordOf(st[i]);if(a&&b){const e=driveEstimate(a,b);km+=e.km;min+=e.min;n++}}
+  let km=0,min=0,n=0,prev=null;for(const s of (d.stops||[])){const c=coordOf(s);if(prev&&c){const e=driveEstimate(prev,c);km+=e.km;min+=e.min;n++}if(c)prev=c}
   if(!n)return "";
   return `<div class="drive-total"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg><div>この日の運転はぜんぶで 約${minText(min)}・${km}km くらい <span class="muted">（渋滞や寄り道でもっとかかることも）</span></div></div>`;
 }
 function focusHTML(){
   if(!S.mapFocus)return `<div class="map-hint small muted">ピンを押すと、その場所の予定が出ます。</div>`;
   for(const d of DAYS()){const i=(d.stops||[]).findIndex(s=>s.id===S.mapFocus);if(i>=0){const s=d.stops[i];
-    return `<div class="map-focus" style="--c:${DC(d.n)}"><span class="fno">DAY${d.n}・${i+1}</span><div class="ft"><b>${esc(s.n)}</b><span>${esc(s.t)}${s.d?`　${esc(s.d)}`:""}</span></div>${s.q?`<a class="btn mini" href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリ</a>`:""}</div>`}}
+    const no=stopNo(d,s.id),link=stopMapUrl(s);return `<div class="map-focus" style="--c:${DC(d.n)}"><span class="fno">DAY${d.n}${no?`・${no}`:""}</span><div class="ft"><b>${esc(s.n)}</b><span>${esc(s.t)}${s.d?`　${esc(s.d)}`:""}</span></div>${link?`<a class="btn mini" href="${link}" target="_blank" rel="noopener">地図アプリ</a>`:""}</div>`}}
   return "";
 }
 function gachaHTML(d){
@@ -1198,7 +1223,7 @@ function gachaHTML(d){
       <svg class="machine" id="cap" viewBox="0 0 80 100" aria-hidden="true"><g class="globe"><circle cx="40" cy="36" r="30" fill="#e9fbfb" stroke="#23314f" stroke-width="4"/><circle cx="28" cy="40" r="8" fill="#ffd23f" stroke="#23314f" stroke-width="2"/><circle cx="46" cy="46" r="8" fill="#13b5c8" stroke="#23314f" stroke-width="2"/><circle cx="40" cy="26" r="8" fill="#ff5c93" stroke="#23314f" stroke-width="2"/><circle cx="54" cy="30" r="7" fill="#3fae49" stroke="#23314f" stroke-width="2"/><path d="M22 22 q6 -8 14 -10" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g><path d="M14 62 h52 l6 34 h-64z" fill="#ffd23f" stroke="#23314f" stroke-width="4" stroke-linejoin="round"/><circle cx="40" cy="78" r="8" fill="#fff" stroke="#23314f" stroke-width="3"/><path d="M36 78 h8" stroke="#23314f" stroke-width="3"/></svg>
       <div style="display:grid;gap:6px">${action}</div></div>
     <div class="mission-list">${list}${tr}</div>
-    <div class="hint">この日の予定（${[...dayTags(d)].filter(t=>t!=="drive"&&t!=="hotel").length?"行き先に合わせた"+pool.day.length+"種類":"どこでもできる"}＋どこでもできる${pool.any.length}種類）から出ます。1回目は行き先のお題が出やすいよ。</div></div>`;
+    <div class="hint">${[...dayTags(d)].filter(t=>t!=="drive"&&t!=="hotel").length?`この日の行き先に合わせたお題${pool.day.length}種類＋どこでもできるお題${pool.any.length}種類から出ます。1回目は行き先のお題が出やすいよ。`:`どこでもできるお題${pool.any.length}種類から出ます（行き先を入れると、その場所ならではのお題も出ます）。`}</div></div>`;
 }
 function pickMission(d,draws,first){
   const pool=poolFor(d),used=new Set(draws.map(x=>x.id));
@@ -1207,10 +1232,10 @@ function pickMission(d,draws,first){
   let cand=(first&&bC.length)?bC:(first&&dayC.length)?dayC:(Math.random()<.5&&dayC.length?dayC:anyC);if(!cand.length)cand=dayC.length?dayC:anyC;
   return cand[Math.floor(Math.random()*cand.length)];
 }
-function pinTap(pin){if(S.mapDragging)return;const [d,id]=pin.dataset.pin.split(":");beep("tap");if(+d!==S.planDay)S.mapView=null;S.planDay=+d;S.mapFocus=S.mapFocus===id?null:id;S.trial=null;renderPlan();
+function pinTap(pin){if(Date.now()<(S.mapDragUntil||0))return;const [d,id]=pin.dataset.pin.split(":");beep("tap");if(+d!==S.planDay)S.mapView=null;S.planDay=+d;S.mapFocus=S.mapFocus===id?null:id;S.trial=null;renderPlan();
   const li=document.querySelector(`.stops li[data-stop="${CSS.escape(id)}"]`);if(li&&innerWidth<700)li.scrollIntoView({block:"center",behavior:"smooth"})}
 $("#v-plan").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const p=e.target.closest(".pin");if(p){e.preventDefault();pinTap(p);return}
-  if(e.target.closest(".inset")){e.preventDefault();S.mapAll=true;renderPlan()}});
+  if(e.target.closest(".inset")){e.preventDefault();S.mapAll=true;S.mapView=null;renderPlan()}});
 $("#v-plan").addEventListener("click",async e=>{
   const pin=e.target.closest(".pin");if(pin){pinTap(pin);return}
   if(e.target.closest(".inset")){beep("tap");S.mapAll=true;S.mapView=null;renderPlan();return}
@@ -1249,9 +1274,11 @@ $("#v-plan").addEventListener("submit",async e=>{
 function spin(after){const c=$("#cap");if(c){c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}setTimeout(after,matchMedia("(prefers-reduced-motion:reduce)").matches?0:700)}
 
 /* ---------- 行程エディター ---------- */
+const inOkinawaMain=(lat,lng)=>lat>25.9&&lat<27.0&&lng>127.2&&lng<128.5;
 async function geocode(q){
-  try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=jp&accept-language=ja&q="+encodeURIComponent(q+" 沖縄県"));const j=await r.json();
-    if(j&&j[0]){const lat=+j[0].lat,lng=+j[0].lon;if(lat>24&&lat<27.5&&lng>122&&lng<129)return {lat,lng}}}catch(e){console.warn("geocode",e)}
+  try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=jp&accept-language=ja&viewbox=126.6,27.2,128.6,25.9&bounded=1&q="+encodeURIComponent(q),{signal:AbortSignal.timeout?AbortSignal.timeout(8000):undefined});
+    if(!r.ok)return null;const j=await r.json();
+    if(j&&j[0]){const lat=+j[0].lat,lng=+j[0].lon;if(inOkinawaMain(lat,lng))return {lat,lng}}}catch(e){console.warn("geocode",e)}
   return null;
 }
 /* ---------- 場所をきめる（検索・貼りつけ・地図タップ） ---------- */
@@ -1264,7 +1291,7 @@ function parseLatLng(s){s=String(s||"").trim();if(!s)return null;
 }
 async function searchPlaces(q){
   const u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ja&countrycodes=jp&viewbox=126.6,27.2,128.6,25.9&bounded=1&q="+encodeURIComponent(q);
-  const r=await fetch(u);if(!r.ok)throw new Error("search "+r.status);const j=await r.json();
+  const r=await fetch(u,{signal:AbortSignal.timeout?AbortSignal.timeout(10000):undefined});if(!r.ok)throw new Error("search "+r.status);const j=await r.json();
   return (j||[]).map(x=>{const name=x.name||String(x.display_name||"").split(",")[0];const addr=String(x.display_name||"").split(",").map(s=>s.trim()).filter(s=>s&&s!==name&&!/^\d{3}-?\d{4}$/.test(s)&&s!=="日本").slice(0,4).reverse().join(" ");return {name,addr,lat:+x.lat,lng:+x.lon}});
 }
 function openPicker(i){
@@ -1283,28 +1310,33 @@ function openPicker(i){
   </div></div>`;
   drawPick();
   $("#pk-close").onclick=()=>{$("#layer2").innerHTML=""};
-  $("#pk-form").onsubmit=async e=>{e.preventDefault();const q=$("#pk-q").value.trim();if(!q)return;const box=$("#pk-results");box.innerHTML=`<div class="small muted">さがしています…</div>`;
+  $("#pk-form").onsubmit=async e=>{e.preventDefault();const q=$("#pk-q").value.trim();if(!q||PK.searching)return;const box=$("#pk-results");box.innerHTML=`<div class="small muted">さがしています…</div>`;PK.searching=true;const go=$("#pk-go");if(go)go.disabled=true;
     try{const rs=await searchPlaces(q);if(!rs.length){box.innerHTML=`<div class="small muted">見つかりませんでした。別の言い方（例：「〇〇 恩納村」）にするか、地図をタップして置いてね</div>`;return}
-      box.innerHTML=rs.map((r,j)=>`<button type="button" class="pk-hit" data-hit="${j}"><b>${esc(r.name)}</b><small>${esc(r.addr)}</small></button>`).join("");
+      box.innerHTML=rs.map((r,j)=>`<button type="button" class="pk-hit" data-hit="${j}"><b>${esc(r.name)}</b><small>${esc(r.addr)}</small></button>`).join("")+`<div class="small muted" style="font-size:10.5px">検索結果：© OpenStreetMap contributors</div>`;
       box.querySelectorAll("[data-hit]").forEach(b=>b.onclick=()=>{const r=rs[+b.dataset.hit];PK.pick={lat:r.lat,lng:r.lng};PK.name=r.name;PK.view=clampView([MX(r.lng)-60,MY(r.lat)-75,120,151]);box.querySelectorAll(".pk-hit").forEach(x=>x.classList.toggle("on",x===b));beep("tap");drawPick()})}
-    catch(err){console.warn(err);box.innerHTML=`<div class="small muted">検索できませんでした（電波かOpenStreetMapの混雑）。地図をタップして置くか、座標を貼ってね</div>`}};
+    catch(err){console.warn(err);box.innerHTML=`<div class="small muted">検索できませんでした（電波かOpenStreetMapの混雑）。地図をタップして置くか、座標を貼ってね</div>`}
+    finally{PK.searching=false;const g=$("#pk-go");if(g)g.disabled=false}};
+  $("#pk-paste").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#pk-paste-go").click()}};
   $("#pk-paste-go").onclick=()=>{const r=parseLatLng($("#pk-paste").value);if(!r){toast("座標かリンクを貼ってね");return}if(r.err){toast(r.err);return}PK.pick=r;PK.view=clampView([MX(r.lng)-60,MY(r.lat)-75,120,151]);beep("tap");drawPick()};
   $("#pk-clear")?.addEventListener("click",()=>{const st=S.editing.stops[PK.i];delete st.lat;delete st.lng;delete st.pinned;if(COORDS[st.id])st.noDefault=true;$("#layer2").innerHTML="";drawEditor();toast("地図の位置をなくしました")});
   $("#pk-ok").onclick=()=>{if(!PK.pick){toast("まず地図に場所を置いてね");return}const st=S.editing.stops[PK.i];st.lat=+PK.pick.lat.toFixed(5);st.lng=+PK.pick.lng.toFixed(5);st.pinned=true;delete st.noDefault;if(!st.q&&PK.name)st.q=PK.name;
     $("#layer2").innerHTML="";drawEditor();beep("clear");toast("地図に置きました。「保存する」で確定します")};
 }
 const PICK_CTL={touch:()=>true,commit:vb=>{PK.view=vb;drawPick()},reset:()=>{PK.view=PK.pick?clampView([MX(PK.pick.lng)-60,MY(PK.pick.lat)-75,120,151]):null;drawPick()},
-  tap:(e,el)=>{const m=document.querySelector("#pk-map");if(!m)return false;const [sx,sy]=m.toSvg(e.clientX,e.clientY);PK.pick={lat:ILAT(sy),lng:ILNG(sx)};PK.name="";beep("tap");drawPick();return true}};
+  tap:(e,el)=>{const m=document.querySelector("#pk-map");if(!m)return false;if(el?.closest?.(".inset")){PK.view=MAP_FULL;beep("tap");drawPick();return true}const [sx,sy]=m.toSvg(e.clientX,e.clientY);PK.pick={lat:ILAT(sy),lng:ILNG(sx)};PK.name="";beep("tap");drawPick();return true}};
 function drawPick(){const m=$("#pk-map");if(!m)return;const day=S.editing?.n||S.planDay;
   m.innerHTML=mapSVG(day,{view:PK.view||dayBox(day,true),pick:PK.pick})+mapCtrlHTMLFor(PICK_CTL);initMapGestures(m,PICK_CTL);
   const st=$("#pk-state");if(st)st.innerHTML=PK.pick?`ピンの位置：${PK.pick.lat.toFixed(4)}, ${PK.pick.lng.toFixed(4)}${PK.name?`（${esc(PK.name)}）`:""}`:`まだ置いていません`;
   const ok=$("#pk-ok");if(ok)ok.disabled=!PK.pick;
 }
 function openEditor(n){
-  const d=JSON.parse(JSON.stringify(DAYS()[n-1]));S.editing=d;drawEditor();
+  const d=JSON.parse(JSON.stringify(DAYS()[n-1]));S.editing=d;S.editingOrig=JSON.stringify(d);S.saving=false;drawEditor();
 }
+function closeEditor(){if($(".editor")){try{collectEditor()}catch(e){console.warn(e)}}if(editorDirty()&&!S.edCloseArm){S.edCloseArm=true;toast("保存していない変更があります。消してよければ、もう一度×を押してね");setTimeout(()=>{S.edCloseArm=false},4000);return}S.edCloseArm=false;S.editing=null;drawEditor()}
+function editorDirty(){return !!S.editing&&JSON.stringify(S.editing)!==S.editingOrig}
 function drawEditor(){
   const d=S.editing;if(!d){$("#layer").innerHTML="";return}
+  const sc=$(".editor")?.scrollTop||0;
   const f=(k,label,ph="")=>`<label class="fld"><span>${label}</span><input data-k="${k}" value="${esc(d[k]||"")}" placeholder="${esc(ph)}" maxlength="120"></label>`;
   $("#layer").innerHTML=`<div class="modal"><div class="box editor" style="--c:${DC(d.n)}">
     <div class="ed-head"><h2>DAY${d.n} の予定を編集</h2><button class="x" id="ed-close" aria-label="とじる">×</button></div>
@@ -1319,15 +1351,16 @@ function drawEditor(){
     <button class="btn ghost" id="ed-add">＋ 予定を追加</button>
     <div class="ed-foot"><span class="small muted">ミッションガチャとスタンプラリーは、ここに書いた行き先に合わせて自動で変わります。</span><button class="btn sea" id="ed-save">保存する</button></div>
   </div></div>`;
+  const box=$(".editor");if(box&&sc)box.scrollTop=sc;
 }
 function collectEditor(){
   const d=S.editing,box=$(".editor");box.querySelectorAll("input[data-k],textarea[data-k]").forEach(i=>d[i.dataset.k]=i.value.trim());
   d.stops=[...box.querySelectorAll(".ed-stop")].map((el,i)=>{const o=d.stops[i]||{id:"x"+uid()};el.querySelectorAll("[data-s]").forEach(inp=>{const v=inp.type==="checkbox"?inp.checked:inp.value.trim();
-    if(inp.dataset.s==="q"&&v!==(o.q||"")&&!o.pinned){delete o.lat;delete o.lng;if(COORDS[o.id]&&v!==(DEFAULT_Q[o.id]||""))o.noDefault=true}o[inp.dataset.s]=v});return o});
+    if(inp.dataset.s==="q"&&v!==(o.q||"")&&!o.pinned){delete o.lat;delete o.lng;if(COORDS[o.id]){if(v!==(DEFAULT_Q[o.id]||""))o.noDefault=true;else delete o.noDefault}}o[inp.dataset.s]=v});return o});
 }
 $("#layer").addEventListener("click",async e=>{
-  if(!S.editing)return;const t=e.target.closest("button");if(!t)return;
-  if(t.id==="ed-close"){S.editing=null;drawEditor();return}
+  if(!S.editing||!e.target.closest(".editor")||S.saving)return;const t=e.target.closest("button");if(!t)return;
+  if(t.id==="ed-close"){closeEditor();return}
   collectEditor();
   if(t.id==="ed-add"){S.editing.stops.push({id:"x"+uid(),t:"",n:"",d:"",q:"",stamp:false});drawEditor();$(".ed-stop:last-child .n")?.focus();return}
   const row=t.closest(".ed-stop");
@@ -1335,18 +1368,21 @@ $("#layer").addEventListener("click",async e=>{
   if(row&&t.hasAttribute("data-del")){S.editing.stops.splice(+row.dataset.i,1);drawEditor();return}
   if(row&&t.hasAttribute("data-place")){openPicker(+row.dataset.i);return}
   if(t.id==="ed-save"){
-    const d=S.editing;d.stops=d.stops.filter(s=>s.n);d.stops.forEach(s=>{if(!s.id)s.id="x"+uid()});
-    t.disabled=true;t.textContent="地図の場所をしらべています…";
-    for(const s of d.stops){if(s.q&&!coordOf(s)){const c=await geocode(s.q);if(c){s.lat=c.lat;s.lng=c.lng}await new Promise(r=>setTimeout(r,1100))}}
-    t.textContent="保存する";
-    const days=JSON.parse(JSON.stringify(DAYS()));days[d.n-1]=d;
-    try{await S.db.doc("trip/plan").set({days,updatedAt:Date.now(),by:S.who});S.editing=null;drawEditor();toast("保存しました");beep("clear")}catch(err){writeErr(err)}
+    const d=S.editing;d.stops=d.stops.filter(s=>s.n);d.stops.forEach(s=>{if(!s.id)s.id="x"+uid()});drawEditor();
+    S.saving=true;const box=$(".editor");box.querySelectorAll("input,textarea,button").forEach(x=>x.disabled=true);const sv=$("#ed-save");
+    try{
+      const need=d.stops.filter(s=>s.q&&!coordOf(s));
+      for(const s of need){if(sv)sv.textContent="地図の場所をしらべています…";const c=await geocode(s.q);if(c){s.lat=c.lat;s.lng=c.lng}await new Promise(r=>setTimeout(r,1100))}
+      if(sv)sv.textContent="保存しています…";
+      const days=JSON.parse(JSON.stringify(DAYS()));days[d.n-1]=d;
+      await S.db.doc("trip/plan").set({days,updatedAt:Date.now(),by:S.who});S.saving=false;S.editing=null;drawEditor();toast("保存しました");beep("clear")}
+    catch(err){S.saving=false;writeErr(err);if(S.editing)drawEditor()}
   }
 });
 
 /* ---------- スタンプ ---------- */
 function spotPhotos(id){const r={};for(const p of S.photos)if(p.spot===id&&!r[p.who])r[p.who]=p;return r}
-function stampSVG(name,isNew){return `<svg class="stampmark ${isNew?"new":""}" viewBox="0 0 100 100" aria-label="スタンプ"><g fill="none" stroke="var(--shu)"><circle cx="50" cy="50" r="46" stroke-width="4"/><circle cx="50" cy="50" r="38" stroke-width="1.5"/></g><text x="50" y="44" text-anchor="middle" font-family="Mochiy Pop One, sans-serif" font-size="15" fill="var(--shu)">とうちゃく</text><path d="M28 54h44" stroke="var(--shu)" stroke-width="1.5"/><text x="50" y="70" text-anchor="middle" font-family="DotGothic16, monospace" font-size="10" fill="var(--shu)">${esc(name.length>7?name.slice(0,7):name)}</text></svg>`}
+function stampSVG(name,isNew){return `<svg class="stampmark ${isNew?"new":""}" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="var(--shu)"><circle cx="50" cy="50" r="46" stroke-width="4"/><circle cx="50" cy="50" r="38" stroke-width="1.5"/></g><text x="50" y="44" text-anchor="middle" font-family="Mochiy Pop One, sans-serif" font-size="15" fill="var(--shu)">とうちゃく</text><path d="M28 54h44" stroke="var(--shu)" stroke-width="1.5"/><text x="50" y="70" text-anchor="middle" font-family="DotGothic16, monospace" font-size="10" fill="var(--shu)">${esc(name.length>7?name.slice(0,7):name)}</text></svg>`}
 function stampedIds(){return SPOTS().filter(s=>{const p=spotPhotos(s.id);return p.sai&&p.yui}).map(s=>s.id)}
 function renderStamp(){
   const spots=SPOTS(),done=stampedIds(),seen=new Set((ls.get("seenStamps")||"").split(",").filter(Boolean));
@@ -1358,11 +1394,11 @@ function renderStamp(){
   <div class="prog-row"><div class="bar"><i style="width:${spots.length?done.length/spots.length*100:0}%"></i></div><span class="num">${done.length}/${spots.length}</span></div>
   ${SAY(S.who==="yui"?"sai":"yui","着いたら、ふたりがそれぞれ写真をあげてね。そろったらスタンプがポン！")}
   <div class="spots">${spots.map(s=>{const p=spotPhotos(s.id),ok=p.sai&&p.yui;
-    const slot=w=>{const ph=p[w],mine=w===S.who&&!ph&&S.canWrite&&S.assets;
-      return `<button class="slot ${mine?"mine":""}" ${mine?`data-up="${s.id}"`:ph?`data-open="${ph.id}"`:"disabled"}><span class="who">${NAME[w]}</span>${ph?`<img class="ph" src="${blob(ph.thumb||ph.full)}" alt="${NAME[w]}の写真" loading="lazy">`:mine?`<span><span class="plus">＋</span><br>写真をあげて<br>とうちゃく！</span>`:`<img class="face" src="${MII[w]}" alt="">`}</button>`};
+    const slot=w=>{const ph=p[w],busy=S.busy?.["spot:"+s.id]&&w===S.who,mine=w===S.who&&!ph&&S.canWrite&&S.assets&&!busy;
+      return `<button class="slot ${mine?"mine":""}" ${mine?`data-up="${s.id}"`:ph?`data-open="${ph.id}"`:"disabled"}><span class="who">${NAME[w]}</span>${ph?`<img class="ph" src="${blob(ph.thumb||ph.full)}" alt="${NAME[w]}の写真" loading="lazy">`:busy?`<span>送信中…</span>`:mine?`<span><span class="plus">＋</span><br>写真をあげて<br>とうちゃく！</span>`:`<img class="face" src="${MII[w]}" alt="">`}</button>`};
     return `<div class="spot" style="--c:${DC(s.d)}"><div class="top"><span class="day">DAY${s.d} ${esc(DAYS()[s.d-1].date)}</span></div><div class="nm">${esc(s.n)}</div><div class="slots">${slot("sai")}${slot("yui")}</div>${ok?stampSVG(s.n,!seen.has(s.id)):""}</div>`}).join("")||`<div class="empty">スタンプの場所がまだありません。しおりの「この日を編集」で、行き先に「スタンプの場所にする」をつけてね。</div>`}</div>
   <div class="treasure">${chest}<div>${all?`<h3 style="font-size:17px">隠しメッセージ</h3><div class="msg">${esc(S.secret??DEFAULT_SECRET)}</div>`:`<h3 style="font-size:17px">？？？の宝箱</h3><div class="small muted">スタンプがぜんぶそろうと、宝箱がひらきます。</div>`}
-    ${S.isOwner&&!all?`<details style="margin-top:6px"><summary class="small">宝箱のメッセージを書きかえる（さいけうだけに見えています）</summary><textarea id="secret-in" maxlength="1000">${esc(S.secret??DEFAULT_SECRET)}</textarea><button class="btn" id="secret-save" style="margin-top:8px">保存</button></details>`:""}</div>
+    ${S.isOwner&&!all?`<details style="margin-top:6px"><summary class="small">宝箱のメッセージを書きかえる（さいけうだけに見えています）</summary><textarea id="secret-in" maxlength="1000" aria-label="宝箱のメッセージ">${esc(S.drafts.secret??S.secret??DEFAULT_SECRET)}</textarea><button class="btn" id="secret-save" style="margin-top:8px">保存</button></details>`:""}</div>
   </div>`;
   const newly=done.filter(id=>!seen.has(id));
   if(newly.length){ls.set("seenStamps",done.join(","));confetti();beep("stamp");cheer("スタンプゲット！","やったー！");if(all)setTimeout(()=>{toast("全スタンプ制覇！宝箱がひらいたよ");beep("open");cheer("ぜんぶ集めた！","宝箱ひらいた！")},700)}
@@ -1372,11 +1408,12 @@ $("#v-stamp").addEventListener("click",async e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.dataset.up){pendingSpot=t.dataset.up;$("#f-stamp").click()}
   else if(t.dataset.open){const list=S.photos.filter(p=>p.spot);openLB(list,list.findIndex(p=>p.id===t.dataset.open))}
-  else if(t.id==="secret-save"){try{await S.db.doc("config/secret").set({msg:$("#secret-in").value});toast("保存しました")}catch(err){writeErr(err)}}
+  else if(t.id==="secret-save"){try{await S.db.doc("config/secret").set({msg:$("#secret-in").value});delete S.drafts.secret;toast("保存しました")}catch(err){writeErr(err)}}
 });
 $("#f-stamp").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingSpot)return;
-  const spot=SPOTS().find(s=>s.id===pendingSpot);if(!spot)return;toast("アップロード中…");
-  try{await uploadPhoto(f,{spot:spot.id,day:spot.d});toast(spotPhotos(spot.id)[other(S.who)]?"スタンプゲット！":`${NAME[other(S.who)]}の写真を待ってるよ`)}catch(err){upErr(err)}});
+  const spot=SPOTS().find(s=>s.id===pendingSpot);if(!spot)return;S.busy=S.busy||{};if(S.busy["spot:"+spot.id])return;S.busy["spot:"+spot.id]=true;if(S.view==="stamp")renderStamp();toast("アップロード中…");
+  try{await uploadPhoto(f,{spot:spot.id,day:spot.d});toast(spotPhotos(spot.id)[other(S.who)]?"スタンプゲット！":`${NAME[other(S.who)]}の写真を待ってるよ`)}catch(err){upErr(err)}
+  finally{delete S.busy["spot:"+spot.id];if(S.view==="stamp")safeRender()}});
 
 /* ---------- 日記 ---------- */
 function renderDiary(){
@@ -1390,7 +1427,7 @@ function renderDiary(){
   ${night?`<div class="banner"><span class="moon"></span>1日のしめくくり。今日の日記を書こう</div>`:""}
   <div class="diary">
     <div class="page ${S.who}"><h3><img src="${MII[S.who]}" alt="">${NAME[S.who]}（あなた）</h3>
-      ${S.canWrite?`<textarea id="diary-in" maxlength="2000" placeholder="今日いちばん楽しかったことは？">${esc(mine?.text||"")}</textarea><button class="btn pink" id="diary-save">${mine?"書き直して保存":"書いた！"}</button>`:`<div class="body">${esc(mine?.text||"")}</div>`}
+      ${S.canWrite?`<textarea id="diary-in" maxlength="2000" placeholder="今日いちばん楽しかったことは？">${esc(S.drafts["diary:"+n]??mine?.text??"")}</textarea><button class="btn pink" id="diary-save">${mine?"書き直して保存":"書いた！"}</button>`:`<div class="body">${esc(mine?.text||"")}</div>`}
     </div>
     <div class="page ${o}"><h3><img src="${MII[o]}" alt="">${NAME[o]}</h3>
       ${both?`<div class="body">${esc(theirs.text)}</div>`:`<div class="sealed"><div>${lock}${theirs?`${NAME[o]}は書き終わったよ。<br>あなたが書くと、ふたりの日記がひらきます`:mine?`${NAME[o]}が書くのを待っています`:`ふたりとも書いたら、ここに${NAME[o]}の日記が出てきます`}</div></div>`}
@@ -1398,18 +1435,17 @@ function renderDiary(){
   </div>
   <div class="remind"><h3><span class="moon"></span>毎晩23時のおしらせ</h3>
     <p class="small">旅行中の6日間、毎晩23時にスマホへ「交換日記を書こう」と通知が来るように、カレンダーの予定を追加できます。ふたりともそれぞれのスマホで追加してね。</p>
-    <button class="btn" id="ics">カレンダーに追加するファイルを保存</button>
-    <p class="small" style="opacity:.85;margin-bottom:0">保存したファイルを開くと、カレンダーアプリに6日分の予定が入ります。</p></div>
+    <a class="btn" id="ics" href="okinawa-diary-reminder.ics">カレンダーに追加する</a>
+    <p class="small" style="opacity:.85;margin-bottom:0">iPhoneは「すべて追加」、Androidはダウンロードしたファイルを開くと、カレンダーに6日分の予定（毎晩23時）が入ります。</p></div>
   ${letterHTML()}`;
 }
 $("#v-diary").addEventListener("click",async e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.dataset.dd){beep("tap");S.diaryDay=+t.dataset.dd;renderDiary();return}
   if(t.id==="diary-save"){const v=$("#diary-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
-    try{await S.db.doc(`diary/d${S.diaryDay}_${S.who}`).set({text:v,who:S.who,at:Date.now()});toast("保存しました");beep("clear");if(S.diary[`d${S.diaryDay}_${other(S.who)}`]){confetti();beep("open");cheer("日記がひらいた！","見せて見せて！")}}catch(err){writeErr(err)}}
+    try{await S.db.doc(`diary/d${S.diaryDay}_${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts["diary:"+S.diaryDay];toast("保存しました");beep("clear");if(S.diary[`d${S.diaryDay}_${other(S.who)}`]){confetti();beep("open");cheer("日記がひらいた！","見せて見せて！")}}catch(err){writeErr(err)}}
   if(t.id==="letter-save"){const v=$("#letter-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
-    try{await S.db.doc(`letters/${S.who}`).set({text:v,who:S.who,at:Date.now()});toast("手紙をしまいました。最終日の夜にひらきます");beep("clear")}catch(err){writeErr(err)}}
-  if(t.id==="ics")saveICS();
+    try{await S.db.doc(`letters/${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts.letter;toast("手紙をしまいました。最終日の夜にひらきます");beep("clear")}catch(err){writeErr(err)}}
 });
 function letterHTML(){
   const open=Date.now()>=LETTER_OPEN,me=S.who,o=other(me||"sai");const mine=S.letters[me],theirs=S.letters[o];
@@ -1418,7 +1454,7 @@ function letterHTML(){
     <p class="small">旅行の前に、相手への手紙を書いておこう。11/24の18時になると、ふたりの手紙が同時にひらきます。</p>
     <div class="letter-grid">
       <div class="letter mine">${env(me||"sai",!open)}<div class="lt-h">${NAME[me||"sai"]}から${NAME[o]}へ</div>
-        ${open?`<div class="lt-body">${mine?esc(mine.text):"<span class='muted'>手紙はありませんでした</span>"}</div>`:S.canWrite?`<textarea id="letter-in" maxlength="3000" placeholder="旅のあとに読んでほしいこと、いま思っていること…">${esc(mine?.text||"")}</textarea><button class="btn pink" id="letter-save">${mine?"書き直してしまう":"手紙をしまう"}</button>${mine?`<div class="small muted">しまった日：${new Date(mine.at+9*3600e3).toISOString().slice(5,10).replace("-","/")}</div>`:""}`:""}
+        ${open?`<div class="lt-body">${mine?esc(mine.text):"<span class='muted'>手紙はありませんでした</span>"}</div>`:S.canWrite?`<textarea id="letter-in" maxlength="3000" placeholder="旅のあとに読んでほしいこと、いま思っていること…">${esc(S.drafts.letter??mine?.text??"")}</textarea><button class="btn pink" id="letter-save">${mine?"書き直してしまう":"手紙をしまう"}</button>${mine?`<div class="small muted">しまった日：${new Date(mine.at+9*3600e3).toISOString().slice(5,10).replace("-","/")}</div>`:""}`:""}
       </div>
       <div class="letter theirs">${env(o,!open)}<div class="lt-h">${NAME[o]}から${NAME[me||"sai"]}へ</div>
         ${open?`<div class="lt-body">${theirs?esc(theirs.text):"<span class='muted'>手紙はありませんでした</span>"}</div>`:`<div class="sealed small">${theirs?`${NAME[o]}の手紙が届いています。<br>11/24 18:00 にひらきます`:`まだ届いていません`}</div>`}
@@ -1438,12 +1474,12 @@ async function saveICS(){
 function albumGroups(){const g={};for(const p of S.photos){const k=p.day||0;(g[k]=g[k]||[]).push(p)}return Object.keys(g).map(Number).sort((a,b)=>a-b).map(k=>({k,items:g[k]}))}
 function renderAlbum(){
   const sel=S.albumDay,groups=albumGroups().filter(x=>sel==="all"||x.k===+sel);
-  const uploadDay=sel!=="all"?+sel:(tripDay()>=1&&tripDay()<=6?tripDay():0);
+  const td=tripDay();const uploadDay=sel!=="all"?+sel:(td>=1&&td<=6?td:td<1?0:null);
   $("#v-album").innerHTML=`
   ${HEAD("思い出アルバム","var(--sea)",`${S.photos.length}枚`)}
   <div class="daytabs"><button style="--c:var(--ink)" data-ad="all" aria-pressed="${sel==="all"}">ぜんぶ<small>ALL</small></button>${DAYS().map(d=>`<button style="--c:${DC(d.n)}" data-ad="${d.n}" aria-pressed="${String(d.n)===String(sel)}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>
-  ${S.assets&&S.canWrite?`<div class="uploadbar"><button class="btn sea" id="up">写真を追加${uploadDay?`（DAY${uploadDay}）`:""}</button>${S.photos.length?`<button class="btn pink mini" id="album-movie">▶ ムービーで見る</button>`:""}<span class="prog" id="prog"></span></div><div class="small muted">何枚でもまとめて選べます。高画質（長辺2560px）で保存されます。</div>`:`<div class="small muted">写真を追加するにはログインしてね。</div>`}
-  ${groups.length?groups.map(gr=>`<div class="album-day" style="--c:${gr.k?DC(gr.k):"var(--muted)"}"><h3><span class="dot"></span>${gr.k?`DAY${gr.k}　${esc(DAYS()[gr.k-1]?.date||"")}`:"旅行の前"}</h3>
+  ${S.assets&&S.canWrite?`<div class="uploadbar"><button class="btn sea" id="up" ${uploadDay===null?"disabled":""}>写真を追加${uploadDay?`（DAY${uploadDay}）`:uploadDay===0?"（旅行の前）":""}</button>${uploadDay===null?`<span class="small muted">上の日付（DAY1〜6）を選ぶと、その日に追加できます</span>`:""}${S.photos.length?`<button class="btn pink mini" id="album-movie">▶ ムービーで見る</button>`:""}<span class="prog" id="prog">${esc(S.progText||"")}</span></div><div class="small muted">何枚でもまとめて選べます。高画質（長辺2560px）で保存されます。</div>`:`<div class="small muted">写真を追加するにはログインしてね。</div>`}
+  ${groups.length?groups.map(gr=>`<div class="album-day" style="--c:${gr.k?DC(gr.k):"var(--muted)"}"><h3><span class="dot"></span>${gr.k?`DAY${gr.k}　${esc(DAYS()[gr.k-1]?.date||"")}`:tripDay()>6?"日付なし":"旅行の前"}</h3>
     <div class="grid">${gr.items.map(p=>`<button data-ph="${p.id}" aria-label="写真をひらく"><img src="${blob(p.thumb||p.full)}" alt="" loading="lazy" decoding="async">${p.spot?`<span class="tag">スタンプ</span>`:p.food?`<span class="tag green">グルメ</span>`:""}${p.likes?.sai&&p.likes?.yui?`<span class="heart" aria-label="ふたりのお気に入り">♥</span>`:""}</button>`).join("")}</div></div>`).join("")
     :`<div class="empty">まだ写真がありません。<br>旅行中に撮った写真を「写真を追加」からあげると、日ごとにここに並びます。</div>`}`;
   S.uploadDay=uploadDay;
@@ -1457,47 +1493,56 @@ $("#v-album").addEventListener("click",e=>{
 });
 $("#f-album").addEventListener("change",async e=>{
   const files=[...e.target.files];e.target.value="";if(!files.length)return;
-  let done=0,fail=0;const day=S.uploadDay;const setP=()=>{const el=$("#prog");if(el)el.textContent=`アップロード中 ${done} / ${files.length}`};setP();
-  const q=files.slice();const worker=async()=>{while(q.length){const f=q.shift();try{await uploadPhoto(f,{day})}catch(err){fail++;console.warn(err)}done++;setP()}};
+  if(S.uploadDay===null){toast("上の日付（DAY1〜6）を選んでから追加してね");return}
+  let done=0,fail=0,decodeFail=0,lastErr=null;const day=S.uploadDay;const setP=txt=>{S.progText=txt;const el=$("#prog");if(el)el.textContent=txt};setP(`アップロード中 ${done} / ${files.length}`);
+  const q=files.slice();const worker=async()=>{while(q.length){const f=q.shift();try{await uploadPhoto(f,{day})}catch(err){fail++;lastErr=err;if(err?.code==="decode"||err?.code==="encode")decodeFail++;console.warn(err)}done++;setP(`アップロード中 ${done} / ${files.length}`)}};
   await Promise.all([worker(),worker()]);
-  const el=$("#prog");if(el)el.textContent=fail?`${files.length-fail}枚追加、${fail}枚は読み込めませんでした`:`${files.length}枚追加しました`;
+  const msg=fail?`${files.length-fail}枚追加。${fail}枚は追加できませんでした${decodeFail<fail?"（電波を確認してもう一度）":"（読み込めない写真でした）"}`:`${files.length}枚追加しました`;
+  setP(msg);setTimeout(()=>{if(S.progText===msg)setP("")},8000);
+  if(fail&&decodeFail<fail)writeErr(lastErr);
   if(!fail){confetti();beep("clear")}
 });
 
 /* ---------- 画像 ---------- */
 async function decode(file){try{return await createImageBitmap(file,{imageOrientation:"from-image"})}catch{}
-  return await new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>res(i);i.onerror=()=>rej({code:"decode"});i.src=u})}
+  return await new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=()=>{URL.revokeObjectURL(u);rej({code:"decode"})};i.src=u})}
 function toJpeg(src,max,q){const w=src.width,h=src.height,s=Math.min(1,max/Math.max(w,h));const c=document.createElement("canvas");c.width=Math.round(w*s);c.height=Math.round(h*s);c.getContext("2d").drawImage(src,0,0,c.width,c.height);return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej({code:"encode"}),"image/jpeg",q))}
 async function uploadPhoto(file,{spot=null,day=0,food=null}){
   if(!S.assets)throw{code:"not_granted"};
   const img=await decode(file);
   // 保存先の容量（無料枠1GB）を考えて、長辺2560pxに整えて保存（スマホで見るには十分な高画質）
-  const full=await toJpeg(img,2560,.88);const thumb=await toJpeg(img,720,.8);
+  const W=img.width,H=img.height;const full=await toJpeg(img,2560,.88);const thumb=await toJpeg(img,720,.8);try{img.close?.()}catch{}
   const [F,T]=await Promise.all([S.assets.upload(full,{type:"image/jpeg"}),S.assets.upload(thumb,{type:"image/jpeg"})]);
   await ensureUrls([F.id,T.id]);
-  await S.db.collection("photos").add({full:F.id,thumb:T.id,w:img.width,h:img.height,who:S.who,day,spot,food,at:Date.now()});
+  await S.db.collection("photos").add({full:F.id,thumb:T.id,w:W,h:H,who:S.who,day,spot,food,at:Date.now()});
 }
-function upErr(err){if(err&&err.code==="decode"){toast("この写真は読み込めませんでした。別の写真で試してね");return}writeErr(err)}
+function upErr(err){if(err&&(err.code==="decode"||err.code==="encode")){toast("この写真は読み込めませんでした。別の写真で試してね");return}writeErr(err)}
 
 /* ---------- ライトボックス ---------- */
-function openLB(list,i){S.lb={list,i:Math.max(0,i)};drawLB();const p=list[S.lb.i];if(p&&!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb)drawLB()})}
+function lbPrefetch(){if(!S.lb)return;const {list,i}=S.lb;const ids=[list[i]?.full,list[i+1]?.full,list[i-1]?.full].filter(f=>f&&!URLS[f]);if(ids.length)ensureUrls(ids).then(()=>{if(S.lb)lbSwap()})}
+function lbSwap(){const p=S.lb?.list[S.lb.i];const im=$("#lb-stage img");const full=p&&URLS[p.full];if(!im||!full||im.dataset.full===full)return;const pre=new Image();pre.onload=()=>{if(S.lb&&S.lb.list[S.lb.i]===p&&im.isConnected){im.src=full;im.dataset.full=full}};pre.src=full}
+function openLB(list,i){S.lb={list,i:Math.max(0,i)};drawLB();lbPrefetch()}
 function drawLB(){
   const L=$("#layer");if(!S.lb){L.innerHTML="";return}
   const {list,i}=S.lb,p=list[i];const sp=SPOTS().find(s=>s.id===p.spot);const fd=p.food?FOODBY[p.food]:null;
   const likes=p.likes||{},liked=S.who&&likes[S.who],n=["sai","yui"].filter(w=>likes[w]).length;
-  L.innerHTML=`<div class="lightbox" role="dialog" aria-label="写真"><div class="lb-top"><span class="small">${i+1} / ${list.length}　${NAME[p.who]||""}${sp?`　${esc(sp.n)}`:fd?`　${esc(fd.n)}`:""}</span><button id="lb-x">とじる</button></div>
-  <div class="lb-stage" id="lb-stage"><img src="${blob(p.full)}" alt="" style="background:url('${blob(p.thumb)}') center/contain no-repeat"></div>
+  const arm=S.lbDelArm===p.id;
+  L.innerHTML=`<div class="lightbox" role="dialog" aria-modal="true" aria-label="写真"><div class="lb-top"><span class="small">${i+1} / ${list.length}　${NAME[p.who]||""}${sp?`　${esc(sp.n)}`:fd?`　${esc(fd.n)}`:""}${p.at?`　<span style="opacity:.7">${fmtTime(p.at)}</span>`:""}</span><span>${p.who===S.who&&S.canWrite?`<button id="lb-del" class="${arm?"arm":""}">${arm?"本当に消す":"消す"}</button> `:""}<button id="lb-x">とじる</button></span></div>
+  <div class="lb-stage" id="lb-stage"><img src="${blob(URLS[p.full]?p.full:p.thumb)}" ${URLS[p.full]?`data-full="${esc(URLS[p.full])}"`:""} alt=""></div>
   <div class="lb-bot"><button id="lb-p" ${i?"":"disabled"}>まえ</button><button class="like ${liked?"on":""}" id="lb-like" ${S.canWrite&&S.who?"":"disabled"} aria-pressed="${!!liked}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="${liked?"#ff5c93":"none"}" stroke="currentColor" stroke-width="2"/></svg>${n?`<b>${n}</b>`:""}${n===2?`<span class="small">ふたりのお気に入り</span>`:""}</button><button id="lb-n" ${i<list.length-1?"":"disabled"}>つぎ</button></div></div>`;
-  const st=$("#lb-stage");let x0=null;
+  const st=$("#lb-stage");let x0=null;lbSwap();
   st.addEventListener("click",()=>st.classList.toggle("zoom"));
   st.addEventListener("touchstart",e=>{x0=e.touches.length===1?e.touches[0].clientX:null},{passive:true});
   st.addEventListener("touchend",e=>{if(x0==null||st.classList.contains("zoom"))return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>60)move(dx<0?1:-1)});
-  $("#lb-x").onclick=()=>{S.lb=null;drawLB()};$("#lb-p").onclick=()=>move(-1);$("#lb-n").onclick=()=>move(1);
+  $("#lb-x").onclick=()=>{S.lb=null;S.lbDelArm=null;drawLB()};$("#lb-p").onclick=()=>move(-1);$("#lb-n").onclick=()=>move(1);
+  $("#lb-del")?.addEventListener("click",async()=>{if(S.lbDelArm!==p.id){S.lbDelArm=p.id;drawLB();setTimeout(()=>{if(S.lbDelArm===p.id){S.lbDelArm=null;if(S.lb)drawLB()}},4000);return}
+    S.lbDelArm=null;try{await S.db.doc("photos/"+p.id).delete();sb.storage.from(BUCKET).remove([p.full,p.thumb].filter(Boolean)).catch(console.warn);S.lb=null;drawLB();toast("写真を消しました");beep("tap")}catch(err){writeErr(err)}});
+  setTimeout(()=>$("#lb-x")?.focus(),30);
   $("#lb-like").onclick=async()=>{const v=!liked;p.likes={...likes,[S.who]:v};drawLB();if(v)beep("tap");
     try{await S.db.doc("photos/"+p.id).update({likes:{[S.who]:v}})}catch(err){writeErr(err)}};
 }
-function move(d){const n=S.lb.i+d;if(n<0||n>=S.lb.list.length)return;S.lb.i=n;drawLB();const p=S.lb.list[n];if(!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb&&S.lb.i===n)drawLB()})}
-document.addEventListener("keydown",e=>{if(S.lb){if(e.key==="Escape"){S.lb=null;drawLB()}if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)}else if(e.key==="Escape"&&$("#layer2").innerHTML){$("#layer2").innerHTML=""}else if(S.editing&&e.key==="Escape"){S.editing=null;drawEditor()}});
+function move(d){const n=S.lb.i+d;if(n<0||n>=S.lb.list.length)return;S.lb.i=n;S.lbDelArm=null;drawLB();lbPrefetch()}
+document.addEventListener("keydown",e=>{if(S.lb){if(e.key==="Escape"){S.lb=null;drawLB()}if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)}else if(e.key==="Escape"&&$("#layer2").innerHTML){$("#layer2").innerHTML=""}else if(S.editing&&e.key==="Escape"&&!S.saving){closeEditor()}});
 
 /* ---------- リザルト ---------- */
 function dayStats(n){
@@ -1561,7 +1606,11 @@ async function saveResultCard(st,rank){
     downloadBlob("futari-okinawa-result.png",blobPng);
   }catch(err){console.warn(err);if(!(err&&err.code==="declined"))toast("画像を作れませんでした")}
 }
-function downloadBlob(name,b){const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+async function downloadBlob(name,b){
+  try{const file=new File([b],name,{type:b.type||"application/octet-stream"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({files:[file],title:name});return}}
+  catch(e){if(e&&e.name==="AbortError")throw Object.assign(e,{code:"declined"});console.warn(e)}
+  const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
 
 /* ---------- 思い出ムービー（写真と日記の自動再生） ---------- */
@@ -1599,7 +1648,7 @@ function slideHTML(s){
 function showUI(){const el=$("#show");el.classList.remove("hide-ui");clearTimeout(SH.uiT);SH.uiT=setTimeout(()=>{if(SH.on&&!SH.paused)el.classList.add("hide-ui")},3500)}
 function startShow(fromDay=1){
   if(!S.photos.length&&!Object.keys(S.diary).length){toast("まだ写真も日記もありません。旅行がはじまったら見てね");return}
-  SH.slides=buildSlides(fromDay);SH.i=0;SH.on=true;SH.paused=false;SH.wavesWasOn=WAVE.on;
+  SH.slides=buildSlides(fromDay);SH.i=0;if(!SH.on)SH.wavesWasOn=WAVE.on;SH.on=true;SH.paused=false;clearTimeout(SH.timer);
   const el=$("#show");el.hidden=false;el.classList.remove("hide-ui");
   el.innerHTML=`<div class="sh-stage" id="sh-stage"></div>
     <div class="sh-top"><select id="sh-from" aria-label="どの日から">${["はじめから",...DAYS().map(d=>`DAY${d.n}から`)].map((x,j)=>`<option value="${j}" ${j===(fromDay<=1?0:fromDay)?"selected":""}>${x}</option>`).join("")}</select><span class="cnt" id="sh-title"></span><button id="sh-x">とじる</button></div>
@@ -1610,14 +1659,15 @@ function startShow(fromDay=1){
   $("#sh-play").onclick=()=>{togglePause()};
   $("#sh-from").onchange=e=>{startShow(Math.max(1,+e.target.value))};
   $("#sh-speed").onchange=e=>{SH.speed=+e.target.value;showUI()};
-  $("#sh-music").onclick=()=>{$("#f-music").click()};
+  $("#sh-music").onclick=()=>{if(!SH.audio){const a=new Audio();a.loop=true;a.preload="auto";SH.audio=a;try{a.play().catch(()=>{});a.pause()}catch{}}$("#f-music").click()};
+  $("#sh-speed").value=String(SH.speed);if(SH.audio&&SH.audioName){const b=$("#sh-music");b.textContent="♪ "+SH.audioName}
   $("#sh-wave").onclick=()=>{if(WAVE.on)wavesStop();else wavesStart();$("#sh-wave").classList.toggle("on",WAVE.on);showUI()};
   $("#sh-stage").onclick=()=>{if(el.classList.contains("hide-ui")){showUI()}else{togglePause()}};
   if(!WAVE.on&&!SH.audio){wavesStart();$("#sh-wave").classList.add("on")}
   document.body.style.overflow="hidden";
   goSlide(0);showUI();
 }
-function togglePause(){SH.paused=!SH.paused;$("#sh-play").textContent=SH.paused?"▶":"❚❚";if(SH.paused){clearTimeout(SH.timer);$("#show").classList.remove("hide-ui");clearTimeout(SH.uiT);$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","paused")}else{$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","running");schedule();showUI()}}
+function togglePause(){SH.paused=!SH.paused;const pb=$("#sh-play");pb.textContent=SH.paused?"▶":"❚❚";pb.setAttribute("aria-label",SH.paused?"再生":"一時停止");if(SH.paused){clearTimeout(SH.timer);$("#show").classList.remove("hide-ui");clearTimeout(SH.uiT);$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","paused")}else{$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","running");schedule();showUI()}}
 function schedule(){clearTimeout(SH.timer);const s=SH.slides[SH.i];if(!s||!s.dur||SH.paused)return;SH.timer=setTimeout(()=>goSlide(SH.i+1),s.dur*SH.speed)}
 async function goSlide(i){
   if(!SH.on)return;if(i<0)i=0;if(i>=SH.slides.length)i=SH.slides.length-1;SH.i=i;const s=SH.slides[i];const stage=$("#sh-stage");if(!stage)return;
@@ -1626,18 +1676,20 @@ async function goSlide(i){
   if(!SH.on||SH.i!==i)return;
   const old=[...stage.children];const wrap=document.createElement("div");wrap.innerHTML=slideHTML(s);const el=wrap.firstElementChild;stage.appendChild(el);
   requestAnimationFrame(()=>{el.classList.add("in");old.forEach(o=>{o.classList.remove("in");o.classList.add("out");setTimeout(()=>o.remove(),800)})});
-  const img=el.querySelector("img.main");if(img){const full=img.dataset.full&&URLS[img.dataset.full];const ready=()=>{img.classList.add("ready");if(SH.paused)img.style.animationPlayState="paused"};
-    if(full){const im=new Image();im.onload=()=>{img.src=full;ready()};im.onerror=ready;im.src=full}else ready()}
+  const img=el.querySelector("img.main");if(img){img.style.setProperty("--dur",Math.round(s.dur*SH.speed)+"ms");img.classList.add("ready");if(SH.paused)img.style.animationPlayState="paused";
+    const full=img.dataset.full&&URLS[img.dataset.full];if(full){const im=new Image();im.onload=()=>{if(img.isConnected)img.src=full};im.src=full}}
   if(s.k==="title"&&s.bday)setTimeout(()=>{if(SH.on&&SH.i===i)confetti()},500);
   if(s.k==="ending"){setTimeout(()=>{if(SH.on&&SH.i===i)confetti()},600);$("#show").classList.remove("hide-ui");clearTimeout(SH.uiT)}
   $("#sh-cnt").textContent=`${i+1} / ${SH.slides.length}`;$("#sh-title").textContent=s.d?.n?`DAY${s.d.n} ${s.d.date||""}`:s.k==="ending"?"おしまい":s.k==="intro"?"":(s.d?.title||"");
   schedule();
 }
 function stopShow(){SH.on=false;clearTimeout(SH.timer);clearTimeout(SH.uiT);const el=$("#show");el.hidden=true;el.innerHTML="";document.body.style.overflow="";
-  if(SH.audio){SH.audio.pause();SH.audio=null}if(!SH.wavesWasOn&&WAVE.on)wavesStop();}
-$("#f-music").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;if(SH.audio){SH.audio.pause()}
-  const a=new Audio(URL.createObjectURL(f));a.loop=true;a.volume=.9;SH.audio=a;a.play().catch(()=>toast("再生できませんでした"));if(WAVE.on){wavesStop();$("#sh-wave")?.classList.remove("on")}
-  const b=$("#sh-music");if(b)b.textContent="♪ "+(f.name.length>14?f.name.slice(0,14)+"…":f.name);toast("曲を流します")});
+  if(SH.audio){try{SH.audio.pause();SH.audio.removeAttribute("src");SH.audio.load()}catch{}SH.audio=null}if(SH.audioUrl){URL.revokeObjectURL(SH.audioUrl);SH.audioUrl=null}SH.audioName=null;if(!SH.wavesWasOn&&WAVE.on)wavesStop();}
+$("#f-music").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  const a=SH.audio||new Audio();a.loop=true;a.volume=.9;SH.audio=a;if(SH.audioUrl)URL.revokeObjectURL(SH.audioUrl);SH.audioUrl=URL.createObjectURL(f);a.src=SH.audioUrl;
+  SH.audioName=f.name.length>14?f.name.slice(0,14)+"…":f.name;const b=$("#sh-music");
+  a.play().then(()=>{if(b)b.textContent="♪ "+SH.audioName;toast("曲を流します")}).catch(()=>{if(b){b.textContent="▶ 曲を再生（タップ）";b.onclick=()=>{a.play().then(()=>{b.textContent="♪ "+SH.audioName;b.onclick=()=>$("#f-music").click()}).catch(()=>toast("再生できませんでした"))}}});
+  if(WAVE.on){wavesStop();$("#sh-wave")?.classList.remove("on")}});
 document.addEventListener("keydown",e=>{if(!SH.on)return;if(e.key==="Escape")stopShow();if(e.key==="ArrowRight")goSlide(SH.i+1);if(e.key==="ArrowLeft")goSlide(SH.i-1);if(e.key===" "){e.preventDefault();togglePause()}});
 document.addEventListener("visibilitychange",()=>{if(SH.on&&document.hidden&&!SH.paused)togglePause()});
 
@@ -1655,6 +1707,7 @@ function confetti(){
 const EMAILS={sai:"sai@futari-shimagurashi.app",yui:"yui@futari-shimagurashi.app"};
 let pickWho=null;
 function showLogin(msg){
+  S.editing=null;
   $("#layer").innerHTML=`<div class="modal"><div class="box login"><h2>おめでと島ぐらし</h2><p class="small muted">${msg||"どっちか選んで、あいことばを入れてね"}</p>
   <div class="whopick">${["sai","yui"].map(w=>`<button type="button" data-who="${w}" aria-pressed="${pickWho===w}"><img src="${MII[w]}" alt="">${NAME[w]}</button>`).join("")}</div>
   <form id="login-form" class="login-form" ${pickWho?"":"hidden"}><input id="pw" type="password" autocomplete="current-password" placeholder="${pickWho?NAME[pickWho]+"のあいことば":"あいことば"}" required><button class="btn sea" type="submit" id="login-btn">はいる</button></form>
@@ -1665,7 +1718,9 @@ function showLogin(msg){
       if(error){const m=String(error.message||"");console.warn(error);
         const msg=/Invalid login credentials/i.test(m)?"あいことばがちがうみたい（または、このアカウントがまだ作られていません）":/Email not confirmed/i.test(m)?"アカウントの確認が済んでいません。Supabaseで「Auto Confirm User」をオンにして作り直してね":/logins are disabled|Email logins/i.test(m)?"メールでのログインがオフになっています（Supabaseの Sign In / Providers → Email をオン）":/fetch|network|Failed/i.test(m)?"つながりませんでした。電波を確認してもう一度":"ログインできませんでした："+m;
         $("#login-err").textContent=msg;btn.disabled=false;btn.textContent="はいる";beep("tap");return}
-      $("#layer").innerHTML="";beep("open");confetti();if(data?.session&&!S.who)start(data.session);}
+      $("#layer").innerHTML="";beep("open");confetti();
+      if(data?.session&&!S.who)start(data.session);
+      else if(S.who){const w=Object.keys(EMAILS).find(k=>EMAILS[k]===data?.session?.user?.email);if(w!==S.who){location.reload();return}S.db?.refresh().then(ok=>{if(ok){S.canWrite=true;setSysbar(null);render()}})}}
     catch(err){console.warn(err);$("#login-err").textContent="つながりませんでした。電波を確認してもう一度";btn.disabled=false;btn.textContent="はいる"}};
 }
 async function logout(){await sb.auth.signOut();S.who=null;location.reload()}
@@ -1685,11 +1740,15 @@ function showChangePw(){
 
 /* ---------- 不具合のお知らせバーと「せつぞくチェック」 ---------- */
 function setSysbar(msg,action){const el=$("#sysbar");if(!el)return;if(!msg){el.hidden=true;el.innerHTML="";return}
-  el.hidden=false;el.innerHTML=`<span>⚠ ${esc(msg)}</span>${action==="diag"?`<button class="btn mini" id="sysbar-diag">せつぞくチェック</button>`:action==="retry"?`<button class="btn mini" id="sysbar-retry">もう一度読み込む</button>`:""}`;
-  $("#sysbar-diag")?.addEventListener("click",()=>showDiag());$("#sysbar-retry")?.addEventListener("click",async()=>{if(S.db){await S.db.refresh();if(S.db.ready)setSysbar(null)}})}
+  el.hidden=false;el.innerHTML=`<span>⚠ ${esc(msg)}</span>${action==="diag"?`<button class="btn mini" id="sysbar-diag">せつぞくチェック</button>`:action==="retry"||action==="urls"?`<button class="btn mini" id="sysbar-retry">もう一度読み込む</button>`:action==="reload"?`<button class="btn mini" id="sysbar-reload">開き直す</button>`:""}`;
+  $("#sysbar-diag")?.addEventListener("click",()=>showDiag());$("#sysbar-reload")?.addEventListener("click",()=>location.reload());
+  $("#sysbar-retry")?.addEventListener("click",async e=>{const b=e.currentTarget;b.disabled=true;b.textContent="…";
+    if(action==="urls"){S.urlErr=null;await ensureUrls(S.photos.flatMap(p=>[p.thumb]));if(!S.urlErr){setSysbar(null);render()}else{b.disabled=false;b.textContent="もう一度読み込む";toast("まだ読み込めません。電波を確認してね")}return}
+    if(S.db&&await S.db.refresh()){S.canWrite=true;setSysbar(null);render()}else{b.disabled=false;b.textContent="もう一度読み込む";toast("まだ読み込めません。電波を確認してね")}})}
 const SB_DASH="https://supabase.com/dashboard/project/rplymvjbetvjsfihozpp";
+let diagRun=0;
 async function showDiag(){
-  const L=$("#layer2");
+  const L=$("#layer2");const run=++diagRun;
   L.innerHTML=`<div class="modal top"><div class="box diag"><h2>せつぞくチェック</h2><p class="small muted">サイトと保存先（Supabase）のつながりを順番にしらべます。</p>
     <ul class="diag-list" id="diag-list"></ul><div class="diag-fix" id="diag-fix" hidden></div>
     ${S.lastErr?`<div class="small muted">さいごに出たエラー（${new Date(S.lastErr.at).toTimeString().slice(0,5)} / ${esc(S.lastErr.where)}）：${esc(S.lastErr.msg)}<br><span style="font-size:11px">${esc(S.lastErr.raw.slice(0,160))}</span></div>`:""}
@@ -1701,9 +1760,12 @@ async function showDiag(){
   const fail=(set,label,e,where)=>{const i=errInfo(e,where);set("ng",label,i.msg+(e?.message?`（${String(e.message).slice(0,90)}）`:""));if(i.fix)fixes.push(i.fix)};
   // 1 ログイン
   let s1=item("ログイン");let session=null;
-  try{session=(await sb.auth.getSession()).data.session;if(!session){s1("ng","ログイン","ログインしていません");fixes.push("login")}
+  try{const r=await sb.auth.getSession();session=r.data.session;
+    if(!session){if(r.error&&isNetErr(r.error)){s1("warn","ログイン","電波がとどかず、ログイン状態を確認できませんでした");fixes.push("net")}else{s1("ng","ログイン","ログインしていません");fixes.push("login")}}
     else{const who=Object.keys(EMAILS).find(k=>EMAILS[k]===session.user?.email);const left=Math.round((session.expires_at*1000-Date.now())/60000);s1(who?"ok":"ng","ログイン",who?`${NAME[who]}として入っています（期限あと${left}分・自動で延長されます）`:"このアカウントはふたりのどちらでもありません："+session.user?.email);if(!who)fixes.push("login")}}
   catch(e){fail(s1,"ログイン",e,"auth")}
+  if(!session){["データの読み込み（docs）","データの書き込み（docs）","写真の保存場所（photos）","写真のアップロード","リアルタイム更新"].forEach(n=>item(n)("warn",n,"ログインしてから確認します"));
+    if(run!==diagRun)return;const fx0=$("#diag-fix");if(fx0){fx0.hidden=false;fx0.innerHTML=fixes.includes("net")?`<b>電波がとどいていません。</b> 電波の良いところでもう一度試してね。`:`<b>ログインしてください。</b> <button class="btn mini" id="diag-login">ログイン画面へ</button>`;$("#diag-login")?.addEventListener("click",()=>{L.innerHTML="";showLogin()})}return}
   // 2 読み込み
   let s2=item("データの読み込み（docs）");
   try{const {count,error}=await sb.from("docs").select("id",{count:"exact",head:true});if(error)throw error;s2("ok","データの読み込み（docs）",`読めました（保存データ ${count??"?"} 件）`)}catch(e){fail(s2,"データの読み込み（docs）",e,"db")}
@@ -1715,13 +1777,14 @@ async function showDiag(){
   try{const {error}=await sb.storage.from(BUCKET).list("",{limit:1});if(error)throw error;s4("ok","写真の保存場所（photos）","見つかりました")}catch(e){fail(s4,"写真の保存場所（photos）",e,"storage")}
   // 5 写真の書き込み
   let s5=item("写真のアップロード");
-  try{const path=`_check/${Date.now().toString(36)}.txt`;const {error}=await sb.storage.from(BUCKET).upload(path,new Blob(["ok"],{type:"text/plain"}),{contentType:"text/plain"});if(error)throw error;
-    const {error:e2}=await sb.storage.from(BUCKET).remove([path]);s5(e2?"warn":"ok","写真のアップロード",e2?"アップロードはできますが、消す許可がありません（写真は消せない設定）":"できました（テスト用の小さなファイルを置いて消しました）")}catch(e){fail(s5,"写真のアップロード",e,"storage")}
+  try{const path=`_check/${Date.now().toString(36)}.gif`;const gif=await (await fetch(BLANK)).blob();const {error}=await sb.storage.from(BUCKET).upload(path,gif,{contentType:"image/gif",upsert:true});if(error)throw error;
+    const {data:rm,error:e2}=await sb.storage.from(BUCKET).remove([path]);const removed=!e2&&Array.isArray(rm)&&rm.length>0;s5(removed?"ok":"warn","写真のアップロード",removed?"できました（テスト用の小さな画像を置いて消しました）":"アップロードはできますが、消す許可がありません（写真を消す機能が使えません）")}catch(e){fail(s5,"写真のアップロード",e,"storage")}
   // 6 リアルタイム
   let s6=item("リアルタイム更新");
-  try{const st=await new Promise(res=>{const ch=sb.channel("diag-"+Date.now());const tm=setTimeout(()=>{res("TIMED_OUT");sb.removeChannel(ch)},7000);ch.on("postgres_changes",{event:"*",schema:"public",table:"docs"},()=>{}).subscribe(s=>{if(s==="SUBSCRIBED"||s==="CHANNEL_ERROR"||s==="TIMED_OUT"){clearTimeout(tm);res(s);setTimeout(()=>sb.removeChannel(ch),500)}})});
-    s6(st==="SUBSCRIBED"?"ok":"warn","リアルタイム更新",st==="SUBSCRIBED"?"相手の変更がすぐ届きます":"いまは届きません（開き直すと反映されます）。設定SQLの「リアルタイム更新」の部分で直ります")}catch(e){s6("warn","リアルタイム更新","確認できませんでした")}
+  try{const [st,em]=await new Promise(res=>{const ch=sb.channel("diag-"+Date.now());const tm=setTimeout(()=>{res(["TIMED_OUT",""]);sb.removeChannel(ch)},12000);ch.on("postgres_changes",{event:"*",schema:"public",table:"docs"},()=>{}).subscribe((s,err)=>{if(s==="SUBSCRIBED"||s==="CHANNEL_ERROR"||s==="TIMED_OUT"){clearTimeout(tm);res([s,err?.message||""]);setTimeout(()=>sb.removeChannel(ch),500)}})});
+    s6(st==="SUBSCRIBED"?"ok":"warn","リアルタイム更新",st==="SUBSCRIBED"?"相手の変更がすぐ届きます":`いまは届きません（開き直すと反映されます）。設定SQLの「リアルタイム更新」の部分で直ることが多いです${em?"："+em.slice(0,80):""}`)}catch(e){s6("warn","リアルタイム更新","確認できませんでした")}
   // 対処
+  if(run!==diagRun)return;
   const fx=$("#diag-fix");if(!fx)return;const u=[...new Set(fixes)];
   if(!u.length){fx.hidden=false;fx.innerHTML=`<b>ぜんぶOKです。</b> いま出ている不具合は、電波が弱かったときの一時的なものの可能性が高いです。もう一度同じ操作をしてみてね。`;return}
   fx.hidden=false;
@@ -1734,7 +1797,9 @@ async function showDiag(){
     (u.includes("login")?`<div style="margin-top:6px"><b>ログインし直してください。</b> <button class="btn mini" id="diag-login">ログイン画面へ</button></div>`:"")+
     (u.includes("net")?`<div style="margin-top:6px"><b>電波がとどいていません。</b> 電波の良いところでもう一度試してね。</div>`:"")+
     (u.includes("diag")?`<div style="margin-top:6px">原因がはっきりしないエラーです。上の赤い項目の文章をさいけうに送ってください。</div>`:"");
-  $("#diag-copy")?.addEventListener("click",async()=>{try{const r=await fetch("supabase_setup.sql",{cache:"no-store"});const sql=await r.text();await navigator.clipboard.writeText(sql);toast("コピーしました。SQL Editorに貼りつけてね")}catch(e){console.warn(e);toast("コピーできませんでした。「SQLファイルを保存」を使ってね")}});
+  $("#diag-copy")?.addEventListener("click",async()=>{const get=()=>fetch("supabase_setup.sql",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("fetch "+r.status);return r});
+    try{if(window.ClipboardItem&&navigator.clipboard?.write){await navigator.clipboard.write([new ClipboardItem({"text/plain":get().then(r=>r.blob())})])}else{const sql=await (await get()).text();await navigator.clipboard.writeText(sql)}toast("コピーしました。SQL Editorに貼りつけてね")}
+    catch(e){console.warn(e);toast("コピーできませんでした。「SQLファイルを保存」を使ってね")}});
   $("#diag-login")?.addEventListener("click",async()=>{L.innerHTML="";await sb.auth.signOut().catch(()=>{});S.who=null;showLogin()});
 }
 $("#diag-open")?.addEventListener("click",()=>showDiag());
@@ -1753,18 +1818,32 @@ const wvBtn=$("#wave");if(wvBtn){const upd=()=>{wvBtn.setAttribute("aria-pressed
 document.addEventListener("visibilitychange",()=>document.body.classList.toggle("paused",document.hidden));
 
 /* ---------- 起動 ---------- */
-skyMode();renderCount();setInterval(()=>{skyMode();renderCount()},60e3);
+skyMode();renderCount();
+let lastTick={day:tripDay(),letter:Date.now()>=LETTER_OPEN};
+setInterval(()=>{skyMode();renderCount();
+  const now={day:tripDay(),letter:Date.now()>=LETTER_OPEN};
+  if(now.letter&&!lastTick.letter){lastTick.letter=true;if(S.view==="diary"){safeRender();confetti();beep("open");cheer("手紙がひらいたよ","読んでみよう！")}}
+  if(now.day!==lastTick.day){lastTick.day=now.day;safeRender()}},60e3);
 (()=>{const d=tripDay();if(d<1||d>6)return;const b=bdayOf(DAYS()[d-1]);if(!b)return;const key="bday_"+d;if(ls.get(key))return;ls.set(key,"1");
   setTimeout(()=>{confetti();beep("open");cheer(b==="yui"?"ゆいちゃん、誕生日おめでとう！":"今日はおれの誕生日！",b==="yui"?"今日はわたしの誕生日〜！":"さいけう、おめでとう！")},1600)})();
 render();
 /* ---------- Supabase ---------- */
 const SB_URL="https://rplymvjbetvjsfihozpp.supabase.co",SB_KEY="sb_publishable_nqGwemzuILxckcYS8rtIGQ_4kwkulhH";
+if(!window.supabase){setSysbar("プログラムの一部を読み込めませんでした。電波を確認して、ページを開き直してね","reload");throw new Error("supabase.js not loaded")}
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 const BUCKET="photos";
+const URL_INFLIGHT=new Map();
 async function ensureUrls(ids){
   const missing=[...new Set(ids.filter(id=>id&&!URLS[id]))];if(!missing.length)return;
-  for(let i=0;i<missing.length;i+=200){const chunk=missing.slice(i,i+200);
-    try{const {data,error}=await withRetry(()=>sb.storage.from(BUCKET).createSignedUrls(chunk,60*60*24*7).then(r=>{if(r.error)throw r.error;return r}),"storage");if(error)throw error;for(const r of data||[]){if(r.signedUrl&&!r.error)URLS[r.path]=r.signedUrl}}catch(e){console.warn("signed urls",e);S.urlErr=e}}
+  const waits=[],fresh=[];for(const id of missing){if(URL_INFLIGHT.has(id))waits.push(URL_INFLIGHT.get(id));else fresh.push(id)}
+  if(fresh.length){const job=(async()=>{let failed=false;
+    for(let i=0;i<fresh.length;i+=200){const chunk=fresh.slice(i,i+200);
+      try{const {data,error}=await withRetry(()=>sb.storage.from(BUCKET).createSignedUrls(chunk,60*60*24*7).then(r=>{if(r.error)throw r.error;return r}),"storage");if(error)throw error;for(const r of data||[]){if(r.signedUrl&&!r.error)URLS[r.path]=r.signedUrl}}
+      catch(e){console.warn("signed urls",e);failed=true;S.urlErr=e}}
+    fresh.forEach(id=>URL_INFLIGHT.delete(id));
+    if(failed){const bar=$("#sysbar");if(!bar||bar.hidden){const i=errInfo(S.urlErr,"storage");setSysbar("写真を読み込めませんでした："+i.msg,"urls")}}})();
+    fresh.forEach(id=>URL_INFLIGHT.set(id,job));waits.push(job)}
+  await Promise.all(waits);
 }
 function makeDb(){
   const cache=new Map();          // collection -> Map(id -> data)
@@ -1775,60 +1854,75 @@ function makeDb(){
   const notify=(c,id)=>{for(const l of listeners){if(l.c!==c)continue;if(l.id&&l.id!==id)continue;try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}};
   const split=p=>{const s=p.split("/");return [s.slice(0,-1).join("/"),s[s.length-1]]};
   const deepMerge=(a,b)=>{const o={...(a||{})};for(const k in b){o[k]=(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k]))?deepMerge(a[k],b[k]):b[k]}return o};
-  async function write(c,id,data){const prev=col(c).get(id);col(c).set(id,data);notify(c,id);
-    try{await withRetry(async()=>{const {error}=await sb.from("docs").upsert({collection:c,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw error},"db")}
-    catch(error){console.warn(error);if(prev===undefined)col(c).delete(id);else col(c).set(id,prev);notify(c,id);throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,status:error?.status,where:"db"})}}
+  const pending=new Map();        // "collection/id" -> 書き込み通し番号（最新だけが結果を反映する）
+  const stable=v=>Array.isArray(v)?`[${v.map(stable).join(",")}]`:v&&typeof v==="object"?`{${Object.keys(v).sort().map(k=>JSON.stringify(k)+":"+stable(v[k])).join(",")}}`:JSON.stringify(v);
+  const notReady=()=>Object.assign(new Error("まだデータの読み込みが終わっていません。少し待ってからもう一度押してね"),{code:"not_ready",where:"db"});
+  async function write(c,id,data){
+    if(!db.ready)throw notReady();
+    const key=c+"/"+id,seq=(pending.get(key)||0)+1;pending.set(key,seq);
+    const prev=col(c).get(id);col(c).set(id,data);notify(c,id);
+    try{await withRetry(async()=>{const {error}=await sb.from("docs").upsert({collection:c,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw error},"db");
+      if(pending.get(key)===seq){pending.delete(key);if(col(c).get(id)!==data){col(c).set(id,data);notify(c,id)}}}
+    catch(error){console.warn(error);if(pending.get(key)===seq){pending.delete(key);if(prev===undefined)col(c).delete(id);else col(c).set(id,prev);notify(c,id)}
+      throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,status:error?.status,where:"db"})}}
   const docRef=(c,id)=>({id,path:c+"/"+id,
     get:async()=>snapDoc(c,id),
     set:data=>write(c,id,JSON.parse(JSON.stringify(data))),
     update:async patch=>{const cur=col(c).get(id);if(!cur)throw {code:"invalid_argument",message:"no doc"};return write(c,id,deepMerge(cur,JSON.parse(JSON.stringify(patch))))},
-    delete:async()=>{const prev=col(c).get(id);col(c).delete(id);notify(c,id);
-      try{await withRetry(async()=>{const {error}=await sb.from("docs").delete().match({collection:c,id});if(error)throw error},"db")}
-      catch(error){if(prev!==undefined){col(c).set(id,prev);notify(c,id)}throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,where:"db"})}},
+    delete:async()=>{if(!db.ready)throw notReady();const key=c+"/"+id,seq=(pending.get(key)||0)+1;pending.set(key,seq);const prev=col(c).get(id);col(c).delete(id);notify(c,id);
+      try{await withRetry(async()=>{const {error}=await sb.from("docs").delete().match({collection:c,id});if(error)throw error},"db");if(pending.get(key)===seq)pending.delete(key)}
+      catch(error){if(pending.get(key)===seq){pending.delete(key);if(prev!==undefined){col(c).set(id,prev);notify(c,id)}}throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,where:"db"})}},
     onSnapshot:(fn)=>{const l={c,id,fn};listeners.push(l);if(db.ready)fn(snapDoc(c,id));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
   const colRef=c=>({path:c,doc:id=>docRef(c,id||uid()+uid()),add:async data=>{const r=docRef(c,Date.now().toString(36)+uid());await r.set(data);return r},
     onSnapshot:(fn)=>{const l={c,id:null,fn};listeners.push(l);if(db.ready)fn(snapCol(c));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
   const db={ready:false,doc:p=>{const [c,id]=split(p);return docRef(c,id)},collection:c=>colRef(c),
-    async load(){const {data,error}=await withRetry(()=>sb.from("docs").select("collection,id,data").then(r=>{if(r.error)throw r.error;return r}),"db");if(error)throw error;cache.clear();for(const r of data||[])col(r.collection).set(r.id,r.data);
+    async load(){const PAGE=1000,rows=[];   // 1000件ずつ（写真が増えても取りこぼさない）
+      for(let from=0;;from+=PAGE){const {data,error}=await withRetry(()=>sb.from("docs").select("collection,id,data").order("collection").order("id").range(from,from+PAGE-1).then(r=>{if(r.error)throw r.error;return r}),"db");
+        if(error)throw error;rows.push(...(data||[]));if(!data||data.length<PAGE)break}
+      const keep=[...pending.keys()].map(k=>{const [c,id]=split(k);return [c,id,col(c).get(id)]});   // 送信中の自分の変更は消さない
+      cache.clear();for(const r of rows)col(r.collection).set(r.id,r.data);for(const [c,id,v] of keep)if(v!==undefined)col(c).set(id,v);
       db.ready=true;for(const c of new Set(listeners.map(l=>l.c))){for(const l of listeners.filter(x=>x.c===c)){try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}}},
-    subscribe(){sb.channel("docs-live").on("postgres_changes",{event:"*",schema:"public",table:"docs"},p=>{
-        if(p.eventType==="DELETE"){const o=p.old;if(o&&o.collection){col(o.collection).delete(o.id);notify(o.collection,o.id)}return}
-        const n=p.new;if(!n)return;const prev=col(n.collection).get(n.id);if(JSON.stringify(prev)===JSON.stringify(n.data))return;col(n.collection).set(n.id,n.data);notify(n.collection,n.id)})
-      .subscribe(st=>{if(st==="CHANNEL_ERROR")console.warn("realtime error")})},
-    async refresh(){try{await db.load()}catch(e){console.warn(e)}}};
+    subscribe(){if(db.channel)return;db.channel=sb.channel("docs-live").on("postgres_changes",{event:"*",schema:"public",table:"docs"},p=>{
+        if(p.eventType==="DELETE"){const o=p.old;if(o&&o.collection&&!pending.has(o.collection+"/"+o.id)){col(o.collection).delete(o.id);notify(o.collection,o.id)}return}
+        const n=p.new;if(!n||pending.has(n.collection+"/"+n.id))return;const prev=col(n.collection).get(n.id);if(stable(prev)===stable(n.data))return;col(n.collection).set(n.id,n.data);notify(n.collection,n.id)})
+      .subscribe((st,err)=>{S.rtStatus=st;if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")console.warn("realtime",st,err?.message||"")})},
+    async refresh(){try{await db.load();return true}catch(e){console.warn(e);return false}}};
   return db;
 }
 const assetsApi={async upload(b,{type}={}){const ext=(type||b.type||"image/jpeg").split("/")[1]||"jpg";const path=`${Date.now().toString(36)}-${uid()}${uid()}.${ext}`;
-  try{await withRetry(async()=>{const {error}=await sb.storage.from(BUCKET).upload(path,b,{contentType:type||b.type||"image/jpeg",upsert:false});if(error)throw error},"storage")}
+  try{await withRetry(async()=>{const {error}=await sb.storage.from(BUCKET).upload(path,b,{contentType:type||b.type||"image/jpeg",upsert:true});if(error)throw error},"storage")}
   catch(error){console.warn(error);throw Object.assign(new Error(error?.message||String(error)),{code:error?.statusCode||error?.status,where:"storage"})}
   return {id:path,url:""}}};
 
 async function start(session){
   const email=session?.user?.email||"";const who=Object.keys(EMAILS).find(k=>EMAILS[k]===email);
   if(!who){await sb.auth.signOut();showLogin("このアカウントでは入れません");return}
-  S.who=who;S.isOwner=who==="sai";S.canWrite=true;S.assets=assetsApi;ls.set("who",who);
+  S.who=who;S.isOwner=who==="sai";S.canWrite=false;S.assets=assetsApi;
   const db=makeDb();S.db=db;
   const sub=(path,fn)=>db.collection(path).onSnapshot(fn);
   db.doc("trip/plan").onSnapshot(d=>{S.plan=d.exists?d.data():null;safeRender()});
-  sub("photos",async s=>{S.photos=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.at||0)-(b.at||0));await ensureUrls(S.photos.flatMap(p=>[p.thumb]));safeRender()});
+  sub("photos",async s=>{S.photos=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.at||0)-(b.at||0));if(S.lb){const ids=new Set(S.photos.map(p=>p.id));S.lb.list=S.lb.list.filter(p=>ids.has(p.id));if(!S.lb.list.length){S.lb=null;drawLB()}else{S.lb.i=Math.min(S.lb.i,S.lb.list.length-1)}}await ensureUrls(S.photos.flatMap(p=>[p.thumb]));safeRender()});
   sub("missions",s=>{S.missions={};s.docs.forEach(d=>S.missions[d.id]=d.data());if(S.view==="plan"||S.view==="result")safeRender()});
   sub("diary",s=>{S.diary={};s.docs.forEach(d=>S.diary[d.id]=d.data());safeRender()});
   db.doc("config/secret").onSnapshot(d=>{S.secret=d.exists?d.data().msg:null;if(S.view==="stamp")safeRender()});
   db.doc("prep/items").onSnapshot(d=>{S.items=d.exists?d.data():null;if(S.view==="plan")safeRender()});
   sub("letters",s=>{S.letters={};s.docs.forEach(d=>S.letters[d.id]=d.data());if(S.view==="diary"||S.view==="plan")safeRender()});
-  try{await db.load();setSysbar(null)}catch(e){console.warn(e);const i=errInfo(e,"db");S.lastErr={at:Date.now(),where:"db(load)",msg:i.msg,raw:String(e?.message||e)};
-    setSysbar(i.kind==="setup"?`保存先の設定がまだのようです：${i.msg}`:i.kind==="network"?"電波がとどかず、データを読み込めませんでした（表示は前回の内容ではなく初期状態です）":"データを読み込めませんでした："+i.msg,i.kind==="network"?"retry":"diag");
-    if(i.kind==="network")setTimeout(()=>db.refresh().then(()=>{if(db.ready)setSysbar(null)}),4000)}
-  db.subscribe();
+  db.subscribe();   // 読み込み中の変更も取りこぼさないよう、先に購読
+  render();
+  try{await db.load();S.canWrite=true;setSysbar(null)}catch(e){console.warn(e);const i=errInfo(e,"db");S.lastErr={at:Date.now(),where:"db(load)",msg:i.msg,raw:String(e?.message||e)};
+    setSysbar(i.kind==="setup"?`保存先の設定がまだのようです：${i.msg}`:i.kind==="network"?"電波がとどかず、データを読み込めませんでした（読み込めるまで保存はできません）":"データを読み込めませんでした："+i.msg,i.kind==="network"?"retry":"diag");
+    if(i.kind==="network")setTimeout(async()=>{if(await db.refresh()){S.canWrite=true;setSysbar(null);render()}},4000)}
   setTimeout(geocodeMissing,4000);
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden)db.refresh()});
+  document.addEventListener("visibilitychange",async()=>{if(document.hidden)return;if(await db.refresh()){if(!S.canWrite){S.canWrite=true;setSysbar(null);render()}}});
   render();
 }
 (async()=>{
-  let session=null;try{session=(await sb.auth.getSession()).data.session}catch(e){console.warn(e)}
-  if(session)start(session);else showLogin();
+  let session=null,err=null;try{const r=await sb.auth.getSession();session=r.data.session;err=r.error}catch(e){err=e}
+  if(session)start(session);
+  else if(err&&isNetErr(err))showLogin("電波がとどかず、ログイン状態を確認できませんでした。電波が戻ると自動でつながります");
+  else showLogin();
   // コールバックの中で supabase を待つと詰まることがあるので、必ず外側で開始する
-  sb.auth.onAuthStateChange((ev,sess)=>{if(ev==="SIGNED_IN"&&sess&&!S.who)setTimeout(()=>{if(!S.who)start(sess)},0);
+  sb.auth.onAuthStateChange((ev,sess)=>{if((ev==="SIGNED_IN"||ev==="TOKEN_REFRESHED")&&sess&&!S.who)setTimeout(()=>{if(!S.who){if($("#login-form"))$("#layer").innerHTML="";start(sess)}},0);
     if(ev==="SIGNED_OUT"&&S.who){S.who=null;location.reload()}});
 })();
 })();
