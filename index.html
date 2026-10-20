@@ -1206,7 +1206,9 @@ function showLogin(msg){
   document.querySelectorAll("[data-who]").forEach(b=>b.onclick=()=>{pickWho=b.dataset.who;beep("tap");showLogin();setTimeout(()=>$("#pw")?.focus(),50)});
   $("#login-form").onsubmit=async e=>{e.preventDefault();const pw=$("#pw").value;const btn=$("#login-btn");btn.disabled=true;btn.textContent="…";
     try{const {error}=await sb.auth.signInWithPassword({email:EMAILS[pickWho],password:pw});
-      if(error){$("#login-err").textContent="あいことばがちがうみたい。もう一度ためしてね";btn.disabled=false;btn.textContent="はいる";beep("tap");return}
+      if(error){const m=String(error.message||"");console.warn(error);
+        const msg=/Invalid login credentials/i.test(m)?"あいことばがちがうみたい（または、このアカウントがまだ作られていません）":/Email not confirmed/i.test(m)?"アカウントの確認が済んでいません。Supabaseで「Auto Confirm User」をオンにして作り直してね":/logins are disabled|Email logins/i.test(m)?"メールでのログインがオフになっています（Supabaseの Sign In / Providers → Email をオン）":/fetch|network|Failed/i.test(m)?"つながりませんでした。電波を確認してもう一度":"ログインできませんでした："+m;
+        $("#login-err").textContent=msg;btn.disabled=false;btn.textContent="はいる";beep("tap");return}
       $("#layer").innerHTML="";beep("open");confetti();}
     catch(err){console.warn(err);$("#login-err").textContent="つながりませんでした。電波を確認してもう一度";btn.disabled=false;btn.textContent="はいる"}};
 }
