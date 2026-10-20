@@ -317,16 +317,56 @@ section.view{position:relative}
 .say .b{background:#fff;border:3px solid var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;font-weight:700;min-width:0}
 
 /* ============ 島めぐりマップ ============ */
-.mapbox{display:grid;grid-template-columns:minmax(0,200px) 1fr;gap:14px;align-items:start}
-@media (max-width:560px){.mapbox{grid-template-columns:1fr}}
-.map{background:radial-gradient(circle at 30% 20%,#9eeef0,var(--sea) 70%);border:3px solid var(--ink);border-radius:20px;padding:6px;max-width:100%}
-@media (max-width:560px){.map{max-width:230px;margin:0 auto;width:100%}}
-.map svg{width:100%;height:auto;display:block}
-.map .pin{cursor:pointer}
-.map .pin circle.dot{transition:r .2s}
-.map .pin.on circle.dot{r:13}
-.route{stroke-dasharray:6 7;animation:march 1.2s linear infinite}
-@keyframes march{to{stroke-dashoffset:-13}}
+.mapbox{display:grid;grid-template-columns:minmax(0,350px) 1fr;gap:16px;align-items:start}
+@media (max-width:760px){.mapbox{grid-template-columns:1fr}}
+.map-col{min-width:0}
+@media (min-width:761px){.map-col{position:sticky;top:12px}}
+.map{background:#17a2c4;border:3px solid var(--ink);border-radius:22px;overflow:hidden;box-shadow:0 5px 0 var(--ink)}
+.map>svg{width:100%;height:auto;display:block}
+.okimap{--k:1}
+.okimap text{font-family:var(--body);font-weight:900;fill:var(--ink)}
+.okimap .ttl{font-family:var(--pop);font-size:34px;fill:#fff;opacity:.95;letter-spacing:.08em}
+.okimap .ttl2{font-size:17px;fill:#fff;opacity:.9;letter-spacing:.12em}
+.okimap .rg{font-size:calc(21px*var(--k));fill:#2b4a2b;opacity:.9;paint-order:stroke;stroke:rgba(255,255,255,.8);stroke-width:calc(5px*var(--k));stroke-linejoin:round;text-anchor:middle;letter-spacing:.05em;pointer-events:none}
+.okimap .r58{fill:none;stroke:rgba(255,255,255,.75);stroke-linejoin:round;stroke-linecap:round}
+.okimap .expy-bg{fill:none;stroke:#fff;stroke-linejoin:round;stroke-linecap:round;opacity:.95}
+.okimap .expy{fill:none;stroke:#f5a524;stroke-linejoin:round;stroke-linecap:round}
+.okimap .lm{pointer-events:none}
+.okimap .route{fill:none;stroke-linecap:round;stroke-linejoin:round;animation:march 1.4s linear infinite;filter:drop-shadow(0 0 2px rgba(255,255,255,.9))}
+@keyframes march{to{stroke-dashoffset:-20}}
+.okimap .pin{cursor:pointer;outline:none}
+.okimap .pin.other{opacity:.7}
+.okimap .pin.other:hover{opacity:1}
+.okimap .pin .no{font-size:calc(17px*var(--k));fill:#fff;text-anchor:middle;pointer-events:none;font-family:var(--pop)}
+.okimap .pin.focus .no{font-size:calc(21px*var(--k))}
+.okimap .pin .lb{font-size:calc(24px*var(--k));paint-order:stroke;stroke:#fff;stroke-width:calc(7px*var(--k));stroke-linejoin:round;pointer-events:none}
+.okimap .pin.focus .lb{font-size:calc(27px*var(--k));fill:#b3231a}
+.okimap .pin:focus-visible circle{stroke:var(--sun)}
+.okimap .me-ring{fill:rgba(255,210,63,.35);stroke:#ffd23f;stroke-width:3;animation:mering 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mering{0%{transform:scale(.55);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.okimap .me .lb{font-size:22px;fill:#8a5a00}
+.okimap .scale text{font-size:calc(16px*var(--k));fill:#fff;paint-order:stroke;stroke:#0e7f9b;stroke-width:calc(3px*var(--k))}
+.okimap .compass text{font-family:var(--pop);font-size:20px;fill:#fff;text-anchor:middle}
+.okimap .inset{cursor:pointer;overflow:visible;filter:drop-shadow(0 3px 0 rgba(35,49,79,.5))}
+.map-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap}
+.map-btns{display:inline-flex;gap:6px;flex-wrap:wrap}
+.stops li[data-stop]{cursor:pointer}
+.drive-total{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;font-weight:900;color:var(--ink);background:var(--sand);border-radius:12px;padding:6px 10px;margin:4px 0 8px}
+.drive-total svg{width:20px;height:20px;flex:none}
+.drive-total .muted{font-weight:700;font-size:11.5px}
+.legend{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:900;color:var(--muted)}
+.legend i{width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--ink);display:inline-block;flex:none}
+.map-hint{margin-top:6px}
+.map-focus{--c:var(--sea);display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:8px;background:#fff;border:3px solid var(--ink);border-left:10px solid var(--c);border-radius:14px;padding:8px 10px;box-shadow:0 4px 0 var(--ink);animation:pop .25s ease-out}
+.map-focus .fno{font-family:var(--pop);font-size:12px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,#fff);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.map-focus .ft{min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.map-focus .ft b{font-size:14.5px;overflow-wrap:anywhere}
+.map-focus .ft span{font-size:12px;color:var(--muted);font-weight:700}
+.stops li.drive{padding:0 0 2px}
+.stops li.drive .t{visibility:hidden}
+.stops li.drive div{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:900;color:var(--muted);background:var(--sand);border-radius:999px;padding:2px 10px 2px 6px;width:max-content;max-width:100%}
+.stops li.drive svg{width:18px;height:18px;flex:none}
+.stops li.focus>div{background:#fff8dc;border-radius:12px;padding:4px 8px;margin:-4px -8px;box-shadow:inset 0 0 0 2px var(--sun)}
 .daytabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .daytabs button{--c:var(--sea);border:3px solid var(--ink);background:#fff;border-radius:12px;padding:2px 10px;line-height:1.3;font-weight:900;text-align:center;box-shadow:0 3px 0 var(--ink)}
 .daytabs button small{display:block;font-size:10.5px;font-weight:900;letter-spacing:.04em;opacity:.85}
@@ -554,7 +594,21 @@ const DEFAULT_DAYS=[
  {n:6,date:"11/24",dow:"火",title:"お土産と帰り道",theme:"またね沖縄",stay:"",flight:"",hotel:"",note:"",
   stops:[{id:"shuri",t:"9:00",n:"首里城",d:"朱色の門と石畳の道。朝いちばんがすいている",q:"首里城",stamp:true},{id:"makishi",t:"11:00",n:"第一牧志公設市場",d:"市場の活気とサーターアンダギー",q:"第一牧志公設市場",stamp:true},{id:"s6b",t:"12:30",n:"国際通りでお土産",d:"ちんすこう、紅いもタルト",q:"",stamp:false},{id:"s6c",t:"14:30",n:"レンタカー返却",d:"給油を忘れずに",q:"",stamp:false},{id:"naha-out",t:"夕方",n:"那覇空港から帰路",d:"またね、沖縄。最後のスタンプ",q:"那覇空港",stamp:true}]}
 ];
-const PINS={1:[66,462],2:[118,402],3:[150,346],4:[168,206],5:[214,160],6:[106,434]};
+/* ---------- 地図データ（沖縄本島） ---------- */
+const ISLANDS=["M226.2 856.1L230.2 860.5L230.2 872.7L225.2 872.7L211.3 885.0L206.3 889.4L210.3 891.7L202.3 893.9L191.4 907.3L185.4 910.6L174.4 907.3L167.4 911.7L166.4 917.3L147.5 925.1L124.6 956.2L97.7 960.7L76.7 975.2L58.8 967.4L58.8 941.8L63.8 929.5L59.8 928.4L68.8 921.7L61.8 922.8L68.8 917.3L62.8 917.3L61.8 912.8L66.8 910.6L67.8 912.8L68.8 909.5L58.8 910.6L59.8 905.0L52.8 907.3L55.8 916.2L50.8 916.2L47.8 896.1L68.8 888.3L59.8 877.2L54.8 878.3L60.8 878.3L67.8 886.1L52.8 888.3L49.8 881.7L46.8 887.2L45.8 879.4L53.8 876.1L48.8 872.7L52.8 872.7L47.8 863.8L55.8 865.0L39.9 862.7L43.9 859.4L43.9 847.1L36.9 836.0L51.8 814.9L72.8 828.2L73.8 824.9L60.8 814.9L63.8 812.6L59.8 814.9L66.8 810.4L71.8 811.5L74.8 806.0L73.8 808.2L84.7 807.1L77.7 802.6L78.7 790.4L76.7 794.8L74.8 790.4L73.8 799.3L66.8 799.3L66.8 792.6L71.8 791.5L68.8 778.1L77.7 778.1L74.8 783.7L84.7 788.1L83.7 772.6L72.8 773.7L75.7 771.4L90.7 773.7L106.6 753.6L110.6 755.9L119.6 751.4L119.6 757.0L125.6 753.6L125.6 749.2L127.6 751.4L125.6 748.1L131.6 748.1L124.6 748.1L129.6 742.5L140.5 744.7L137.5 740.3L150.5 734.7L152.5 728.0L156.5 729.1L159.5 713.6L152.5 705.8L154.5 698.0L148.5 701.3L145.5 698.0L142.5 686.8L146.5 679.1L144.5 665.7L141.5 667.9L138.5 659.0L140.5 652.3L136.5 653.4L115.6 607.8L112.6 593.3L116.6 575.5L111.6 566.6L124.6 567.7L136.5 587.8L143.5 586.7L158.5 575.5L170.4 561.1L181.4 573.3L197.3 571.1L203.3 562.2L203.3 559.9L202.3 562.2L200.3 562.2L198.3 559.9L202.3 562.2L199.3 558.8L209.3 548.8L211.3 539.9L213.3 543.2L230.2 533.2L234.2 524.3L245.2 522.1L238.2 505.4L243.2 496.5L250.2 495.4L254.2 502.1L258.1 495.4L255.1 490.9L262.1 496.5L268.1 486.5L269.1 490.9L272.1 487.6L285.0 497.6L290.0 487.6L307.0 478.7L315.9 483.1L319.9 468.7L325.9 469.8L332.9 458.6L330.9 453.1L339.9 462.0L350.8 450.8L356.8 448.6L358.8 455.3L362.8 455.3L382.7 417.4L378.7 400.8L363.8 400.8L325.9 379.6L318.9 379.6L312.0 388.5L294.0 381.8L294.0 374.0L277.1 344.0L278.1 329.5L287.0 321.7L294.0 322.8L287.0 321.7L287.0 306.1L273.1 295.0L279.1 268.3L296.0 276.1L301.0 275.0L303.0 279.4L351.8 269.4L368.8 275.0L364.8 280.5L368.8 285.0L376.7 280.5L387.7 287.2L397.7 287.2L406.6 296.1L394.7 303.9L387.7 328.4L389.7 331.7L381.7 335.1L397.7 341.8L406.6 356.2L411.6 354.0L423.6 359.6L431.6 350.7L429.6 342.9L433.6 344.0L432.6 349.5L449.5 350.7L469.4 340.6L478.4 340.6L495.3 320.6L507.3 319.5L509.3 313.9L509.3 323.9L513.3 319.5L515.3 323.9L522.3 323.9L519.3 313.9L508.3 309.5L505.3 312.8L497.3 299.5L515.3 275.0L542.2 269.4L557.1 254.9L559.1 247.1L554.2 234.9L548.2 232.7L551.2 227.1L561.1 230.4L582.1 222.6L588.0 210.4L596.0 202.6L601.0 203.7L603.0 194.8L621.9 179.2L623.9 170.3L629.9 169.2L628.9 161.4L650.8 119.1L650.8 110.2L641.9 102.4L643.9 92.4L654.8 83.5L661.8 84.6L663.8 86.8L659.8 93.5L667.8 101.3L677.7 104.6L678.7 110.2L689.7 116.9L687.7 120.2L692.7 119.1L691.7 114.7L703.7 116.9L703.7 134.7L718.6 151.4L715.6 160.3L719.6 171.4L714.6 175.9L723.6 187.0L719.6 199.3L723.6 204.8L716.6 214.8L725.6 216.0L724.6 223.8L715.6 230.4L720.6 230.4L716.6 233.8L722.6 230.4L715.6 239.3L703.7 244.9L701.7 254.9L691.7 259.4L696.7 263.8L688.7 269.4L691.7 276.1L678.7 281.6L676.7 303.9L671.8 311.7L662.8 313.9L661.8 323.9L653.8 323.9L648.8 331.7L649.8 339.5L633.9 355.1L611.0 360.7L580.1 362.9L557.1 355.1L546.2 357.3L544.2 365.1L553.2 381.8L550.2 391.8L522.3 386.3L543.2 420.8L549.2 425.2L536.2 427.5L536.2 441.9L524.3 439.7L506.3 445.3L498.3 453.1L500.3 457.5L491.4 456.4L493.4 463.1L463.5 441.9L462.5 446.4L442.5 447.5L440.5 435.3L437.5 443.1L431.6 441.9L451.5 478.7L429.6 478.7L431.6 485.4L424.6 489.8L408.6 484.2L403.7 487.6L403.7 495.4L398.7 488.7L394.7 490.9L390.7 495.4L399.7 507.6L399.7 519.9L388.7 522.1L389.7 528.8L365.8 536.6L359.8 529.9L349.8 531.0L349.8 537.7L344.8 541.0L349.8 549.9L341.9 555.5L347.8 570.0L339.9 565.5L322.9 568.8L315.9 564.4L314.9 559.9L314.0 563.3L313.0 559.9L299.0 557.7L284.1 547.7L275.1 552.1L269.1 547.7L250.2 557.7L242.2 571.1L245.2 573.3L242.2 581.1L229.2 576.6L232.2 581.1L229.2 580.0L226.2 587.8L238.2 592.2L235.2 595.6L240.2 605.6L250.2 604.5L244.2 606.7L259.1 614.5L279.1 636.8L273.1 637.9L272.1 656.8L287.0 677.9L300.0 688.0L314.0 688.0L305.0 689.1L318.9 704.7L322.9 721.4L319.9 729.1L314.9 730.3L309.0 722.5L305.0 728.0L308.0 722.5L303.0 723.6L304.0 721.4L293.0 713.6L270.1 689.1L271.1 692.4L261.1 673.5L247.2 683.5L261.1 674.6L269.1 690.2L264.1 694.6L257.1 685.7L252.2 695.7L237.2 691.3L234.2 694.6L238.2 696.9L235.2 695.7L234.2 699.1L245.2 701.3L246.2 708.0L228.2 709.1L228.2 719.1L215.3 718.0L211.3 723.6L210.3 731.4L216.3 734.7L215.3 749.2L212.3 755.9L208.3 751.4L198.3 760.3L189.4 780.4L187.4 806.0L192.4 813.7L183.4 806.0L178.4 814.9L167.4 818.2L155.5 830.4L168.4 834.9L170.4 842.7L175.4 846.0L177.4 866.1L184.4 863.8L189.4 867.2L193.4 851.6L214.3 843.8L220.3 844.9L220.3 854.9L226.2 856.1Z", "M367.8 654.6L371.8 639.0L386.7 629.0L389.7 635.6L383.7 639.0L391.7 641.2L394.7 654.6L374.7 662.4L376.7 665.7L373.8 663.5L356.8 684.6L357.8 681.3L354.8 680.2L356.8 683.5L352.8 679.1L339.9 682.4L346.8 672.4L341.9 663.5L341.9 652.3L343.9 660.1L353.8 661.2L366.8 654.6L364.8 651.2L367.8 654.6Z", "M425.6 319.5L433.6 329.5L429.6 340.6L430.6 335.1L415.6 326.2L408.6 328.4L408.6 334.0L392.7 322.8L397.7 306.1L404.6 307.2L408.6 301.7L418.6 299.5L425.6 319.5Z", "M204.3 272.7L194.4 268.3L162.5 270.5L155.5 267.2L148.5 256.0L151.5 241.6L159.5 236.0L183.4 241.6L210.3 236.0L228.2 251.6L230.2 259.4L227.2 267.2L204.3 272.7Z", "M351.8 705.8L348.8 693.5L353.8 691.3L350.8 691.3L355.8 691.3L365.8 699.1L367.8 698.0L365.8 703.5L359.8 705.8L357.8 713.6L351.8 705.8Z", "M342.9 782.6L341.9 788.1L330.9 784.8L336.9 785.9L331.9 784.8L336.9 775.9L336.9 764.8L343.9 765.9L346.8 770.3L342.9 782.6Z", "M425.6 268.3L422.6 282.8L413.6 282.8L414.6 285.0L407.6 273.8L408.6 264.9L417.6 262.7L425.6 268.3Z", "M217.3 332.8L220.3 339.5L212.3 339.5L215.3 338.4L213.3 335.1L209.3 338.4L212.3 332.8L217.3 332.8Z", "M168.4 820.4L173.4 818.2L168.4 823.8L172.4 831.6L166.4 827.1L169.4 833.8L156.5 830.4L168.4 820.4Z"];
+const MX=lng=>(lng-127.60)*996.6, MY=lat=>(26.95-lat)*1113.2;
+const COORDS={"naha-in":[26.1958,127.6460],"senaga":[26.1766,127.6468],"kokusai":[26.2144,127.6868],"sefa":[26.1733,127.8261],"nirai":[26.1612,127.7956],"s2b":[26.1352,127.7620],"ou":[26.1273,127.7700],"chatan":[26.3158,127.7568],
+ "aono":[26.4433,127.7722],"manza":[26.5047,127.8503],"s3c":[26.4975,127.8536],"zanpa":[26.4397,127.7132],"churaumi":[26.6943,127.8780],"emerald":[26.6998,127.8775],"bise":[26.7062,127.8795],"sesoko":[26.6447,127.8533],
+ "nakijin":[26.6906,127.9298],"kouri":[26.6890,128.0163],"heart":[26.7138,128.0190],"s5c":[26.7000,128.0220],"s5d":[26.2125,127.6792],"kyoda":[26.5567,127.9823],"shuri":[26.2170,127.7195],"makishi":[26.2143,127.6884],"s6b":[26.2172,127.6905],"s6c":[26.2010,127.6530],"naha-out":[26.1958,127.6460]};
+const DEFAULT_Q={};DEFAULT_DAYS.forEach(d=>d.stops.forEach(s=>{if(s.q)DEFAULT_Q[s.id]=s.q}));
+const coordOf=s=>s&&typeof s.lat==="number"?{lat:s.lat,lng:s.lng}:(s&&COORDS[s.id]&&!s.noDefault)?{lat:COORDS[s.id][0],lng:COORDS[s.id][1]}:null;
+const EXPRESSWAY=[[26.2206,127.7355],[26.2383,127.7533],[26.2958,127.7958],[26.3309,127.8107],[26.3617,127.8129],[26.4143,127.8299],[26.4609,127.8775],[26.4903,127.9596],[26.5548,127.9803]];
+const REGIONS=[["那覇",26.248,127.690],["糸満",26.123,127.672],["南城",26.155,127.838],["北谷",26.335,127.735],["うるま",26.385,127.86],["読谷",26.395,127.742],["恩納村",26.472,127.852],["名護",26.60,128.00],["本部",26.668,127.915],["古宇利島",26.736,128.018],["やんばる",26.78,128.19],["伊江島",26.735,127.78]];
+const ROUTE58=[[26.213,127.680],[26.25,127.702],[26.2848,127.7466],[26.317,127.7606],[26.356,127.754],[26.392,127.744],[26.428,127.768],[26.4512,127.8043],[26.4739,127.8401],[26.505,127.86],[26.5273,127.9278],[26.5609,127.9836],[26.5962,127.975]];
+const LANDMARKS=[{k:"air",lat:26.1958,lng:127.6460,n:"那覇空港"},{k:"aqua",lat:26.6943,lng:127.8780,n:"美ら海水族館"},{k:"castle",lat:26.2170,lng:127.7195,n:"首里城"}];
+function haversine(a,b){const R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function driveEstimate(a,b){const d=haversine(a,b);const km=d*(d>25?1.45:1.3);const v=35+25*Math.max(0,Math.min(1,(d-10)/30));const min=Math.max(5,Math.round((km/v*60+4)/5)*5);return {km:Math.round(km),min}}
+const minText=m=>{const h=Math.floor(m/60),r=m%60;return (h?h+"時間":"")+(r?r+"分":"")};
 
 /* ---------- ミッション：タグで「その日の行程」に合うものを出す ---------- */
 const TAGWORDS=[
@@ -815,17 +869,102 @@ function newsHTML(){
 }
 
 /* ---------- 地図 ---------- */
+const MAP_FULL=[20,60,740,930];
+function dayBox(sel){
+  if(S.mapAll)return MAP_FULL;
+  const pts=[];for(const s of (DAYS()[sel-1]?.stops||[])){const c=coordOf(s);if(c)pts.push([MX(c.lng),MY(c.lat)])}
+  if(!pts.length)return MAP_FULL;
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  let w=Math.max((x1-x0)*1.7+90,300),h=Math.max((y1-y0)*1.7+90,300);const A=740/930;if(w/h>A)h=w/A;else w=h*A;
+  if(w>=740||h>=930)return MAP_FULL;
+  // 海ばかりにならないよう、島の中心の方へ少し寄せる
+  const cx=(x0+x1)/2,cy=(y0+y1)/2;const sx=Math.max(-w*.16,Math.min(w*.16,MX(127.86)-cx)),sy=Math.max(-h*.09,Math.min(h*.09,MY(26.42)-cy));
+  let x=cx+sx-w/2,y=cy+sy-h/2;x=Math.max(-30,Math.min(x,810-w));y=Math.max(20,Math.min(y,1030-h));
+  return [x,y,w,h].map(Math.round);
+}
 function mapSVG(sel){
-  const route=DAYS().map(d=>PINS[d.n]).filter(Boolean);
-  const land="M60 455 L90 492 L140 500 L172 472 L176 422 L200 380 L214 332 L248 300 L264 250 L290 200 L300 150 L318 100 L328 52 L314 30 L294 56 L284 110 L262 150 L240 172 L226 180 L192 168 L160 184 L146 214 L172 236 L198 236 L204 262 L190 290 L164 322 L140 360 L114 390 L94 420 L68 432 Z";
-  return `<svg viewBox="20 10 320 500" role="img" aria-label="沖縄本島の島めぐりルート">
-   <path d="${land}" fill="none" stroke="#fbe7b5" stroke-width="12" stroke-linejoin="round" opacity=".9"/>
-   <path d="${land}" fill="#8fd654" stroke="#23314f" stroke-width="4" stroke-linejoin="round"/>
-   <ellipse cx="216" cy="158" rx="14" ry="10" fill="#8fd654" stroke="#23314f" stroke-width="3"/><ellipse cx="138" cy="228" rx="9" ry="7" fill="#8fd654" stroke="#23314f" stroke-width="3"/>
-   <text x="250" y="420" font-family="DotGothic16,monospace" font-size="16" fill="#fff">OKINAWA</text>
-   <polyline class="route" points="${route.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#23314f" stroke-width="3" stroke-linecap="round"/>
-   ${DAYS().map(d=>{const [x,y]=PINS[d.n];const c=getComputedStyle(document.documentElement).getPropertyValue("--d"+d.n).trim();return `<g class="pin ${d.n===sel?"on":""}" data-pd="${d.n}" tabindex="0" role="button" aria-label="DAY${d.n}"><circle class="dot" cx="${x}" cy="${y}" r="10" fill="${c}" stroke="#23314f" stroke-width="3"/><text x="${x}" y="${y+5}" text-anchor="middle" font-family="DotGothic16,monospace" font-size="13" fill="#fff" pointer-events="none">${d.n}</text></g>`}).join("")}
+  const days=DAYS();const cs=getComputedStyle(document.documentElement);const dcol=n=>cs.getPropertyValue("--d"+n).trim()||"#ee4b3a";
+  const vb=dayBox(sel);const [vx,vy,vw,vh]=vb;const k=vw/740;const full=vw>=740;const f=v=>(+v).toFixed(1);
+  const land=ISLANDS.map(p=>`<path d="${p}"/>`).join("");
+  const line=pts=>pts.map(([la,ln])=>`${f(MX(ln))},${f(MY(la))}`).join(" ");
+  const regions=REGIONS.map(([n,la,ln])=>`<text class="rg" x="${f(MX(ln))}" y="${f(MY(la))}">${n}</text>`).join("");
+  const glyph={air:`<path d="M-11 2 L-2 -1 L-2 -8 L1 -8 L3 -1 L11 2 L11 5 L3 3 L2 8 L5 10 L5 12 L0 11 L-5 12 L-5 10 L-2 8 L-3 3 L-11 5z" fill="#fff" stroke="#23314f" stroke-width="1.6" stroke-linejoin="round"/>`,
+    aqua:`<path d="M-12 1 C-8 -8 4 -9 10 -2 L13 -7 L12 4 L9 2 C3 8 -6 7 -12 1z" fill="#8fd3f4" stroke="#23314f" stroke-width="1.6" stroke-linejoin="round"/><circle cx="-5" cy="-1" r="1.4" fill="#23314f"/>`,
+    castle:`<path d="M-11 9 L-11 -1 L-7 -7 L7 -7 L11 -1 L11 9z" fill="#ee4b3a" stroke="#23314f" stroke-width="1.6" stroke-linejoin="round"/><rect x="-3" y="1" width="6" height="8" fill="#fff6e3" stroke="#23314f" stroke-width="1.2"/>`};
+  const marks=LANDMARKS.map(l=>`<g class="lm" transform="translate(${f(MX(l.lng))} ${f(MY(l.lat))}) scale(${f(k)})"><circle r="16" fill="#fff" stroke="#23314f" stroke-width="2"/>${glyph[l.k]}</g>`).join("");
+  // ピン：全日の予定（座標があるもの）
+  const pins=[];for(const d of days){(d.stops||[]).forEach((s,i)=>{const c=coordOf(s);if(!c)return;pins.push({d:d.n,i,s,c,x:MX(c.lng),y:MY(c.lat)})})}
+  const selPins=pins.filter(p=>p.d===sel),otherPins=pins.filter(p=>p.d!==sel);
+  // 近すぎるピン同士は少し離して描く（同じ場所に2つあっても両方見えるように）
+  for(let it=0;it<6;it++){for(let i=0;i<selPins.length;i++)for(let j=i+1;j<selPins.length;j++){const a=selPins[i],b=selPins[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);const min=26*k;
+    if(d<min){if(d<.01){dx=1;dy=0;d=1}const push=(min-d)/2;a.x-=dx/d*push;a.y-=dy/d*push;b.x+=dx/d*push;b.y+=dy/d*push}}}
+  // ルート：直線だと海の上を横切るので、島の内側へ少しふくらむ曲線にする
+  const CX=MX(127.86),CY=MY(26.42);let routeD="";
+  selPins.forEach((p,i)=>{if(!i){routeD=`M${f(p.x)} ${f(p.y)}`;return}const q=selPins[i-1];const dx=p.x-q.x,dy=p.y-q.y,len=Math.hypot(dx,dy)||1;
+    let nx=-dy/len,ny=dx/len;const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;if((CX-mx)*nx+(CY-my)*ny<0){nx=-nx;ny=-ny}
+    const bow=Math.min(len*.22,40);routeD+=` Q${f(mx+nx*bow)} ${f(my+ny*bow)} ${f(p.x)} ${f(p.y)}`});
+  const route=selPins.length>1?`<path class="route" d="${routeD}" stroke="${dcol(sel)}" stroke-width="${f(5.5*k)}" stroke-dasharray="${f(9*k)} ${f(11*k)}"/>`:"";
+  // ラベル位置：右・左・上・下の順に、ほかのラベルやピンと重ならない所を選ぶ
+  const boxes=[];const pinR=p=>((S.mapFocus===p.s.id)?16:(p.s.stamp?13:11))*k;
+  const selSorted=[...selPins].sort((a,b)=>a.y-b.y);for(const p of selSorted)boxes.push({x0:p.x-pinR(p),y0:p.y-pinR(p),x1:p.x+pinR(p),y1:p.y+pinR(p)});
+  const overlap=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
+  const labels=selSorted.map(p=>{const focus=S.mapFocus===p.s.id;const fs=(focus?27:24)*k;const name=p.s.n.length>10?p.s.n.slice(0,10)+"…":p.s.n;
+    const tw=[...name].reduce((w,ch)=>w+(ch.charCodeAt(0)<256?.6:1)*fs,0)+4*k,th=fs*1.15;const r=pinR(p),g=6*k;
+    const dy=r*.95;const cands=[{a:"start",x:p.x+r+g,y:p.y+fs*.36},{a:"end",x:p.x-r-g,y:p.y+fs*.36},{a:"middle",x:p.x,y:p.y-r-g},{a:"middle",x:p.x,y:p.y+r+g+fs*.85},
+      {a:"start",x:p.x+r,y:p.y-dy},{a:"start",x:p.x+r,y:p.y+dy+fs*.7},{a:"end",x:p.x-r,y:p.y-dy},{a:"end",x:p.x-r,y:p.y+dy+fs*.7}];
+    let best=null;for(const c of cands){const x0=c.a==="start"?c.x:c.a==="end"?c.x-tw:c.x-tw/2;const b={x0,y0:c.y-fs*.85,x1:x0+tw,y1:c.y+th*.2};
+      let sc=0;for(const o of boxes)sc+=overlap(b,o);const out=Math.max(0,vx+4*k-b.x0)+Math.max(0,b.x1-(vx+vw-4*k))+Math.max(0,vy+4*k-b.y0)+Math.max(0,b.y1-(vy+vh-4*k));sc+=out*th;
+      if(!best||sc<best.sc)best={...c,b,sc};if(sc===0)break}
+    boxes.push(best.b);return {...p,focus,fs,name,lx:best.x,ly:best.y,anchor:best.a}});
+  const otherHTML=otherPins.map(p=>`<g class="pin other" data-pin="${p.d}:${p.s.id}"><title>DAY${p.d}：${esc(p.s.n)}</title><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f((p.s.stamp?8:6)*k)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(2.5*k)}"/></g>`).join("");
+  const selHTML=labels.map(p=>{const r=pinR(p);
+    return `<g class="pin sel ${p.focus?"focus":""}" data-pin="${p.d}:${p.s.id}" tabindex="0" role="button" aria-label="${esc(p.s.n)}">
+      <circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(3.5*k)}"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="none" stroke="#23314f" stroke-width="${f(1.5*k)}"/>
+      <text class="no" x="${f(p.x)}" y="${f(p.y+5.5*k)}">${p.i+1}</text>
+      <text class="lb" x="${f(p.lx)}" y="${f(p.ly)}" text-anchor="${p.anchor}">${esc(p.name)}</text></g>`}).join("");
+  const me=S.me?`<g class="me" transform="translate(${f(MX(S.me.lng))} ${f(MY(S.me.lat))}) scale(${f(k)})"><circle r="26" class="me-ring"/><circle r="17" fill="#fff" stroke="#23314f" stroke-width="2.5"/><clipPath id="meclip"><circle r="15"/></clipPath><image href="${MII[S.who||"sai"]}" x="-15" y="-16" width="30" height="42" clip-path="url(#meclip)" preserveAspectRatio="xMidYMin slice"/><text class="lb" x="22" y="6">いまここ</text></g>`:"";
+  const inset=full?`<text class="ttl" x="${f(vx+24)}" y="${f(vy+58)}">OKINAWA</text><text class="ttl2" x="${f(vx+26)}" y="${f(vy+82)}">沖縄本島 ・ 5泊6日</text>`:
+    `<svg class="inset" tabindex="0" x="${f(vx+10*k)}" y="${f(vy+10*k)}" width="${f(150*k)}" height="${f(188*k)}" viewBox="20 60 740 930" role="button" aria-label="島ぜんたいを見る"><title>島ぜんたいを見る</title>
+      <rect x="20" y="60" width="740" height="930" rx="60" fill="#0e7f9b" stroke="#fff" stroke-width="14"/><g fill="#8fd654" stroke="#fff" stroke-width="5">${land}</g>
+      <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" rx="24" fill="rgba(255,255,255,.25)" stroke="#ffd23f" stroke-width="16"/></svg>`;
+  return `<svg class="okimap ${full?"full":"zoom"}" viewBox="${vb.join(" ")}" style="--k:${f(k)}" role="img" aria-label="沖縄本島の地図と旅の行き先">
+    <defs><linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fb9d6"/><stop offset="1" stop-color="#17a2c4"/></linearGradient>
+      <pattern id="wav" width="${f(90*k)}" height="${f(70*k)}" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><g transform="scale(${f(k)})"><path d="M8 20 q7 -8 14 0 M50 48 q7 -8 14 0 M70 12 q6 -7 12 0" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/></g></pattern></defs>
+    <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#seaG)"/><rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#wav)"/>
+    <g fill="none" stroke="#9fe7e9" stroke-width="${f(30*k)}" stroke-linejoin="round" opacity=".75">${land}</g>
+    <g fill="none" stroke="#fbe7b5" stroke-width="${f(9*k)}" stroke-linejoin="round">${land}</g>
+    <g fill="#8fd654" stroke="#5aa83f" stroke-width="${f(3*k)}" stroke-linejoin="round">${land}</g>
+    <polyline class="r58" points="${line(ROUTE58)}" stroke-width="${f(3.5*k)}"/>
+    <polyline class="expy-bg" points="${line(EXPRESSWAY)}" stroke-width="${f(8*k)}"/><polyline class="expy" points="${line(EXPRESSWAY)}" stroke-width="${f(4*k)}"/>
+    ${regions}${marks}
+    ${route}${otherHTML}${selHTML}${me}
+    ${inset}
+    <g class="compass" transform="translate(${f(vx+vw-42*k)} ${f(vy+50*k)}) scale(${f(k)})"><circle r="22" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2"/><path d="M0 -17 L7 6 L0 1 L-7 6z" fill="#ee4b3a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><text y="40">N</text></g>
+    <g class="scale" transform="translate(${f(vx+vw-(full?125:75)*k)} ${f(vy+vh-26*k)})"><rect x="0" y="${f(-4*k)}" width="${f(full?100:50)}" height="${f(8*k)}" fill="#fff" stroke="#23314f" stroke-width="${f(1.5*k)}"/><rect x="0" y="${f(-4*k)}" width="${f(full?50:25)}" height="${f(8*k)}" fill="#23314f"/><text x="${f(full?50:25)}" y="${f(-10*k)}" text-anchor="middle">${full?"10km":"5km"}</text></g>
   </svg>`;
+}
+function animateMap(){
+  const svg=document.querySelector(".okimap");if(!svg)return;const vb=svg.getAttribute("viewBox");
+  if(S.mapVB&&S.mapVB!==vb&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    const a=S.mapVB.split(" ").map(Number),b=vb.split(" ").map(Number),t0=performance.now();
+    const step=now=>{const u=Math.min(1,(now-t0)/520),e=1-Math.pow(1-u,3);svg.setAttribute("viewBox",a.map((v,i)=>v+(b[i]-v)*e).join(" "));if(u<1&&svg.isConnected)requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  }
+  S.mapVB=vb;
+}
+async function locateMe(){
+  if(!navigator.geolocation){toast("この端末では位置情報が使えません");return}
+  toast("位置を調べています…");
+  navigator.geolocation.getCurrentPosition(pos=>{const {latitude:lat,longitude:lng}=pos.coords;
+    if(lat<25.9||lat>27||lng<127.5||lng>128.5){toast("沖縄本島の外にいるみたい。旅行中にまた試してね");return}
+    S.me={lat,lng,at:Date.now()};renderPlan();beep("tap")},err=>{toast(err.code===1?"位置情報の許可が必要です":"位置を取得できませんでした")},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+}
+async function geocodeMissing(){
+  if(S.geocoded||!S.plan||!S.db||!navigator.onLine)return;S.geocoded=true;const found={};
+  for(const d of DAYS())for(const s of (d.stops||[])){if(s.q&&!coordOf(s)){const c=await geocode(s.q);if(c)found[s.id]=c;await new Promise(r=>setTimeout(r,1100))}}
+  if(!Object.keys(found).length)return;
+  const days=JSON.parse(JSON.stringify(DAYS()));let n=0;for(const d of days)for(const s of (d.stops||[])){const c=found[s.id];if(c&&!coordOf(s)){s.lat=c.lat;s.lng=c.lng;n++}}
+  if(n){try{await S.db.doc("trip/plan").set({...S.plan,days});}catch(e){console.warn(e)}}
 }
 
 /* ---------- しおり ---------- */
@@ -838,7 +977,11 @@ function renderPlan(){
   ${newsHTML()}
   ${HEAD("島めぐりのしおり","var(--shu)",S.canWrite?`<button class="btn mini" id="edit-day">この日を編集</button>`:"")}
   <div class="mapbox">
-    <div class="map">${mapSVG(S.planDay)}</div>
+    <div class="map-col">
+      <div class="map">${mapSVG(S.planDay)}</div>
+      <div class="map-bar"><span class="legend"><i style="background:${DC(S.planDay)}"></i>DAY${S.planDay}の行き先（番号は順番）</span><span class="map-btns"><button class="btn mini ghost" id="mapzoom">${S.mapAll?"この日にズーム":"島ぜんたい"}</button><button class="btn mini ghost" id="locate">${S.me?"いまここを更新":"いまここ"}</button></span></div>
+      ${focusHTML()}
+    </div>
     <div style="min-width:0">
       ${dayPicker(S.planDay,"pd")}
       <article class="daycard" style="--c:${DC(d.n)}">
@@ -846,7 +989,9 @@ function renderPlan(){
         <div class="inner">
           ${bdayOf(d)?`<div class="bday">${CAKE()}<div><b>${NAME[bdayOf(d)]}の誕生日！</b><span>今日の主役は${NAME[bdayOf(d)]}。ガチャには誕生日のお題が出ます</span></div>${CAKE("r")}</div>`:""}
           ${sun?`<div class="sunrow"><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="5" fill="#ffd23f" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M12 3v3M5 7l2 2M19 7l-2 2" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の出 ${sun[0]}</span><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="5" fill="#ff8a5c" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M8 21h8" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の入り ${sun[1]}</span><span class="sr">${moonSVG(sun[2])}${moonName(sun[2])}${d.n===6?"（最終日の夜はほぼ満月）":""}</span></div>`:""}
-          <ul class="stops">${(d.stops||[]).map(s=>`<li><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図をひらく</a>`:""}</div></li>`).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
+          <ul class="stops">${(d.stops||[]).map((s,i,arr)=>{const prev=i?coordOf(arr[i-1]):null,cur=coordOf(s);const dr=prev&&cur?driveEstimate(prev,cur):null;
+            return `${dr?`<li class="drive"><span class="t"></span><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg>車で約${minText(dr.min)}・${dr.km}km（目安）</div></li>`:""}<li class="${S.mapFocus===s.id?"focus":""}" data-stop="${s.id}"><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリでひらく</a>`:""}</div></li>`}).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
+          ${driveTotalHTML(d)}
           ${(fl||d.stay||d.hotel)?`<div class="infobox">${fl?`<div class="row"><span class="k">${d.n===1?"行きの飛行機":"帰りの飛行機"}</span><span class="v">${d.flight?esc(d.flight):`<span class="muted">便名と時間を入れてね</span>`}</span></div>`:""}${(d.stay||d.hotel)?`<div class="row"><span class="k">今夜の宿</span><span class="v">${d.hotel?esc(d.hotel):`<span class="muted">${esc(d.stay)}エリア（ホテル名を入れてね）</span>`}</span></div>`:""}</div>`:""}
         </div>
       </article>
@@ -855,6 +1000,7 @@ function renderPlan(){
   </div>
   ${gachaHTML(d)}
   ${itemsHTML()}`;
+  animateMap();
 }
 /* ---------- 持ち物リスト ---------- */
 function itemsHTML(){
@@ -871,6 +1017,17 @@ function itemsHTML(){
   </div>`;
 }
 async function saveItems(items){try{await S.db.doc("prep/items").set({items,at:Date.now()})}catch(err){writeErr(err)}}
+function driveTotalHTML(d){
+  let km=0,min=0,n=0;const st=d.stops||[];for(let i=1;i<st.length;i++){const a=coordOf(st[i-1]),b=coordOf(st[i]);if(a&&b){const e=driveEstimate(a,b);km+=e.km;min+=e.min;n++}}
+  if(!n)return "";
+  return `<div class="drive-total"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg><div>この日の運転はぜんぶで 約${minText(min)}・${km}km くらい <span class="muted">（渋滞や寄り道でもっとかかることも）</span></div></div>`;
+}
+function focusHTML(){
+  if(!S.mapFocus)return `<div class="map-hint small muted">ピンを押すと、その場所の予定が出ます。</div>`;
+  for(const d of DAYS()){const i=(d.stops||[]).findIndex(s=>s.id===S.mapFocus);if(i>=0){const s=d.stops[i];
+    return `<div class="map-focus" style="--c:${DC(d.n)}"><span class="fno">DAY${d.n}・${i+1}</span><div class="ft"><b>${esc(s.n)}</b><span>${esc(s.t)}${s.d?`　${esc(s.d)}`:""}</span></div>${s.q?`<a class="btn mini" href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリ</a>`:""}</div>`}}
+  return "";
+}
 function gachaHTML(d){
   const n=d.n,today=tripDay(),m=S.missions["day"+n]||{draws:[]},draws=m.draws||[];
   const isToday=n===today,trial=today<1,left=3-draws.length;
@@ -897,11 +1054,19 @@ function pickMission(d,draws,first){
   let cand=(first&&bC.length)?bC:(first&&dayC.length)?dayC:(Math.random()<.5&&dayC.length?dayC:anyC);if(!cand.length)cand=dayC.length?dayC:anyC;
   return cand[Math.floor(Math.random()*cand.length)];
 }
-$("#v-plan").addEventListener("keydown",e=>{const p=e.target.closest(".pin");if(p&&(e.key==="Enter"||e.key===" ")){e.preventDefault();S.planDay=+p.dataset.pd;S.trial=null;renderPlan()}});
+function pinTap(pin){const [d,id]=pin.dataset.pin.split(":");beep("tap");S.planDay=+d;S.mapFocus=S.mapFocus===id?null:id;S.trial=null;renderPlan();
+  const li=document.querySelector(`.stops li[data-stop="${CSS.escape(id)}"]`);if(li&&innerWidth<700)li.scrollIntoView({block:"center",behavior:"smooth"})}
+$("#v-plan").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const p=e.target.closest(".pin");if(p){e.preventDefault();pinTap(p);return}
+  if(e.target.closest(".inset")){e.preventDefault();S.mapAll=true;renderPlan()}});
 $("#v-plan").addEventListener("click",async e=>{
-  const pin=e.target.closest(".pin");if(pin){beep("tap");S.planDay=+pin.dataset.pd;S.trial=null;renderPlan();return}
+  const pin=e.target.closest(".pin");if(pin){pinTap(pin);return}
+  if(e.target.closest(".inset")){beep("tap");S.mapAll=true;renderPlan();return}
+  const li=e.target.closest(".stops li[data-stop]");if(li&&!e.target.closest("a")){beep("tap");S.mapFocus=S.mapFocus===li.dataset.stop?null:li.dataset.stop;renderPlan();
+    if(S.mapFocus&&innerWidth<761)document.querySelector(".map")?.scrollIntoView({behavior:"smooth",block:"center"});return}
   const t=e.target.closest("button");if(!t)return;
-  if(t.dataset.pd){beep("tap");S.planDay=+t.dataset.pd;S.trial=null;renderPlan();return}
+  if(t.id==="mapzoom"){beep("tap");S.mapAll=!S.mapAll;renderPlan();return}
+  if(t.id==="locate"){locateMe();return}
+  if(t.dataset.pd){beep("tap");S.planDay=+t.dataset.pd;S.mapFocus=null;S.mapAll=false;S.trial=null;renderPlan();return}
   if(t.id==="edit-day"){openEditor(S.planDay);return}
   const d=DAYS()[S.planDay-1];
   if(t.id==="trial"){spin(()=>{const m=pickMission(d,[],true);S.trial={n:d.n,id:m.id};beep("gacha");renderPlan()});return}
@@ -930,6 +1095,11 @@ $("#v-plan").addEventListener("submit",async e=>{
 function spin(after){const c=$("#cap");if(c){c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}setTimeout(after,matchMedia("(prefers-reduced-motion:reduce)").matches?0:700)}
 
 /* ---------- 行程エディター ---------- */
+async function geocode(q){
+  try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=jp&accept-language=ja&q="+encodeURIComponent(q+" 沖縄県"));const j=await r.json();
+    if(j&&j[0]){const lat=+j[0].lat,lng=+j[0].lon;if(lat>24&&lat<27.5&&lng>122&&lng<129)return {lat,lng}}}catch(e){console.warn("geocode",e)}
+  return null;
+}
 function openEditor(n){
   const d=JSON.parse(JSON.stringify(DAYS()[n-1]));S.editing=d;drawEditor();
 }
@@ -943,7 +1113,7 @@ function drawEditor(){
     <div class="ed-stops">${(d.stops||[]).map((s,i)=>`<div class="ed-stop" data-i="${i}">
       <div class="ed-stop-row"><input class="t" data-s="t" value="${esc(s.t)}" placeholder="10:00" maxlength="8"><input class="n" data-s="n" value="${esc(s.n)}" placeholder="行き先・やること" maxlength="60"><div class="ed-btns"><button data-mv="-1" aria-label="上へ">▲</button><button data-mv="1" aria-label="下へ">▼</button><button data-del aria-label="削除">×</button></div></div>
       <input class="d" data-s="d" value="${esc(s.d||"")}" placeholder="ひとことメモ" maxlength="80">
-      <div class="ed-stop-row2"><input class="q" data-s="q" value="${esc(s.q||"")}" placeholder="地図で検索する名前（空欄なら地図なし）" maxlength="60"><label class="chk"><input type="checkbox" data-s="stamp" ${s.stamp?"checked":""}>スタンプの場所にする</label></div></div>`).join("")}
+      <div class="ed-stop-row2"><input class="q" data-s="q" value="${esc(s.q||"")}" placeholder="地図で検索する名前（入れると地図にピンが立ちます）" maxlength="60"><label class="chk"><input type="checkbox" data-s="stamp" ${s.stamp?"checked":""}>スタンプの場所にする</label></div></div>`).join("")}
     </div>
     <button class="btn ghost" id="ed-add">＋ 予定を追加</button>
     <div class="ed-foot"><span class="small muted">ミッションガチャとスタンプラリーは、ここに書いた行き先に合わせて自動で変わります。</span><button class="btn sea" id="ed-save">保存する</button></div>
@@ -951,7 +1121,8 @@ function drawEditor(){
 }
 function collectEditor(){
   const d=S.editing,box=$(".editor");box.querySelectorAll("input[data-k],textarea[data-k]").forEach(i=>d[i.dataset.k]=i.value.trim());
-  d.stops=[...box.querySelectorAll(".ed-stop")].map((el,i)=>{const o=d.stops[i]||{id:"x"+uid()};el.querySelectorAll("[data-s]").forEach(inp=>{o[inp.dataset.s]=inp.type==="checkbox"?inp.checked:inp.value.trim()});return o});
+  d.stops=[...box.querySelectorAll(".ed-stop")].map((el,i)=>{const o=d.stops[i]||{id:"x"+uid()};el.querySelectorAll("[data-s]").forEach(inp=>{const v=inp.type==="checkbox"?inp.checked:inp.value.trim();
+    if(inp.dataset.s==="q"&&v!==(o.q||"")){delete o.lat;delete o.lng;if(COORDS[o.id]&&v!==(DEFAULT_Q[o.id]||""))o.noDefault=true}o[inp.dataset.s]=v});return o});
 }
 $("#layer").addEventListener("click",async e=>{
   if(!S.editing)return;const t=e.target.closest("button");if(!t)return;
@@ -963,6 +1134,9 @@ $("#layer").addEventListener("click",async e=>{
   if(row&&t.hasAttribute("data-del")){S.editing.stops.splice(+row.dataset.i,1);drawEditor();return}
   if(t.id==="ed-save"){
     const d=S.editing;d.stops=d.stops.filter(s=>s.n);d.stops.forEach(s=>{if(!s.id)s.id="x"+uid()});
+    t.disabled=true;t.textContent="地図の場所をしらべています…";
+    for(const s of d.stops){if(s.q&&!coordOf(s)){const c=await geocode(s.q);if(c){s.lat=c.lat;s.lng=c.lng}await new Promise(r=>setTimeout(r,1100))}}
+    t.textContent="保存する";
     const days=JSON.parse(JSON.stringify(DAYS()));days[d.n-1]=d;
     try{await S.db.doc("trip/plan").set({days,updatedAt:Date.now(),by:S.who});S.editing=null;drawEditor();toast("保存しました");beep("clear")}catch(err){writeErr(err)}
   }
@@ -1302,6 +1476,7 @@ async function start(session){
   sub("letters",s=>{S.letters={};s.docs.forEach(d=>S.letters[d.id]=d.data());if(S.view==="diary"||S.view==="plan")safeRender()});
   try{await db.load()}catch(e){console.warn(e);toast("データを読み込めませんでした。電波を確認して開き直してね")}
   db.subscribe();
+  setTimeout(geocodeMissing,4000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)db.refresh()});
   render();
 }
