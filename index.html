@@ -321,7 +321,30 @@ section.view{position:relative}
 @media (max-width:760px){.mapbox{grid-template-columns:1fr}}
 .map-col{min-width:0}
 @media (min-width:761px){.map-col{position:sticky;top:12px}}
-.map{background:#17a2c4;border:3px solid var(--ink);border-radius:22px;overflow:hidden;box-shadow:0 5px 0 var(--ink)}
+.map{background:#17a2c4;border:3px solid var(--ink);border-radius:22px;overflow:hidden;box-shadow:0 5px 0 var(--ink);position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.map.touchmode{touch-action:none;box-shadow:0 5px 0 var(--ink),0 0 0 4px var(--sun) inset}
+.map-ctrl{position:absolute;right:8px;bottom:8px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.map-ctrl button{min-width:36px;height:36px;border-radius:12px;border:2.5px solid var(--ink);background:#fff;font-family:var(--pop);font-size:16px;box-shadow:0 3px 0 var(--ink);padding:0 8px;color:var(--ink)}
+.map-ctrl button.wide{font-size:12px}
+.map-ctrl button.on{background:var(--sun)}
+.ed-place{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ed-place .pl{font-size:12px;font-weight:900;color:var(--shu)}
+.ed-place .pl.ok{color:#2e7d32}
+.ed-place .pl.ok::before{content:"● ";}
+.st-badge.off{background:#fff;color:var(--shu);border:2px solid var(--shu)}
+.modal .box.picker{text-align:left;max-width:560px;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
+.pk-search{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
+.pk-search input,.pk-paste-in input{width:100%;border:2px solid var(--ink);border-radius:10px;padding:7px 9px;font:inherit;font-size:14px;min-width:0}
+.pk-results{display:grid;gap:6px;margin:4px 0}
+.pk-hit{text-align:left;border:2px solid var(--ink);background:var(--sand);border-radius:12px;padding:6px 10px;font:inherit;display:grid;gap:1px}
+.pk-hit b{font-size:14px}.pk-hit small{font-size:11.5px;color:var(--muted);font-weight:700}
+.pk-hit.on{background:var(--sun)}
+.pk-paste{margin:6px 0}
+.pk-paste summary{font-size:12.5px;font-weight:900;cursor:pointer}
+.pk-paste-in{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0 4px}
+.pk-map{touch-action:none}
+.pk-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pk-btns{display:flex;gap:6px;margin-left:auto}
 .map>svg{width:100%;height:auto;display:block}
 .okimap{--k:1}
 .okimap text{font-family:var(--body);font-weight:900;fill:var(--ink)}
@@ -492,6 +515,66 @@ section.view{position:relative}
 
 /* ============ モーダル等 ============ */
 .modal{position:fixed;inset:0;z-index:60;background:rgba(10,60,80,.55);display:grid;place-items:center;padding:20px}
+.modal.top{z-index:65}
+/* ============ 思い出ムービー ============ */
+.show{position:fixed;inset:0;z-index:80;background:#071a26;color:#fff;overflow:hidden;font-family:var(--body)}
+.show .sh-stage{position:absolute;inset:0}
+.show .sl{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .7s ease}
+.show .sl.in{opacity:1}.show .sl.out{opacity:0}
+.show .sl.photo .bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(26px) brightness(.55);transform:scale(1.1)}
+.show .sl.photo img.main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .5s}
+.show .sl.photo img.main.ready{opacity:1;animation:kb var(--dur,4s) ease-in-out forwards}
+@keyframes kb{from{transform:scale(1.02) translate(var(--x0,0),var(--y0,0))}to{transform:scale(1.12) translate(var(--x1,0),var(--y1,0))}}
+.show .cap{position:absolute;left:0;right:0;bottom:calc(118px + env(safe-area-inset-bottom,0px));text-align:center;font-weight:900;font-size:16px;text-shadow:0 2px 6px rgba(0,0,0,.8);padding:0 16px}
+.show .cap small{display:block;font-size:12px;opacity:.85;font-weight:700}
+.show .sl.title{background:linear-gradient(160deg,#13b5c8,#2f4fb5);text-align:center;padding:24px}
+.show .sl.title .no{font-family:var(--pop);font-size:clamp(22px,8vw,40px);color:#ffd23f;letter-spacing:.06em}
+.show .sl.title .dt{font-size:16px;font-weight:900;opacity:.9;margin-top:4px}
+.show .sl.title h2{font-family:var(--pop);font-size:clamp(26px,9vw,52px);margin:10px 0 4px;line-height:1.2}
+.show .sl.title .th{font-size:15px;font-weight:900;opacity:.9}
+.show .sl.title .cake{width:64px;height:64px;margin-top:10px}
+.show .sl.title .miis{position:static;display:flex;justify-content:center;gap:10px;margin-top:18px}
+.show .sl.title .miis img{height:150px;width:auto;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+.show .sl.intro{background:linear-gradient(180deg,#13b5c8 0%,#0a7f9c 60%,#fbe7b5 60%,#fbe7b5 100%)}
+.show .sl.intro .logo{position:relative;left:auto;top:auto;transform:none;width:min(78%,360px);margin:0 auto 10px;animation:none}
+.show .sl.intro .introcap{margin-top:16px;color:var(--ink);text-align:center;font-weight:900;font-size:16px}
+.show .sl.intro .introcap small{display:block;font-size:12px;opacity:.8}
+.show .sl.diary{background:linear-gradient(160deg,#ff5c93,#8a5cf6);padding:20px}
+.show .sl.diary .pages{display:grid;gap:12px;width:min(92%,640px)}
+.show .sl.diary .pg{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:36vh;overflow:hidden}
+.show .sl.diary .pg h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-family:var(--pop);font-size:14px;color:var(--hibiscus)}
+.show .sl.diary .pg h4 img{height:34px;width:auto}
+.show .sl.ending{background:linear-gradient(180deg,#1d3a8a,#2f4fb5);text-align:center;padding:24px 24px 120px}
+.show .sl.ending h2{font-family:var(--pop);font-size:clamp(24px,8vw,44px);color:#ffd23f;margin:0 0 8px}
+.show .sl.ending .rows{display:grid;gap:6px;width:min(88%,420px);margin:12px auto}
+.show .sl.ending .rows div{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 12px;font-weight:900}
+.show .sl.ending .rows b{font-family:var(--pixel);font-size:20px;color:#ffd23f}
+.show .sl.ending .rank{font-family:var(--pop);font-size:clamp(18px,6vw,30px);background:#ffd23f;color:var(--ink);border-radius:999px;padding:6px 18px;display:inline-block;margin-top:6px}
+.show .sl.ending .fin{margin-top:18px;font-family:var(--pop);letter-spacing:.3em;opacity:.8}
+.show .sh-top{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;z-index:2;gap:8px}
+.show .sh-top select,.show .sh-bot select{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:4px 10px;font:inherit;font-weight:900;font-size:12.5px}
+.show .sh-top button,.show .sh-bot button{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-weight:900;font-size:13px;min-height:36px}
+.show .sh-bot{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;z-index:2}
+.show .sh-bot .cnt{font-family:var(--pixel);font-size:13px;opacity:.85;min-width:60px;text-align:center}
+.show .sh-bot button.big{width:48px;height:48px;padding:0;font-size:18px;display:grid;place-items:center}
+.show .sh-bot button.on{background:var(--sun);color:var(--ink);border-color:var(--sun)}
+.show .sh-hint{position:absolute;left:0;right:0;top:calc(52px + env(safe-area-inset-top,0px));text-align:center;font-size:12px;opacity:.8;z-index:2;font-weight:700}
+.show.hide-ui .sh-top,.show.hide-ui .sh-bot,.show.hide-ui .sh-hint{opacity:0;pointer-events:none;transition:opacity .4s}
+.movie-box{margin-top:14px;background:linear-gradient(135deg,#ff5c93,#8a5cf6);color:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 5px 0 var(--ink)}
+.movie-box>div{flex:1 1 220px}
+.movie-box h3{font-size:17px;margin:0 0 2px}
+.movie-box .btn{margin-left:auto}
+.sysbar{margin:0 0 12px;background:#fff3c4;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;font-weight:900;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 4px 0 var(--ink)}
+.sysbar .btn{margin-left:auto}
+.modal .box.diag{max-width:520px;text-align:left;background:#fff;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
+.diag-list{list-style:none;margin:10px 0;padding:0;display:grid;gap:6px}
+.diag-list li{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;background:var(--sand);border-radius:12px;padding:8px 10px;font-size:13.5px;font-weight:900}
+.diag-list li i{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--ink);background:#fff;font-style:normal;font-family:var(--pop);font-size:13px}
+.diag-list li.ok i{background:#8fd654}.diag-list li.ng i{background:var(--shu);color:#fff}.diag-list li.wait i{background:#fff}.diag-list li.warn i{background:var(--sun)}
+.diag-list li small{display:block;font-weight:700;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.diag-fix{background:#eafaff;border:3px solid var(--sea);border-radius:14px;padding:10px 12px;font-size:13px;margin:8px 0}
+.diag-fix ol{margin:6px 0 0;padding-left:20px}
+.diag-fix code{background:#fff;border-radius:6px;padding:0 4px;font-size:12px}
 .modal .box{background:var(--sand);border:4px solid var(--ink);border-radius:24px;padding:20px;max-width:440px;width:100%;text-align:center;box-shadow:0 6px 0 var(--ink)}
 .modal h2{font-size:22px}
 .whopick{display:flex;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
@@ -537,6 +620,7 @@ section.view{position:relative}
   </header>
 
   <main class="board-wrap">
+    <div id="sysbar" class="sysbar" hidden></div>
     <section class="view" id="v-plan"></section>
     <section class="view" id="v-stamp" hidden></section>
     <section class="view" id="v-diary" hidden></section>
@@ -558,8 +642,9 @@ section.view{position:relative}
 <input type="file" id="f-album" accept="image/*" multiple hidden>
 <input type="file" id="f-stamp" accept="image/*" hidden>
 <input type="file" id="f-food" accept="image/*" hidden>
-<div id="layer"></div>
-<div class="foot"><button class="linkbtn" id="chpw">あいことばを変える</button>　<button class="linkbtn" id="logout">ログアウト</button></div>
+<div id="layer"></div><div id="layer2"></div>
+<div id="show" class="show" hidden></div><input type="file" id="f-music" accept="audio/*" hidden>
+<div class="foot"><button class="linkbtn" id="diag-open">せつぞくチェック</button>　<button class="linkbtn" id="chpw">あいことばを変える</button>　<button class="linkbtn" id="logout">ログアウト</button></div>
 <div id="splash" class="splash" hidden><div class="splash-in"><img class="splash-mii l" src="sai.webp" alt=""><div class="logo" id="logo-splash">
       <div class="lg-bubble">さいけうとゆいちゃんの</div>
       <img class="lg-blob" src="blob.webp" alt="" width="740" height="537" decoding="async">
@@ -758,7 +843,31 @@ function foodPhoto(id){return S.photos.find(p=>p.food===id)}
 const relTime=t=>{const s=(Date.now()-t)/1e3;if(s<60)return"たった今";if(s<3600)return Math.floor(s/60)+"分前";if(s<86400)return Math.floor(s/3600)+"時間前";const d=Math.floor(s/86400);return d===1?"昨日":d+"日前"};
 
 function toast(t){const el=document.createElement("div");el.className="toast";el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
-function writeErr(e){console.warn(e);toast(e&&e.code==="quota_exceeded"?"保存できる量の上限に達しました":"保存できませんでした。共有設定で「編集者」になっているか確認してね")}
+/* エラーを「何が起きたか」で分類して、人間向けの説明にする */
+function errInfo(e,where){
+  const m=String(e?.message||e?.error_description||e?.error||e||"");const code=String(e?.code||e?.statusCode||e?.status||"");
+  const net=e instanceof TypeError||/Failed to fetch|NetworkError|Load failed|network|timeout|ECONN/i.test(m);
+  if(net)return {kind:"network",msg:"電波がとどいていないみたい。少し待ってもう一度試してね",fix:"net"};
+  if(/does not exist|42P01|42883/i.test(m+code))return {kind:"setup",msg:/docs/i.test(m)?"保存先の表（docs）がまだ作られていません":"保存先の設定（表や関数）がまだ作られていません",fix:"sql"};
+  if(where==="storage"&&(/Bucket not found|not found/i.test(m)||code==="404"))return {kind:"setup",msg:"写真の保存場所（photos）がまだ作られていません",fix:"sql"};
+  if(/row-level security|permission denied|42501|not authorized|Unauthorized/i.test(m+code)||code==="403")return {kind:"setup",msg:"保存の許可（ポリシー）が設定されていないか、このアカウントは対象外です",fix:"sql"};
+  if(/JWT|expired|token|PGRST301|invalid claim/i.test(m+code)||code==="401")return {kind:"auth",msg:"ログインの期限が切れていました。もう一度ログインしてね",fix:"login"};
+  if(code==="413"||/too large|exceeded the maximum/i.test(m))return {kind:"size",msg:"写真が大きすぎました",fix:null};
+  if(e?.code==="decode")return {kind:"decode",msg:"この写真は読み込めませんでした。別の写真で試してね",fix:null};
+  if(e?.code==="quota_exceeded"||/quota/i.test(m))return {kind:"quota",msg:"保存できる量の上限に達しました",fix:null};
+  return {kind:"other",msg:"保存できませんでした："+(m||"原因不明").slice(0,80),fix:"diag"};
+}
+function writeErr(e){console.warn(e);const i=errInfo(e,e?.where);S.lastErr={at:Date.now(),where:e?.where||"db",msg:i.msg,raw:String(e?.message||e)};toast(i.msg);if(i.fix==="sql"||i.fix==="diag")setTimeout(()=>showDiag(),900);if(i.fix==="login")setTimeout(()=>{showLogin("ログインの期限が切れました。もう一度入ってね")},900)}
+const isAuthErr=e=>errInfo(e).kind==="auth",isNetErr=e=>errInfo(e).kind==="network";
+/* 期限切れなら更新して1回やり直す／電波なら少し待って1回やり直す */
+async function withRetry(fn,where){
+  try{return await fn()}
+  catch(e){
+    if(isAuthErr(e)){try{await sb.auth.refreshSession()}catch(x){console.warn(x)}return await fn()}
+    if(isNetErr(e)){await new Promise(r=>setTimeout(r,1500));return await fn()}
+    throw e;
+  }
+}
 
 /* ---------- 空の時間帯・カウントダウン・おしゃべり ---------- */
 function skyMode(){const h=jstHour();document.body.dataset.sky=h>=19||h<5?"night":h>=16?"dusk":h<7?"dawn":"day"}
@@ -870,8 +979,11 @@ function newsHTML(){
 
 /* ---------- 地図 ---------- */
 const MAP_FULL=[20,60,740,930];
-function dayBox(sel){
-  if(S.mapAll)return MAP_FULL;
+const MAP_MINW=70,MAP_MAXW=900;
+function clampView(v){let [x,y,w,h]=v;const A=740/930;w=Math.max(MAP_MINW,Math.min(MAP_MAXW,w));h=w/A;x=Math.max(-220,Math.min(x,980-w));y=Math.max(-120,Math.min(y,1170-h));return [x,y,w,h].map(n=>Math.round(n*10)/10)}
+function dayBox(sel,auto){
+  if(!auto&&S.mapView)return S.mapView;
+  if(!auto&&S.mapAll)return MAP_FULL;
   const pts=[];for(const s of (DAYS()[sel-1]?.stops||[])){const c=coordOf(s);if(c)pts.push([MX(c.lng),MY(c.lat)])}
   if(!pts.length)return MAP_FULL;
   const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
@@ -882,9 +994,10 @@ function dayBox(sel){
   let x=cx+sx-w/2,y=cy+sy-h/2;x=Math.max(-30,Math.min(x,810-w));y=Math.max(20,Math.min(y,1030-h));
   return [x,y,w,h].map(Math.round);
 }
-function mapSVG(sel){
+const ILAT=y=>26.95-y/1113.2,ILNG=x=>x/996.6+127.60;
+function mapSVG(sel,o={}){
   const days=DAYS();const cs=getComputedStyle(document.documentElement);const dcol=n=>cs.getPropertyValue("--d"+n).trim()||"#ee4b3a";
-  const vb=dayBox(sel);const [vx,vy,vw,vh]=vb;const k=vw/740;const full=vw>=740;const f=v=>(+v).toFixed(1);
+  const vb=o.view||dayBox(sel);const [vx,vy,vw,vh]=vb;const k=vw/740;const full=vw>=740;const f=v=>(+v).toFixed(1);
   const land=ISLANDS.map(p=>`<path d="${p}"/>`).join("");
   const line=pts=>pts.map(([la,ln])=>`${f(MX(ln))},${f(MY(la))}`).join(" ");
   const regions=REGIONS.map(([n,la,ln])=>`<text class="rg" x="${f(MX(ln))}" y="${f(MY(la))}">${n}</text>`).join("");
@@ -922,6 +1035,7 @@ function mapSVG(sel){
       <circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="${dcol(p.d)}" stroke="#fff" stroke-width="${f(3.5*k)}"/><circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(r)}" fill="none" stroke="#23314f" stroke-width="${f(1.5*k)}"/>
       <text class="no" x="${f(p.x)}" y="${f(p.y+5.5*k)}">${p.i+1}</text>
       <text class="lb" x="${f(p.lx)}" y="${f(p.ly)}" text-anchor="${p.anchor}">${esc(p.name)}</text></g>`}).join("");
+  const pick=o.pick?`<g class="pickpin" transform="translate(${f(MX(o.pick.lng))} ${f(MY(o.pick.lat))}) scale(${f(k)})"><circle r="30" class="me-ring"/><path d="M0 2 C-14 -16 -14 -34 0 -34 C14 -34 14 -16 0 2z" fill="#ee4b3a" stroke="#fff" stroke-width="3.5"/><path d="M0 2 C-14 -16 -14 -34 0 -34 C14 -34 14 -16 0 2z" fill="none" stroke="#23314f" stroke-width="1.5"/><circle cy="-21" r="6" fill="#fff" stroke="#23314f" stroke-width="1.5"/></g>`:"";
   const me=S.me?`<g class="me" transform="translate(${f(MX(S.me.lng))} ${f(MY(S.me.lat))}) scale(${f(k)})"><circle r="26" class="me-ring"/><circle r="17" fill="#fff" stroke="#23314f" stroke-width="2.5"/><clipPath id="meclip"><circle r="15"/></clipPath><image href="${MII[S.who||"sai"]}" x="-15" y="-16" width="30" height="42" clip-path="url(#meclip)" preserveAspectRatio="xMidYMin slice"/><text class="lb" x="22" y="6">いまここ</text></g>`:"";
   const inset=full?`<text class="ttl" x="${f(vx+24)}" y="${f(vy+58)}">OKINAWA</text><text class="ttl2" x="${f(vx+26)}" y="${f(vy+82)}">沖縄本島 ・ 5泊6日</text>`:
     `<svg class="inset" tabindex="0" x="${f(vx+10*k)}" y="${f(vy+10*k)}" width="${f(150*k)}" height="${f(188*k)}" viewBox="20 60 740 930" role="button" aria-label="島ぜんたいを見る"><title>島ぜんたいを見る</title>
@@ -937,12 +1051,51 @@ function mapSVG(sel){
     <polyline class="r58" points="${line(ROUTE58)}" stroke-width="${f(3.5*k)}"/>
     <polyline class="expy-bg" points="${line(EXPRESSWAY)}" stroke-width="${f(8*k)}"/><polyline class="expy" points="${line(EXPRESSWAY)}" stroke-width="${f(4*k)}"/>
     ${regions}${marks}
-    ${route}${otherHTML}${selHTML}${me}
+    ${route}${otherHTML}${selHTML}${me}${pick}
     ${inset}
     <g class="compass" transform="translate(${f(vx+vw-42*k)} ${f(vy+50*k)}) scale(${f(k)})"><circle r="22" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2"/><path d="M0 -17 L7 6 L0 1 L-7 6z" fill="#ee4b3a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><text y="40">N</text></g>
-    <g class="scale" transform="translate(${f(vx+vw-(full?125:75)*k)} ${f(vy+vh-26*k)})"><rect x="0" y="${f(-4*k)}" width="${f(full?100:50)}" height="${f(8*k)}" fill="#fff" stroke="#23314f" stroke-width="${f(1.5*k)}"/><rect x="0" y="${f(-4*k)}" width="${f(full?50:25)}" height="${f(8*k)}" fill="#23314f"/><text x="${f(full?50:25)}" y="${f(-10*k)}" text-anchor="middle">${full?"10km":"5km"}</text></g>
+    <g class="scale" transform="translate(${f(vx+16*k)} ${f(vy+vh-26*k)})"><rect x="0" y="${f(-4*k)}" width="${f(full?100:50)}" height="${f(8*k)}" fill="#fff" stroke="#23314f" stroke-width="${f(1.5*k)}"/><rect x="0" y="${f(-4*k)}" width="${f(full?50:25)}" height="${f(8*k)}" fill="#23314f"/><text x="${f(full?50:25)}" y="${f(-10*k)}" text-anchor="middle">${full?"10km":"5km"}</text></g>
   </svg>`;
 }
+function mapCtrlHTML(){return mapCtrlHTMLFor(MAIN_CTL)}
+function redrawMap(){const m=document.querySelector("#v-plan .map");if(!m)return;m.innerHTML=mapSVG(S.planDay)+mapCtrlHTML();initMapGestures(m);S.mapVB=m.querySelector(".okimap")?.getAttribute("viewBox")||S.mapVB}
+const MAIN_CTL={touch:()=>!!S.mapTouch,commit:vb=>{S.mapView=vb;S.mapAll=false;redrawMap()},reset:()=>{S.mapView=null;S.mapAll=false;redrawMap()},
+  toggleTouch:()=>{S.mapTouch=!S.mapTouch;redrawMap();toast(S.mapTouch?"指で動かしたり、2本指で広げたりできます":"ふつうの表示にもどしました")},
+  tap:(e,el)=>{const pin=el?.closest?.(".pin");if(pin){pinTap(pin);return true}if(el?.closest?.(".inset")){beep("tap");S.mapAll=true;S.mapView=null;renderPlan();return true}return false}};
+function initMapGestures(m,ctl=MAIN_CTL){
+  const svg=m.querySelector("svg.okimap");if(!svg)return;m.ctl=ctl;
+  m.classList.toggle("touchmode",!!ctl.touch());
+  const P=new Map();let st=null,moved=false,wheelT=null,lastTap=0,lastTapAt=null;
+  const getVB=()=>svg.getAttribute("viewBox").split(" ").map(Number),setVB=v=>svg.setAttribute("viewBox",v.join(" "));
+  const toSvg=(cx,cy,vb)=>{const r=svg.getBoundingClientRect();return [vb[0]+(cx-r.left)/r.width*vb[2],vb[1]+(cy-r.top)/r.height*vb[3]]};
+  const commit=()=>ctl.commit(clampView(getVB()));
+  const zoomAt=(cx,cy,f)=>{const vb=getVB();const [sx,sy]=toSvg(cx,cy,vb);let w=vb[2]/f;w=Math.max(MAP_MINW,Math.min(MAP_MAXW,w));f=vb[2]/w;const h=vb[3]/f;setVB(clampView([sx-(sx-vb[0])/f,sy-(sy-vb[1])/f,w,h]))};
+  m.zoomAt=zoomAt;m.commit=commit;m.toSvg=(cx,cy)=>toSvg(cx,cy,getVB());
+  const begin=()=>{const pts=[...P.values()];const c=pts.length>=2?[(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2]:pts[0];const vb=getVB();st={vb,c,s0:toSvg(c[0],c[1],vb),d:pts.length>=2?Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]):0}};
+  m.addEventListener("pointerdown",e=>{if(e.target.closest(".map-ctrl"))return;if(e.pointerType==="touch"&&!ctl.touch())return;if(e.pointerType==="mouse"&&e.button!==0)return;
+    try{m.setPointerCapture(e.pointerId)}catch{}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===1)moved=false;begin()});
+  m.addEventListener("pointermove",e=>{if(!P.has(e.pointerId)||!st)return;P.set(e.pointerId,[e.clientX,e.clientY]);const pts=[...P.values()];const r=svg.getBoundingClientRect();
+    const c=pts.length>=2?[(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2]:pts[0];const d=pts.length>=2?Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]):0;
+    if(Math.hypot(c[0]-st.c[0],c[1]-st.c[1])>5||(st.d&&Math.abs(d-st.d)>5))moved=true;if(!moved)return;S.mapDragging=true;
+    let f=(st.d&&d)?d/st.d:1;let w=st.vb[2]/f;w=Math.max(MAP_MINW,Math.min(MAP_MAXW,w));f=st.vb[2]/w;const h=st.vb[3]/f;
+    setVB(clampView([st.s0[0]-(c[0]-r.left)/r.width*w,st.s0[1]-(c[1]-r.top)/r.height*h,w,h]))});
+  const end=e=>{if(!P.has(e.pointerId))return;P.delete(e.pointerId);
+    if(P.size){begin();return}
+    st=null;if(moved){setTimeout(()=>{S.mapDragging=false},50);commit();return}
+    // 動かしていなければタップ扱い（ポインターキャプチャ中は click がピンに届かないので自前で）
+    const el=document.elementFromPoint(e.clientX,e.clientY);m._tapAt=Date.now();if(ctl.tap(e,el))return;
+    // ダブルタップで拡大
+    const now=Date.now();if(now-lastTap<320&&lastTapAt&&Math.hypot(e.clientX-lastTapAt[0],e.clientY-lastTapAt[1])<30){lastTap=0;zoomAt(e.clientX,e.clientY,1.8);commit()}else{lastTap=now;lastTapAt=[e.clientX,e.clientY]}};
+  m.addEventListener("pointerup",end);m.addEventListener("pointercancel",end);
+  // ポインターで処理したタップの直後に来る click は二重処理しない
+  m.addEventListener("click",e=>{if(Date.now()-(m._tapAt||0)<600&&!e.target.closest(".map-ctrl")){e.stopPropagation();e.preventDefault()}},true);
+  m.addEventListener("wheel",e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.18:1/1.18);clearTimeout(wheelT);wheelT=setTimeout(commit,220)},{passive:false});
+}
+document.addEventListener("click",e=>{const mz=e.target.closest("[data-mz]");if(!mz)return;const m=mz.closest(".map");if(!m||!m.ctl)return;const r=m.getBoundingClientRect();beep("tap");
+  if(mz.dataset.mz==="in"){m.zoomAt(r.left+r.width/2,r.top+r.height/2,1.5);m.commit()}else if(mz.dataset.mz==="out"){m.zoomAt(r.left+r.width/2,r.top+r.height/2,1/1.5);m.commit()}
+  else if(mz.dataset.mz==="reset")m.ctl.reset();else if(mz.dataset.mz==="touch")m.ctl.toggleTouch()});
+function mapCtrlHTMLFor(ctl){const coarse=matchMedia("(pointer:coarse)").matches;
+  return `<div class="map-ctrl"><button data-mz="in" aria-label="拡大">＋</button><button data-mz="out" aria-label="縮小">－</button>${coarse&&ctl.toggleTouch?`<button data-mz="touch" class="wide ${ctl.touch()?"on":""}" aria-pressed="${ctl.touch()}">${ctl.touch()?"完了":"動かす"}</button>`:""}<button data-mz="reset" class="wide" aria-label="もどす">もどす</button></div>`}
 function animateMap(){
   const svg=document.querySelector(".okimap");if(!svg)return;const vb=svg.getAttribute("viewBox");
   if(S.mapVB&&S.mapVB!==vb&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
@@ -978,7 +1131,7 @@ function renderPlan(){
   ${HEAD("島めぐりのしおり","var(--shu)",S.canWrite?`<button class="btn mini" id="edit-day">この日を編集</button>`:"")}
   <div class="mapbox">
     <div class="map-col">
-      <div class="map">${mapSVG(S.planDay)}</div>
+      <div class="map">${mapSVG(S.planDay)}${mapCtrlHTML()}</div>
       <div class="map-bar"><span class="legend"><i style="background:${DC(S.planDay)}"></i>DAY${S.planDay}の行き先（番号は順番）</span><span class="map-btns"><button class="btn mini ghost" id="mapzoom">${S.mapAll?"この日にズーム":"島ぜんたい"}</button><button class="btn mini ghost" id="locate">${S.me?"いまここを更新":"いまここ"}</button></span></div>
       ${focusHTML()}
     </div>
@@ -990,7 +1143,7 @@ function renderPlan(){
           ${bdayOf(d)?`<div class="bday">${CAKE()}<div><b>${NAME[bdayOf(d)]}の誕生日！</b><span>今日の主役は${NAME[bdayOf(d)]}。ガチャには誕生日のお題が出ます</span></div>${CAKE("r")}</div>`:""}
           ${sun?`<div class="sunrow"><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="5" fill="#ffd23f" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M12 3v3M5 7l2 2M19 7l-2 2" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の出 ${sun[0]}</span><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="5" fill="#ff8a5c" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M8 21h8" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の入り ${sun[1]}</span><span class="sr">${moonSVG(sun[2])}${moonName(sun[2])}${d.n===6?"（最終日の夜はほぼ満月）":""}</span></div>`:""}
           <ul class="stops">${(d.stops||[]).map((s,i,arr)=>{const prev=i?coordOf(arr[i-1]):null,cur=coordOf(s);const dr=prev&&cur?driveEstimate(prev,cur):null;
-            return `${dr?`<li class="drive"><span class="t"></span><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg>車で約${minText(dr.min)}・${dr.km}km（目安）</div></li>`:""}<li class="${S.mapFocus===s.id?"focus":""}" data-stop="${s.id}"><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリでひらく</a>`:""}</div></li>`}).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
+            return `${dr?`<li class="drive"><span class="t"></span><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4h11L19 11M4 11h16v6H4z" fill="#fff" stroke="#23314f" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="2" fill="#23314f"/><circle cx="16.5" cy="17" r="2" fill="#23314f"/></svg>車で約${minText(dr.min)}・${dr.km}km（目安）</div></li>`:""}<li class="${S.mapFocus===s.id?"focus":""}" data-stop="${s.id}"><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}${!coordOf(s)&&(s.stamp||s.q)?`<span class="st-badge off">地図の位置なし</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図アプリでひらく</a>`:""}</div></li>`}).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
           ${driveTotalHTML(d)}
           ${(fl||d.stay||d.hotel)?`<div class="infobox">${fl?`<div class="row"><span class="k">${d.n===1?"行きの飛行機":"帰りの飛行機"}</span><span class="v">${d.flight?esc(d.flight):`<span class="muted">便名と時間を入れてね</span>`}</span></div>`:""}${(d.stay||d.hotel)?`<div class="row"><span class="k">今夜の宿</span><span class="v">${d.hotel?esc(d.hotel):`<span class="muted">${esc(d.stay)}エリア（ホテル名を入れてね）</span>`}</span></div>`:""}</div>`:""}
         </div>
@@ -1000,7 +1153,7 @@ function renderPlan(){
   </div>
   ${gachaHTML(d)}
   ${itemsHTML()}`;
-  animateMap();
+  animateMap();const mEl=document.querySelector("#v-plan .map");if(mEl)initMapGestures(mEl);
 }
 /* ---------- 持ち物リスト ---------- */
 function itemsHTML(){
@@ -1054,19 +1207,20 @@ function pickMission(d,draws,first){
   let cand=(first&&bC.length)?bC:(first&&dayC.length)?dayC:(Math.random()<.5&&dayC.length?dayC:anyC);if(!cand.length)cand=dayC.length?dayC:anyC;
   return cand[Math.floor(Math.random()*cand.length)];
 }
-function pinTap(pin){const [d,id]=pin.dataset.pin.split(":");beep("tap");S.planDay=+d;S.mapFocus=S.mapFocus===id?null:id;S.trial=null;renderPlan();
+function pinTap(pin){if(S.mapDragging)return;const [d,id]=pin.dataset.pin.split(":");beep("tap");if(+d!==S.planDay)S.mapView=null;S.planDay=+d;S.mapFocus=S.mapFocus===id?null:id;S.trial=null;renderPlan();
   const li=document.querySelector(`.stops li[data-stop="${CSS.escape(id)}"]`);if(li&&innerWidth<700)li.scrollIntoView({block:"center",behavior:"smooth"})}
 $("#v-plan").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const p=e.target.closest(".pin");if(p){e.preventDefault();pinTap(p);return}
   if(e.target.closest(".inset")){e.preventDefault();S.mapAll=true;renderPlan()}});
 $("#v-plan").addEventListener("click",async e=>{
   const pin=e.target.closest(".pin");if(pin){pinTap(pin);return}
-  if(e.target.closest(".inset")){beep("tap");S.mapAll=true;renderPlan();return}
+  if(e.target.closest(".inset")){beep("tap");S.mapAll=true;S.mapView=null;renderPlan();return}
+  if(e.target.closest("[data-mz]"))return;
   const li=e.target.closest(".stops li[data-stop]");if(li&&!e.target.closest("a")){beep("tap");S.mapFocus=S.mapFocus===li.dataset.stop?null:li.dataset.stop;renderPlan();
     if(S.mapFocus&&innerWidth<761)document.querySelector(".map")?.scrollIntoView({behavior:"smooth",block:"center"});return}
   const t=e.target.closest("button");if(!t)return;
-  if(t.id==="mapzoom"){beep("tap");S.mapAll=!S.mapAll;renderPlan();return}
+  if(t.id==="mapzoom"){beep("tap");S.mapAll=!S.mapAll;S.mapView=null;renderPlan();return}
   if(t.id==="locate"){locateMe();return}
-  if(t.dataset.pd){beep("tap");S.planDay=+t.dataset.pd;S.mapFocus=null;S.mapAll=false;S.trial=null;renderPlan();return}
+  if(t.dataset.pd){beep("tap");S.planDay=+t.dataset.pd;S.mapFocus=null;S.mapAll=false;S.mapView=null;S.trial=null;renderPlan();return}
   if(t.id==="edit-day"){openEditor(S.planDay);return}
   const d=DAYS()[S.planDay-1];
   if(t.id==="trial"){spin(()=>{const m=pickMission(d,[],true);S.trial={n:d.n,id:m.id};beep("gacha");renderPlan()});return}
@@ -1100,6 +1254,52 @@ async function geocode(q){
     if(j&&j[0]){const lat=+j[0].lat,lng=+j[0].lon;if(lat>24&&lat<27.5&&lng>122&&lng<129)return {lat,lng}}}catch(e){console.warn("geocode",e)}
   return null;
 }
+/* ---------- 場所をきめる（検索・貼りつけ・地図タップ） ---------- */
+const PK={i:-1,pick:null,name:"",view:null,touch:true};
+function parseLatLng(s){s=String(s||"").trim();if(!s)return null;
+  if(/goo\.gl|maps\.app/i.test(s)&&!/@-?\d/.test(s))return {err:"短いリンクには座標が入っていません。Googleマップで場所を長押しして、上に出る数字（26.xxxx, 127.xxxx）をコピーして貼ってね"};
+  const m=s.match(/@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/)||s.match(/!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/)||s.match(/[?&](?:q|ll|query|center|destination|daddr|saddr)=(-?\d{1,2}\.\d+)(?:,|%2C)(-?\d{1,3}\.\d+)/i)||s.match(/^(-?\d{1,2}\.\d+)\s*[,、\s]\s*(-?\d{1,3}\.\d+)$/);
+  if(!m)return {err:"座標が見つかりませんでした。「26.5047, 127.8503」の形か、座標入りのGoogleマップのリンクを貼ってね"};
+  const lat=+m[1],lng=+m[2];if(lat<24||lat>27.5||lng<122||lng>129)return {err:"沖縄の外の座標みたい。もう一度確認してね"};return {lat,lng};
+}
+async function searchPlaces(q){
+  const u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ja&countrycodes=jp&viewbox=126.6,27.2,128.6,25.9&bounded=1&q="+encodeURIComponent(q);
+  const r=await fetch(u);if(!r.ok)throw new Error("search "+r.status);const j=await r.json();
+  return (j||[]).map(x=>{const name=x.name||String(x.display_name||"").split(",")[0];const addr=String(x.display_name||"").split(",").map(s=>s.trim()).filter(s=>s&&s!==name&&!/^\d{3}-?\d{4}$/.test(s)&&s!=="日本").slice(0,4).reverse().join(" ");return {name,addr,lat:+x.lat,lng:+x.lon}});
+}
+function openPicker(i){
+  const s=S.editing?.stops?.[i];if(!s)return;const c=coordOf(s);
+  PK.i=i;PK.pick=c?{lat:c.lat,lng:c.lng}:null;PK.name="";PK.view=c?clampView([MX(c.lng)-60,MY(c.lat)-75,120,151]):null;PK.q=s.q||s.n||"";
+  $("#layer2").innerHTML=`<div class="modal top"><div class="box picker">
+    <div class="ed-head"><h2>場所をきめる</h2><button class="x" id="pk-close" aria-label="とじる">×</button></div>
+    <div class="small muted" style="margin:-4px 0 8px">「${esc(s.n||"この予定")}」の場所を地図に置きます。</div>
+    <form class="pk-search" id="pk-form"><input id="pk-q" value="${esc(PK.q)}" placeholder="名前で検索（例：万座毛、瀬長島ウミカジテラス）" maxlength="80"><button class="btn mini sea" type="submit" id="pk-go">さがす</button></form>
+    <div id="pk-results" class="pk-results"></div>
+    <details class="pk-paste"><summary>Googleマップの座標やリンクを貼る</summary><div class="pk-paste-in"><input id="pk-paste" placeholder="26.5047, 127.8503（またはリンク）"><button class="btn mini" type="button" id="pk-paste-go">置く</button></div>
+      <div class="small muted">Googleマップで場所を長押し → 画面の上に出る数字（26.xxxx, 127.xxxx）をコピーして貼るのが確実です。</div></details>
+    <div class="small" style="margin:8px 0 4px">地図をタップしてもピンを置けます（2本指で広げる・動かす）</div>
+    <div class="map pk-map" id="pk-map"></div>
+    <div class="pk-foot"><span id="pk-state" class="small"></span><div class="pk-btns">${c?`<button class="btn mini ghost" type="button" id="pk-clear">場所をなくす</button>`:""}<button class="btn sea" type="button" id="pk-ok">この場所にする</button></div></div>
+  </div></div>`;
+  drawPick();
+  $("#pk-close").onclick=()=>{$("#layer2").innerHTML=""};
+  $("#pk-form").onsubmit=async e=>{e.preventDefault();const q=$("#pk-q").value.trim();if(!q)return;const box=$("#pk-results");box.innerHTML=`<div class="small muted">さがしています…</div>`;
+    try{const rs=await searchPlaces(q);if(!rs.length){box.innerHTML=`<div class="small muted">見つかりませんでした。別の言い方（例：「〇〇 恩納村」）にするか、地図をタップして置いてね</div>`;return}
+      box.innerHTML=rs.map((r,j)=>`<button type="button" class="pk-hit" data-hit="${j}"><b>${esc(r.name)}</b><small>${esc(r.addr)}</small></button>`).join("");
+      box.querySelectorAll("[data-hit]").forEach(b=>b.onclick=()=>{const r=rs[+b.dataset.hit];PK.pick={lat:r.lat,lng:r.lng};PK.name=r.name;PK.view=clampView([MX(r.lng)-60,MY(r.lat)-75,120,151]);box.querySelectorAll(".pk-hit").forEach(x=>x.classList.toggle("on",x===b));beep("tap");drawPick()})}
+    catch(err){console.warn(err);box.innerHTML=`<div class="small muted">検索できませんでした（電波かOpenStreetMapの混雑）。地図をタップして置くか、座標を貼ってね</div>`}};
+  $("#pk-paste-go").onclick=()=>{const r=parseLatLng($("#pk-paste").value);if(!r){toast("座標かリンクを貼ってね");return}if(r.err){toast(r.err);return}PK.pick=r;PK.view=clampView([MX(r.lng)-60,MY(r.lat)-75,120,151]);beep("tap");drawPick()};
+  $("#pk-clear")?.addEventListener("click",()=>{const st=S.editing.stops[PK.i];delete st.lat;delete st.lng;delete st.pinned;if(COORDS[st.id])st.noDefault=true;$("#layer2").innerHTML="";drawEditor();toast("地図の位置をなくしました")});
+  $("#pk-ok").onclick=()=>{if(!PK.pick){toast("まず地図に場所を置いてね");return}const st=S.editing.stops[PK.i];st.lat=+PK.pick.lat.toFixed(5);st.lng=+PK.pick.lng.toFixed(5);st.pinned=true;delete st.noDefault;if(!st.q&&PK.name)st.q=PK.name;
+    $("#layer2").innerHTML="";drawEditor();beep("clear");toast("地図に置きました。「保存する」で確定します")};
+}
+const PICK_CTL={touch:()=>true,commit:vb=>{PK.view=vb;drawPick()},reset:()=>{PK.view=PK.pick?clampView([MX(PK.pick.lng)-60,MY(PK.pick.lat)-75,120,151]):null;drawPick()},
+  tap:(e,el)=>{const m=document.querySelector("#pk-map");if(!m)return false;const [sx,sy]=m.toSvg(e.clientX,e.clientY);PK.pick={lat:ILAT(sy),lng:ILNG(sx)};PK.name="";beep("tap");drawPick();return true}};
+function drawPick(){const m=$("#pk-map");if(!m)return;const day=S.editing?.n||S.planDay;
+  m.innerHTML=mapSVG(day,{view:PK.view||dayBox(day,true),pick:PK.pick})+mapCtrlHTMLFor(PICK_CTL);initMapGestures(m,PICK_CTL);
+  const st=$("#pk-state");if(st)st.innerHTML=PK.pick?`ピンの位置：${PK.pick.lat.toFixed(4)}, ${PK.pick.lng.toFixed(4)}${PK.name?`（${esc(PK.name)}）`:""}`:`まだ置いていません`;
+  const ok=$("#pk-ok");if(ok)ok.disabled=!PK.pick;
+}
 function openEditor(n){
   const d=JSON.parse(JSON.stringify(DAYS()[n-1]));S.editing=d;drawEditor();
 }
@@ -1113,7 +1313,8 @@ function drawEditor(){
     <div class="ed-stops">${(d.stops||[]).map((s,i)=>`<div class="ed-stop" data-i="${i}">
       <div class="ed-stop-row"><input class="t" data-s="t" value="${esc(s.t)}" placeholder="10:00" maxlength="8"><input class="n" data-s="n" value="${esc(s.n)}" placeholder="行き先・やること" maxlength="60"><div class="ed-btns"><button data-mv="-1" aria-label="上へ">▲</button><button data-mv="1" aria-label="下へ">▼</button><button data-del aria-label="削除">×</button></div></div>
       <input class="d" data-s="d" value="${esc(s.d||"")}" placeholder="ひとことメモ" maxlength="80">
-      <div class="ed-stop-row2"><input class="q" data-s="q" value="${esc(s.q||"")}" placeholder="地図で検索する名前（入れると地図にピンが立ちます）" maxlength="60"><label class="chk"><input type="checkbox" data-s="stamp" ${s.stamp?"checked":""}>スタンプの場所にする</label></div></div>`).join("")}
+      <div class="ed-stop-row2"><input class="q" data-s="q" value="${esc(s.q||"")}" placeholder="場所の名前（検索用。例：万座毛）" maxlength="60"><label class="chk"><input type="checkbox" data-s="stamp" ${s.stamp?"checked":""}>スタンプの場所にする</label></div>
+      <div class="ed-place">${coordOf(s)?`<span class="pl ok">地図にピンあり</span>`:`<span class="pl">${s.stamp?"スタンプの場所なのに、地図の位置がまだです":"地図の位置が未設定（地図には出ません）"}</span>`}<button type="button" class="btn mini ${coordOf(s)?"ghost":"sea"}" data-place>${coordOf(s)?"場所を変える":"場所をきめる"}</button></div></div>`).join("")}
     </div>
     <button class="btn ghost" id="ed-add">＋ 予定を追加</button>
     <div class="ed-foot"><span class="small muted">ミッションガチャとスタンプラリーは、ここに書いた行き先に合わせて自動で変わります。</span><button class="btn sea" id="ed-save">保存する</button></div>
@@ -1122,7 +1323,7 @@ function drawEditor(){
 function collectEditor(){
   const d=S.editing,box=$(".editor");box.querySelectorAll("input[data-k],textarea[data-k]").forEach(i=>d[i.dataset.k]=i.value.trim());
   d.stops=[...box.querySelectorAll(".ed-stop")].map((el,i)=>{const o=d.stops[i]||{id:"x"+uid()};el.querySelectorAll("[data-s]").forEach(inp=>{const v=inp.type==="checkbox"?inp.checked:inp.value.trim();
-    if(inp.dataset.s==="q"&&v!==(o.q||"")){delete o.lat;delete o.lng;if(COORDS[o.id]&&v!==(DEFAULT_Q[o.id]||""))o.noDefault=true}o[inp.dataset.s]=v});return o});
+    if(inp.dataset.s==="q"&&v!==(o.q||"")&&!o.pinned){delete o.lat;delete o.lng;if(COORDS[o.id]&&v!==(DEFAULT_Q[o.id]||""))o.noDefault=true}o[inp.dataset.s]=v});return o});
 }
 $("#layer").addEventListener("click",async e=>{
   if(!S.editing)return;const t=e.target.closest("button");if(!t)return;
@@ -1132,6 +1333,7 @@ $("#layer").addEventListener("click",async e=>{
   const row=t.closest(".ed-stop");
   if(row&&t.dataset.mv){const i=+row.dataset.i,j=i+(+t.dataset.mv);if(j<0||j>=S.editing.stops.length)return;[S.editing.stops[i],S.editing.stops[j]]=[S.editing.stops[j],S.editing.stops[i]];drawEditor();return}
   if(row&&t.hasAttribute("data-del")){S.editing.stops.splice(+row.dataset.i,1);drawEditor();return}
+  if(row&&t.hasAttribute("data-place")){openPicker(+row.dataset.i);return}
   if(t.id==="ed-save"){
     const d=S.editing;d.stops=d.stops.filter(s=>s.n);d.stops.forEach(s=>{if(!s.id)s.id="x"+uid()});
     t.disabled=true;t.textContent="地図の場所をしらべています…";
@@ -1240,7 +1442,7 @@ function renderAlbum(){
   $("#v-album").innerHTML=`
   ${HEAD("思い出アルバム","var(--sea)",`${S.photos.length}枚`)}
   <div class="daytabs"><button style="--c:var(--ink)" data-ad="all" aria-pressed="${sel==="all"}">ぜんぶ<small>ALL</small></button>${DAYS().map(d=>`<button style="--c:${DC(d.n)}" data-ad="${d.n}" aria-pressed="${String(d.n)===String(sel)}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>
-  ${S.assets&&S.canWrite?`<div class="uploadbar"><button class="btn sea" id="up">写真を追加${uploadDay?`（DAY${uploadDay}）`:""}</button><span class="prog" id="prog"></span></div><div class="small muted">何枚でもまとめて選べます。元の画質のまま保存されます。</div>`:`<div class="small muted">写真の追加は、共有設定で「編集者」になっている人ができます。</div>`}
+  ${S.assets&&S.canWrite?`<div class="uploadbar"><button class="btn sea" id="up">写真を追加${uploadDay?`（DAY${uploadDay}）`:""}</button>${S.photos.length?`<button class="btn pink mini" id="album-movie">▶ ムービーで見る</button>`:""}<span class="prog" id="prog"></span></div><div class="small muted">何枚でもまとめて選べます。高画質（長辺2560px）で保存されます。</div>`:`<div class="small muted">写真を追加するにはログインしてね。</div>`}
   ${groups.length?groups.map(gr=>`<div class="album-day" style="--c:${gr.k?DC(gr.k):"var(--muted)"}"><h3><span class="dot"></span>${gr.k?`DAY${gr.k}　${esc(DAYS()[gr.k-1]?.date||"")}`:"旅行の前"}</h3>
     <div class="grid">${gr.items.map(p=>`<button data-ph="${p.id}" aria-label="写真をひらく"><img src="${blob(p.thumb||p.full)}" alt="" loading="lazy" decoding="async">${p.spot?`<span class="tag">スタンプ</span>`:p.food?`<span class="tag green">グルメ</span>`:""}${p.likes?.sai&&p.likes?.yui?`<span class="heart" aria-label="ふたりのお気に入り">♥</span>`:""}</button>`).join("")}</div></div>`).join("")
     :`<div class="empty">まだ写真がありません。<br>旅行中に撮った写真を「写真を追加」からあげると、日ごとにここに並びます。</div>`}`;
@@ -1250,6 +1452,7 @@ $("#v-album").addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.dataset.ad){beep("tap");S.albumDay=t.dataset.ad;renderAlbum()}
   else if(t.id==="up")$("#f-album").click();
+  else if(t.id==="album-movie"){beep("open");startShow(S.albumDay==="all"?1:+S.albumDay)}
   else if(t.dataset.ph){const list=albumGroups().filter(x=>S.albumDay==="all"||x.k===+S.albumDay).flatMap(x=>x.items);openLB(list,list.findIndex(p=>p.id===t.dataset.ph))}
 });
 $("#f-album").addEventListener("change",async e=>{
@@ -1274,7 +1477,7 @@ async function uploadPhoto(file,{spot=null,day=0,food=null}){
   await ensureUrls([F.id,T.id]);
   await S.db.collection("photos").add({full:F.id,thumb:T.id,w:img.width,h:img.height,who:S.who,day,spot,food,at:Date.now()});
 }
-function upErr(err){console.warn(err);toast(err&&err.code==="decode"?"この写真は読み込めませんでした。別の写真で試してね":err&&err.code==="too_large"?"写真が大きすぎました":"アップロードできませんでした。共有設定で「編集者」になっているか確認してね")}
+function upErr(err){if(err&&err.code==="decode"){toast("この写真は読み込めませんでした。別の写真で試してね");return}writeErr(err)}
 
 /* ---------- ライトボックス ---------- */
 function openLB(list,i){S.lb={list,i:Math.max(0,i)};drawLB();const p=list[S.lb.i];if(p&&!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb)drawLB()})}
@@ -1294,7 +1497,7 @@ function drawLB(){
     try{await S.db.doc("photos/"+p.id).update({likes:{[S.who]:v}})}catch(err){writeErr(err)}};
 }
 function move(d){const n=S.lb.i+d;if(n<0||n>=S.lb.list.length)return;S.lb.i=n;drawLB();const p=S.lb.list[n];if(!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb&&S.lb.i===n)drawLB()})}
-document.addEventListener("keydown",e=>{if(S.lb){if(e.key==="Escape"){S.lb=null;drawLB()}if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)}else if(S.editing&&e.key==="Escape"){S.editing=null;drawEditor()}});
+document.addEventListener("keydown",e=>{if(S.lb){if(e.key==="Escape"){S.lb=null;drawLB()}if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)}else if(e.key==="Escape"&&$("#layer2").innerHTML){$("#layer2").innerHTML=""}else if(S.editing&&e.key==="Escape"){S.editing=null;drawEditor()}});
 
 /* ---------- リザルト ---------- */
 function dayStats(n){
@@ -1319,11 +1522,13 @@ function renderResult(){
     <div class="rank">${final?`ふたりの称号<strong>${rank.main}</strong>${rank.sub.length?`<div class="subtitles">${rank.sub.map(s=>`<span>${s}</span>`).join("")}</div>`:""}`:"旅の最終日に、ふたりの称号が発表されます"}</div>
     ${final?`<div style="text-align:center;margin-top:14px"><button class="btn" id="result-png">リザルトを画像で保存</button></div>`:""}
   </div>
+  <div class="movie-box"><div><h3>思い出ムービー</h3><div class="small">いままでの写真と日記を、日付の順に音楽つきで自動再生。最終日の夜にふたりで見てね。画面収録すれば動画にもなります。</div></div><button class="btn pink" id="movie">▶ 再生する</button></div>
   <h3 style="font-size:17px;margin-top:18px">1日ごとのきろく</h3>
   <div class="dayres">${DAYS().map(d=>{const s=dayStats(d.n),open=today>=d.n;return `<div class="c ${open?"":"locked"}" style="--c:${DC(d.n)}"><h4>DAY${d.n} ${esc(d.date)}</h4>${open?`スタンプ ${s.stamps}/${s.spots}<br>ミッション ${s.ms}<br>写真 ${s.photos}枚<br>日記 ${s.diary?"ひらいた":"まだ"}`:"まだ先の日"}</div>`}).join("")}</div>`;
   if(final){document.querySelectorAll(".result b[data-n]").forEach(b=>{const n=+b.dataset.n;let k=0;const step=Math.max(1,Math.ceil(n/30));const t=setInterval(()=>{k=Math.min(n,k+step);b.textContent=k;if(k>=n)clearInterval(t)},40)});
     if(!ls.get("finalSeen")){ls.set("finalSeen","1");confetti();beep("open");cheer("おつかれさま！","楽しかったね！")}
     $("#result-png")?.addEventListener("click",()=>saveResultCard(st,rank));}
+  $("#movie")?.addEventListener("click",()=>{beep("open");startShow(1)});
 }
 function rankOf(st){
   const main=st.pts>=220?"伝説の島ぐらしカップル":st.pts>=150?"沖縄マスターなふたり":st.pts>=80?"なかよし島めぐりペア":"のんびり旅のふたり";
@@ -1359,6 +1564,83 @@ async function saveResultCard(st,rank){
 function downloadBlob(name,b){const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
 
+/* ---------- 思い出ムービー（写真と日記の自動再生） ---------- */
+const SH={on:false,slides:[],i:0,timer:null,paused:false,speed:1,audio:null,wavesWasOn:false,uiT:null};
+function fmtTime(t){const d=new Date(t+9*3600e3);return d.toISOString().slice(11,16)}
+function buildSlides(fromDay){
+  const sl=[];const days=DAYS();const st=stats();const rank=rankOf(st);
+  if(fromDay<=1)sl.push({k:"intro",dur:4200});
+  for(const d of days){if(d.n<fromDay)continue;
+    const ph=S.photos.filter(p=>p.day===d.n).sort((a,b)=>(a.at||0)-(b.at||0));const dy={sai:S.diary[`d${d.n}_sai`],yui:S.diary[`d${d.n}_yui`]};
+    if(!ph.length&&!dy.sai&&!dy.yui)continue;
+    sl.push({k:"title",d,dur:3600,bday:bdayOf(d),photos:ph.length,ms:(S.missions["day"+d.n]?.draws||[]).filter(x=>x.done).length});
+    ph.forEach(p=>sl.push({k:"photo",p,d,dur:4000}));
+    if(dy.sai||dy.yui){const len=(dy.sai?.text||"").length+(dy.yui?.text||"").length;sl.push({k:"diary",d,dy,dur:Math.min(14000,5000+len*45)})}
+  }
+  const pre=S.photos.filter(p=>!p.day||p.day<1||p.day>6);if(fromDay<=1&&pre.length){sl.splice(1,0,{k:"title",d:{n:0,date:"",title:"旅行の前",theme:"準備もたのしい"},dur:3000,photos:pre.length,ms:0},...pre.map(p=>({k:"photo",p,d:null,dur:3500})))}
+  sl.push({k:"ending",st,rank,dur:0});
+  return sl;
+}
+function slideHTML(s){
+  if(s.k==="intro")return `<div class="sl intro"><div style="width:100%"><div class="logo" aria-hidden="true">${$("#logo-hero")?.innerHTML||""}</div><div class="introcap">ふたりの思い出ムービー<small>写真と日記を、日付の順に</small></div></div></div>`;
+  if(s.k==="title"){const d=s.d;return `<div class="sl title"><div>${d.n?`<div class="no">DAY ${d.n}</div><div class="dt">${esc(d.date||"")}${d.dow?`（${esc(d.dow)}）`:""}</div>`:""}<h2>${esc(d.title||"")}</h2><div class="th">${esc(d.theme||"")}</div>
+    ${s.bday?`${CAKE("")}${/誕生日/.test(d.theme||"")?"":`<div class="th" style="margin-top:4px">${NAME[s.bday]}の誕生日！</div>`}`:""}
+    <div class="th" style="margin-top:10px;opacity:.8">写真 ${s.photos}枚${s.ms?`・ミッション ${s.ms}クリア`:""}</div>
+    <div class="miis"><img src="${MII.sai}" alt=""><img src="${MII.yui}" alt=""></div></div></div>`}
+  if(s.k==="photo"){const p=s.p;const sp=SPOTS().find(x=>x.id===p.spot);const fd=p.food?FOODBY[p.food]:null;const r=()=>(Math.random()*4-2).toFixed(1)+"%";
+    return `<div class="sl photo"><div class="bg" style="background-image:url('${blob(p.thumb)}')"></div><img class="main" alt="" src="${blob(p.thumb)}" data-full="${esc(p.full)}" style="--x0:${r()};--y0:${r()};--x1:${r()};--y1:${r()};--dur:${s.dur}ms">
+      <div class="cap">${sp?esc(sp.n):fd?esc(fd.n)+"をゲット":""}<small>${NAME[p.who]||""}${p.at?"　"+fmtTime(p.at):""}${p.likes?.sai&&p.likes?.yui?"　♥ ふたりのお気に入り":""}</small></div></div>`}
+  if(s.k==="diary"){const pg=w=>s.dy[w]?`<div class="pg"><h4><img src="${MII[w]}" alt="">${NAME[w]}の日記</h4>${esc(s.dy[w].text)}</div>`:"";return `<div class="sl diary"><div class="pages">${pg("sai")}${pg("yui")}</div></div>`}
+  if(s.k==="ending"){const st=s.st;return `<div class="sl ending"><div><h2>おめでと島ぐらし</h2><div class="th" style="font-weight:900">5泊6日誕生日旅行のきろく</div>
+    <div class="rows"><div><span>あつめたスタンプ</span><b>${st.stamped}</b></div><div><span>クリアしたミッション</span><b>${st.ms}</b></div><div><span>ひらいた交換日記</span><b>${st.diaries}</b></div><div><span>ゲットしたグルメ</span><b>${st.foods}</b></div><div><span>撮った写真</span><b>${S.photos.length}</b></div></div>
+    <div class="rank">${esc(s.rank.main)}</div><div class="miis" style="position:static;display:flex;justify-content:center;gap:10px;margin-top:14px"><img src="${MII.sai}" alt="" style="height:140px"><img src="${MII.yui}" alt="" style="height:140px"></div><div class="fin">— fin —</div></div></div>`}
+  return "";
+}
+function showUI(){const el=$("#show");el.classList.remove("hide-ui");clearTimeout(SH.uiT);SH.uiT=setTimeout(()=>{if(SH.on&&!SH.paused)el.classList.add("hide-ui")},3500)}
+function startShow(fromDay=1){
+  if(!S.photos.length&&!Object.keys(S.diary).length){toast("まだ写真も日記もありません。旅行がはじまったら見てね");return}
+  SH.slides=buildSlides(fromDay);SH.i=0;SH.on=true;SH.paused=false;SH.wavesWasOn=WAVE.on;
+  const el=$("#show");el.hidden=false;el.classList.remove("hide-ui");
+  el.innerHTML=`<div class="sh-stage" id="sh-stage"></div>
+    <div class="sh-top"><select id="sh-from" aria-label="どの日から">${["はじめから",...DAYS().map(d=>`DAY${d.n}から`)].map((x,j)=>`<option value="${j}" ${j===(fromDay<=1?0:fromDay)?"selected":""}>${x}</option>`).join("")}</select><span class="cnt" id="sh-title"></span><button id="sh-x">とじる</button></div>
+    <div class="sh-hint">画面をタップでボタンを表示／一時停止</div>
+    <div class="sh-bot"><button class="big" id="sh-prev" aria-label="まえ">◀</button><button class="big" id="sh-play" aria-label="一時停止">❚❚</button><button class="big" id="sh-next" aria-label="つぎ">▶</button><span class="cnt" id="sh-cnt"></span>
+      <button id="sh-music">♪ 曲をえらぶ</button><button id="sh-wave" class="${WAVE.on?"on":""}">🌊 波の音</button><select id="sh-speed"><option value="1">ふつう</option><option value="1.6">ゆっくり</option><option value="0.65">はやい</option></select></div>`;
+  $("#sh-x").onclick=stopShow;$("#sh-prev").onclick=()=>{showUI();goSlide(SH.i-1)};$("#sh-next").onclick=()=>{showUI();goSlide(SH.i+1)};
+  $("#sh-play").onclick=()=>{togglePause()};
+  $("#sh-from").onchange=e=>{startShow(Math.max(1,+e.target.value))};
+  $("#sh-speed").onchange=e=>{SH.speed=+e.target.value;showUI()};
+  $("#sh-music").onclick=()=>{$("#f-music").click()};
+  $("#sh-wave").onclick=()=>{if(WAVE.on)wavesStop();else wavesStart();$("#sh-wave").classList.toggle("on",WAVE.on);showUI()};
+  $("#sh-stage").onclick=()=>{if(el.classList.contains("hide-ui")){showUI()}else{togglePause()}};
+  if(!WAVE.on&&!SH.audio){wavesStart();$("#sh-wave").classList.add("on")}
+  document.body.style.overflow="hidden";
+  goSlide(0);showUI();
+}
+function togglePause(){SH.paused=!SH.paused;$("#sh-play").textContent=SH.paused?"▶":"❚❚";if(SH.paused){clearTimeout(SH.timer);$("#show").classList.remove("hide-ui");clearTimeout(SH.uiT);$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","paused")}else{$("#sh-stage")?.querySelector(".sl.photo img.main")?.style.setProperty("animation-play-state","running");schedule();showUI()}}
+function schedule(){clearTimeout(SH.timer);const s=SH.slides[SH.i];if(!s||!s.dur||SH.paused)return;SH.timer=setTimeout(()=>goSlide(SH.i+1),s.dur*SH.speed)}
+async function goSlide(i){
+  if(!SH.on)return;if(i<0)i=0;if(i>=SH.slides.length)i=SH.slides.length-1;SH.i=i;const s=SH.slides[i];const stage=$("#sh-stage");if(!stage)return;
+  if(s.k==="photo"&&s.p.full&&!URLS[s.p.full])await ensureUrls([s.p.full]);
+  const nxt=SH.slides.slice(i+1,i+3).filter(x=>x.k==="photo").map(x=>x.p.full);ensureUrls(nxt).then(()=>nxt.forEach(f=>{if(URLS[f]){const im=new Image();im.src=URLS[f]}}));
+  if(!SH.on||SH.i!==i)return;
+  const old=[...stage.children];const wrap=document.createElement("div");wrap.innerHTML=slideHTML(s);const el=wrap.firstElementChild;stage.appendChild(el);
+  requestAnimationFrame(()=>{el.classList.add("in");old.forEach(o=>{o.classList.remove("in");o.classList.add("out");setTimeout(()=>o.remove(),800)})});
+  const img=el.querySelector("img.main");if(img){const full=img.dataset.full&&URLS[img.dataset.full];const ready=()=>{img.classList.add("ready");if(SH.paused)img.style.animationPlayState="paused"};
+    if(full){const im=new Image();im.onload=()=>{img.src=full;ready()};im.onerror=ready;im.src=full}else ready()}
+  if(s.k==="title"&&s.bday)setTimeout(()=>{if(SH.on&&SH.i===i)confetti()},500);
+  if(s.k==="ending"){setTimeout(()=>{if(SH.on&&SH.i===i)confetti()},600);$("#show").classList.remove("hide-ui");clearTimeout(SH.uiT)}
+  $("#sh-cnt").textContent=`${i+1} / ${SH.slides.length}`;$("#sh-title").textContent=s.d?.n?`DAY${s.d.n} ${s.d.date||""}`:s.k==="ending"?"おしまい":s.k==="intro"?"":(s.d?.title||"");
+  schedule();
+}
+function stopShow(){SH.on=false;clearTimeout(SH.timer);clearTimeout(SH.uiT);const el=$("#show");el.hidden=true;el.innerHTML="";document.body.style.overflow="";
+  if(SH.audio){SH.audio.pause();SH.audio=null}if(!SH.wavesWasOn&&WAVE.on)wavesStop();}
+$("#f-music").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;if(SH.audio){SH.audio.pause()}
+  const a=new Audio(URL.createObjectURL(f));a.loop=true;a.volume=.9;SH.audio=a;a.play().catch(()=>toast("再生できませんでした"));if(WAVE.on){wavesStop();$("#sh-wave")?.classList.remove("on")}
+  const b=$("#sh-music");if(b)b.textContent="♪ "+(f.name.length>14?f.name.slice(0,14)+"…":f.name);toast("曲を流します")});
+document.addEventListener("keydown",e=>{if(!SH.on)return;if(e.key==="Escape")stopShow();if(e.key==="ArrowRight")goSlide(SH.i+1);if(e.key==="ArrowLeft")goSlide(SH.i-1);if(e.key===" "){e.preventDefault();togglePause()}});
+document.addEventListener("visibilitychange",()=>{if(SH.on&&document.hidden&&!SH.paused)togglePause()});
+
 /* ---------- 紙吹雪 ---------- */
 function confetti(){
   if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
@@ -1379,11 +1661,11 @@ function showLogin(msg){
   <div id="login-err" class="small" style="color:var(--shu);min-height:1.5em;font-weight:900"></div></div></div>`;
   document.querySelectorAll("[data-who]").forEach(b=>b.onclick=()=>{pickWho=b.dataset.who;beep("tap");showLogin();setTimeout(()=>$("#pw")?.focus(),50)});
   $("#login-form").onsubmit=async e=>{e.preventDefault();const pw=$("#pw").value;const btn=$("#login-btn");btn.disabled=true;btn.textContent="…";
-    try{const {error}=await sb.auth.signInWithPassword({email:EMAILS[pickWho],password:pw});
+    try{const {data,error}=await sb.auth.signInWithPassword({email:EMAILS[pickWho],password:pw});
       if(error){const m=String(error.message||"");console.warn(error);
         const msg=/Invalid login credentials/i.test(m)?"あいことばがちがうみたい（または、このアカウントがまだ作られていません）":/Email not confirmed/i.test(m)?"アカウントの確認が済んでいません。Supabaseで「Auto Confirm User」をオンにして作り直してね":/logins are disabled|Email logins/i.test(m)?"メールでのログインがオフになっています（Supabaseの Sign In / Providers → Email をオン）":/fetch|network|Failed/i.test(m)?"つながりませんでした。電波を確認してもう一度":"ログインできませんでした："+m;
         $("#login-err").textContent=msg;btn.disabled=false;btn.textContent="はいる";beep("tap");return}
-      $("#layer").innerHTML="";beep("open");confetti();}
+      $("#layer").innerHTML="";beep("open");confetti();if(data?.session&&!S.who)start(data.session);}
     catch(err){console.warn(err);$("#login-err").textContent="つながりませんでした。電波を確認してもう一度";btn.disabled=false;btn.textContent="はいる"}};
 }
 async function logout(){await sb.auth.signOut();S.who=null;location.reload()}
@@ -1400,6 +1682,62 @@ function showChangePw(){
     if(error){$("#pw-err").textContent="変えられませんでした："+(error.message||"");btn.disabled=false;btn.textContent="変える";return}
     $("#layer").innerHTML="";toast("あいことばを変えました");beep("clear")};
 }
+
+/* ---------- 不具合のお知らせバーと「せつぞくチェック」 ---------- */
+function setSysbar(msg,action){const el=$("#sysbar");if(!el)return;if(!msg){el.hidden=true;el.innerHTML="";return}
+  el.hidden=false;el.innerHTML=`<span>⚠ ${esc(msg)}</span>${action==="diag"?`<button class="btn mini" id="sysbar-diag">せつぞくチェック</button>`:action==="retry"?`<button class="btn mini" id="sysbar-retry">もう一度読み込む</button>`:""}`;
+  $("#sysbar-diag")?.addEventListener("click",()=>showDiag());$("#sysbar-retry")?.addEventListener("click",async()=>{if(S.db){await S.db.refresh();if(S.db.ready)setSysbar(null)}})}
+const SB_DASH="https://supabase.com/dashboard/project/rplymvjbetvjsfihozpp";
+async function showDiag(){
+  const L=$("#layer2");
+  L.innerHTML=`<div class="modal top"><div class="box diag"><h2>せつぞくチェック</h2><p class="small muted">サイトと保存先（Supabase）のつながりを順番にしらべます。</p>
+    <ul class="diag-list" id="diag-list"></ul><div class="diag-fix" id="diag-fix" hidden></div>
+    ${S.lastErr?`<div class="small muted">さいごに出たエラー（${new Date(S.lastErr.at).toTimeString().slice(0,5)} / ${esc(S.lastErr.where)}）：${esc(S.lastErr.msg)}<br><span style="font-size:11px">${esc(S.lastErr.raw.slice(0,160))}</span></div>`:""}
+    <div class="pw-btns" style="margin-top:10px"><button class="btn ghost" id="diag-close">とじる</button><button class="btn sea" id="diag-run">もう一度しらべる</button></div></div></div>`;
+  $("#diag-close").onclick=()=>{L.innerHTML=""};$("#diag-run").onclick=()=>showDiag();
+  const list=$("#diag-list"),fixes=[];
+  const item=(label)=>{const li=document.createElement("li");li.className="wait";li.innerHTML=`<i>…</i><div>${esc(label)}<small>しらべています…</small></div>`;list.appendChild(li);
+    return (state,text,sub)=>{li.className=state;li.querySelector("i").textContent=state==="ok"?"✓":state==="ng"?"×":state==="warn"?"!":"…";li.querySelector("small").textContent=sub||"";li.firstElementChild.nextElementSibling.firstChild.textContent=text||label}};
+  const fail=(set,label,e,where)=>{const i=errInfo(e,where);set("ng",label,i.msg+(e?.message?`（${String(e.message).slice(0,90)}）`:""));if(i.fix)fixes.push(i.fix)};
+  // 1 ログイン
+  let s1=item("ログイン");let session=null;
+  try{session=(await sb.auth.getSession()).data.session;if(!session){s1("ng","ログイン","ログインしていません");fixes.push("login")}
+    else{const who=Object.keys(EMAILS).find(k=>EMAILS[k]===session.user?.email);const left=Math.round((session.expires_at*1000-Date.now())/60000);s1(who?"ok":"ng","ログイン",who?`${NAME[who]}として入っています（期限あと${left}分・自動で延長されます）`:"このアカウントはふたりのどちらでもありません："+session.user?.email);if(!who)fixes.push("login")}}
+  catch(e){fail(s1,"ログイン",e,"auth")}
+  // 2 読み込み
+  let s2=item("データの読み込み（docs）");
+  try{const {count,error}=await sb.from("docs").select("id",{count:"exact",head:true});if(error)throw error;s2("ok","データの読み込み（docs）",`読めました（保存データ ${count??"?"} 件）`)}catch(e){fail(s2,"データの読み込み（docs）",e,"db")}
+  // 3 書き込み
+  let s3=item("データの書き込み（docs）");
+  try{const {error}=await sb.from("docs").upsert({collection:"config",id:"ping",data:{at:Date.now(),by:S.who||null},updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw error;s3("ok","データの書き込み（docs）","書けました")}catch(e){fail(s3,"データの書き込み（docs）",e,"db")}
+  // 4 写真の置き場
+  let s4=item("写真の保存場所（photos）");
+  try{const {error}=await sb.storage.from(BUCKET).list("",{limit:1});if(error)throw error;s4("ok","写真の保存場所（photos）","見つかりました")}catch(e){fail(s4,"写真の保存場所（photos）",e,"storage")}
+  // 5 写真の書き込み
+  let s5=item("写真のアップロード");
+  try{const path=`_check/${Date.now().toString(36)}.txt`;const {error}=await sb.storage.from(BUCKET).upload(path,new Blob(["ok"],{type:"text/plain"}),{contentType:"text/plain"});if(error)throw error;
+    const {error:e2}=await sb.storage.from(BUCKET).remove([path]);s5(e2?"warn":"ok","写真のアップロード",e2?"アップロードはできますが、消す許可がありません（写真は消せない設定）":"できました（テスト用の小さなファイルを置いて消しました）")}catch(e){fail(s5,"写真のアップロード",e,"storage")}
+  // 6 リアルタイム
+  let s6=item("リアルタイム更新");
+  try{const st=await new Promise(res=>{const ch=sb.channel("diag-"+Date.now());const tm=setTimeout(()=>{res("TIMED_OUT");sb.removeChannel(ch)},7000);ch.on("postgres_changes",{event:"*",schema:"public",table:"docs"},()=>{}).subscribe(s=>{if(s==="SUBSCRIBED"||s==="CHANNEL_ERROR"||s==="TIMED_OUT"){clearTimeout(tm);res(s);setTimeout(()=>sb.removeChannel(ch),500)}})});
+    s6(st==="SUBSCRIBED"?"ok":"warn","リアルタイム更新",st==="SUBSCRIBED"?"相手の変更がすぐ届きます":"いまは届きません（開き直すと反映されます）。設定SQLの「リアルタイム更新」の部分で直ります")}catch(e){s6("warn","リアルタイム更新","確認できませんでした")}
+  // 対処
+  const fx=$("#diag-fix");if(!fx)return;const u=[...new Set(fixes)];
+  if(!u.length){fx.hidden=false;fx.innerHTML=`<b>ぜんぶOKです。</b> いま出ている不具合は、電波が弱かったときの一時的なものの可能性が高いです。もう一度同じ操作をしてみてね。`;return}
+  fx.hidden=false;
+  fx.innerHTML=(u.includes("sql")?`<b>保存先の設定がまだ終わっていません。</b> 一度だけ、次の手順をやると直ります（5分くらい）。<ol>
+      <li><a href="${SB_DASH}/sql/new" target="_blank" rel="noopener">Supabase の SQL Editor をひらく</a>（さいけうのアカウントでログイン）</li>
+      <li>下の「設定SQLをコピー」を押して、SQL Editor の入力欄に貼りつける</li>
+      <li>右下の <code>Run</code> を押す。「Success」と出たらOK</li>
+      <li>この画面の「もう一度しらべる」でぜんぶ ✓ になるか確認</li></ol>
+      <div style="margin-top:8px"><button class="btn mini sea" id="diag-copy">設定SQLをコピー</button> <a class="btn mini ghost" href="supabase_setup.sql" download>SQLファイルを保存</a></div>`:"")+
+    (u.includes("login")?`<div style="margin-top:6px"><b>ログインし直してください。</b> <button class="btn mini" id="diag-login">ログイン画面へ</button></div>`:"")+
+    (u.includes("net")?`<div style="margin-top:6px"><b>電波がとどいていません。</b> 電波の良いところでもう一度試してね。</div>`:"")+
+    (u.includes("diag")?`<div style="margin-top:6px">原因がはっきりしないエラーです。上の赤い項目の文章をさいけうに送ってください。</div>`:"");
+  $("#diag-copy")?.addEventListener("click",async()=>{try{const r=await fetch("supabase_setup.sql",{cache:"no-store"});const sql=await r.text();await navigator.clipboard.writeText(sql);toast("コピーしました。SQL Editorに貼りつけてね")}catch(e){console.warn(e);toast("コピーできませんでした。「SQLファイルを保存」を使ってね")}});
+  $("#diag-login")?.addEventListener("click",async()=>{L.innerHTML="";await sb.auth.signOut().catch(()=>{});S.who=null;showLogin()});
+}
+$("#diag-open")?.addEventListener("click",()=>showDiag());
 
 /* ---------- オープニング・サウンド切替 ---------- */
 const sp=$("#splash");
@@ -1426,7 +1764,7 @@ const BUCKET="photos";
 async function ensureUrls(ids){
   const missing=[...new Set(ids.filter(id=>id&&!URLS[id]))];if(!missing.length)return;
   for(let i=0;i<missing.length;i+=200){const chunk=missing.slice(i,i+200);
-    try{const {data,error}=await sb.storage.from(BUCKET).createSignedUrls(chunk,60*60*24*7);if(error)throw error;for(const r of data||[]){if(r.signedUrl&&!r.error)URLS[r.path]=r.signedUrl}}catch(e){console.warn("signed urls",e)}}
+    try{const {data,error}=await withRetry(()=>sb.storage.from(BUCKET).createSignedUrls(chunk,60*60*24*7).then(r=>{if(r.error)throw r.error;return r}),"storage");if(error)throw error;for(const r of data||[]){if(r.signedUrl&&!r.error)URLS[r.path]=r.signedUrl}}catch(e){console.warn("signed urls",e);S.urlErr=e}}
 }
 function makeDb(){
   const cache=new Map();          // collection -> Map(id -> data)
@@ -1437,19 +1775,21 @@ function makeDb(){
   const notify=(c,id)=>{for(const l of listeners){if(l.c!==c)continue;if(l.id&&l.id!==id)continue;try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}};
   const split=p=>{const s=p.split("/");return [s.slice(0,-1).join("/"),s[s.length-1]]};
   const deepMerge=(a,b)=>{const o={...(a||{})};for(const k in b){o[k]=(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k]))?deepMerge(a[k],b[k]):b[k]}return o};
-  async function write(c,id,data){col(c).set(id,data);notify(c,id);
-    const {error}=await sb.from("docs").upsert({collection:c,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});
-    if(error){console.warn(error);throw {code:error.code==="42501"?"invalid_argument":"unavailable",message:error.message}}}
+  async function write(c,id,data){const prev=col(c).get(id);col(c).set(id,data);notify(c,id);
+    try{await withRetry(async()=>{const {error}=await sb.from("docs").upsert({collection:c,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw error},"db")}
+    catch(error){console.warn(error);if(prev===undefined)col(c).delete(id);else col(c).set(id,prev);notify(c,id);throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,status:error?.status,where:"db"})}}
   const docRef=(c,id)=>({id,path:c+"/"+id,
     get:async()=>snapDoc(c,id),
     set:data=>write(c,id,JSON.parse(JSON.stringify(data))),
     update:async patch=>{const cur=col(c).get(id);if(!cur)throw {code:"invalid_argument",message:"no doc"};return write(c,id,deepMerge(cur,JSON.parse(JSON.stringify(patch))))},
-    delete:async()=>{col(c).delete(id);notify(c,id);const {error}=await sb.from("docs").delete().match({collection:c,id});if(error)throw {code:"unavailable",message:error.message}},
+    delete:async()=>{const prev=col(c).get(id);col(c).delete(id);notify(c,id);
+      try{await withRetry(async()=>{const {error}=await sb.from("docs").delete().match({collection:c,id});if(error)throw error},"db")}
+      catch(error){if(prev!==undefined){col(c).set(id,prev);notify(c,id)}throw Object.assign(new Error(error?.message||String(error)),{code:error?.code,where:"db"})}},
     onSnapshot:(fn)=>{const l={c,id,fn};listeners.push(l);if(db.ready)fn(snapDoc(c,id));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
   const colRef=c=>({path:c,doc:id=>docRef(c,id||uid()+uid()),add:async data=>{const r=docRef(c,Date.now().toString(36)+uid());await r.set(data);return r},
     onSnapshot:(fn)=>{const l={c,id:null,fn};listeners.push(l);if(db.ready)fn(snapCol(c));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
   const db={ready:false,doc:p=>{const [c,id]=split(p);return docRef(c,id)},collection:c=>colRef(c),
-    async load(){const {data,error}=await sb.from("docs").select("collection,id,data");if(error)throw error;cache.clear();for(const r of data||[])col(r.collection).set(r.id,r.data);
+    async load(){const {data,error}=await withRetry(()=>sb.from("docs").select("collection,id,data").then(r=>{if(r.error)throw r.error;return r}),"db");if(error)throw error;cache.clear();for(const r of data||[])col(r.collection).set(r.id,r.data);
       db.ready=true;for(const c of new Set(listeners.map(l=>l.c))){for(const l of listeners.filter(x=>x.c===c)){try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}}},
     subscribe(){sb.channel("docs-live").on("postgres_changes",{event:"*",schema:"public",table:"docs"},p=>{
         if(p.eventType==="DELETE"){const o=p.old;if(o&&o.collection){col(o.collection).delete(o.id);notify(o.collection,o.id)}return}
@@ -1459,7 +1799,9 @@ function makeDb(){
   return db;
 }
 const assetsApi={async upload(b,{type}={}){const ext=(type||b.type||"image/jpeg").split("/")[1]||"jpg";const path=`${Date.now().toString(36)}-${uid()}${uid()}.${ext}`;
-  const {error}=await sb.storage.from(BUCKET).upload(path,b,{contentType:type||b.type||"image/jpeg",upsert:false});if(error){console.warn(error);throw {code:error.statusCode==="413"?"too_large":"upstream_error",message:error.message}}return {id:path,url:""}}};
+  try{await withRetry(async()=>{const {error}=await sb.storage.from(BUCKET).upload(path,b,{contentType:type||b.type||"image/jpeg",upsert:false});if(error)throw error},"storage")}
+  catch(error){console.warn(error);throw Object.assign(new Error(error?.message||String(error)),{code:error?.statusCode||error?.status,where:"storage"})}
+  return {id:path,url:""}}};
 
 async function start(session){
   const email=session?.user?.email||"";const who=Object.keys(EMAILS).find(k=>EMAILS[k]===email);
@@ -1474,16 +1816,20 @@ async function start(session){
   db.doc("config/secret").onSnapshot(d=>{S.secret=d.exists?d.data().msg:null;if(S.view==="stamp")safeRender()});
   db.doc("prep/items").onSnapshot(d=>{S.items=d.exists?d.data():null;if(S.view==="plan")safeRender()});
   sub("letters",s=>{S.letters={};s.docs.forEach(d=>S.letters[d.id]=d.data());if(S.view==="diary"||S.view==="plan")safeRender()});
-  try{await db.load()}catch(e){console.warn(e);toast("データを読み込めませんでした。電波を確認して開き直してね")}
+  try{await db.load();setSysbar(null)}catch(e){console.warn(e);const i=errInfo(e,"db");S.lastErr={at:Date.now(),where:"db(load)",msg:i.msg,raw:String(e?.message||e)};
+    setSysbar(i.kind==="setup"?`保存先の設定がまだのようです：${i.msg}`:i.kind==="network"?"電波がとどかず、データを読み込めませんでした（表示は前回の内容ではなく初期状態です）":"データを読み込めませんでした："+i.msg,i.kind==="network"?"retry":"diag");
+    if(i.kind==="network")setTimeout(()=>db.refresh().then(()=>{if(db.ready)setSysbar(null)}),4000)}
   db.subscribe();
   setTimeout(geocodeMissing,4000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)db.refresh()});
   render();
 }
 (async()=>{
-  const {data:{session}}=await sb.auth.getSession();
+  let session=null;try{session=(await sb.auth.getSession()).data.session}catch(e){console.warn(e)}
   if(session)start(session);else showLogin();
-  sb.auth.onAuthStateChange((ev,sess)=>{if(ev==="SIGNED_IN"&&sess&&!S.who)start(sess)});
+  // コールバックの中で supabase を待つと詰まることがあるので、必ず外側で開始する
+  sb.auth.onAuthStateChange((ev,sess)=>{if(ev==="SIGNED_IN"&&sess&&!S.who)setTimeout(()=>{if(!S.who)start(sess)},0);
+    if(ev==="SIGNED_OUT"&&S.who){S.who=null;location.reload()}});
 })();
 })();
 </script>
