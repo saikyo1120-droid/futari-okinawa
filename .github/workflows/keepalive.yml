@@ -1,0 +1,16 @@
+name: keep supabase awake
+on:
+  schedule:
+    - cron: "17 2 * * *"   # 毎日 11:17 JST
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" "${SUPABASE_URL}/rest/v1/docs?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_KEY}" -H "Authorization: Bearer ${SUPABASE_KEY}"
+        env:
+          SUPABASE_URL: __SB_URL__
+          SUPABASE_KEY: __SB_KEY__

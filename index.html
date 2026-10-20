@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#13b5c8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="島ぐらし">
+<meta name="description" content="さいけうとゆいちゃんの沖縄5泊6日誕生日旅行、ふたりだけのサイト">
+<meta name="robots" content="noindex,nofollow">
+<title>ふたりの島ぐらし</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script src="supabase.js"></script>
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-family:system-ui,sans-serif;font-size:14px}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Dela+Gothic+One&family=DotGothic16&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* Layout: 上に「ふたりが立つ南の島」の一枚絵（海・波・雲が動く）、その下に砂浜のボードに今の画面。下のカラフルなタブで5画面を切り替える。
+   明るい昼の島で統一（ダークモードでも同じ）。夕方・夜は空の色だけ変わる。 */
+:root{
+  color-scheme:light;
+  --sea:#13b5c8; --sea-deep:#0a7f9c; --lagoon:#7fe3e6; --foam:#e9fbfb;
+  --sand:#fbe7b5; --sand-deep:#e9c47a;
+  --grass:#7ccb45; --leaf:#3fae49;
+  --shu:#ee4b3a; --sun:#ffd23f; --hibiscus:#ff5c93; --ai:#2f4fb5;
+  --ink:#23314f; --muted:#46587a; --paper:#ffffff; --card:#fffdf6; --line:#f0dfb4;
+  --pop:"Mochiy Pop One","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --pixel:"DotGothic16","Osaka-mono",monospace;
+  --d1:#ee4b3a; --d2:#f5a524; --d3:#13b5c8; --d4:#2f4fb5; --d5:#ff5c93; --d6:#3fae49;
+}
+*{box-sizing:border-box}
+html{background:#0d7ea6}
+body{margin:0;overflow-x:clip;color:var(--ink);font-family:var(--body);font-weight:700;font-size:15px;line-height:1.7;
+  background-color:#0d7ea6;background-image:linear-gradient(180deg,rgba(0,40,70,0) 0,rgba(0,30,60,.25) 100%),url("water.webp");background-size:100% 100%,420px 420px;background-attachment:scroll;padding-block:0 104px}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--pop);font-weight:400;margin:0;line-height:1.3;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+a{color:var(--sea-deep);font-weight:700}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+.btn{border:3px solid var(--ink);background:var(--sun);color:var(--ink);border-radius:999px;padding:8px 20px;font-family:var(--pop);font-size:15px;box-shadow:0 4px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.sea{background:var(--sea);color:#fff}.btn.pink{background:var(--hibiscus);color:#fff}.btn.ghost{background:#fff}
+.btn.mini{padding:3px 12px;font-size:13px;box-shadow:0 3px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* ============ 島のヒーロー（レイヤー） ============ */
+.island{position:relative;margin:0 calc(50% - 50vw);width:100vw;height:clamp(600px,152vw,720px);overflow:hidden;background:#5cc9f5}
+.island .ly{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 70%;display:block;max-width:none;pointer-events:none}
+.island .ly.sea{animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.012)}}
+.island .ly.glow{mix-blend-mode:screen}
+.island .ly.g1{animation:caus1 9s ease-in-out infinite}
+.island .ly.g2{animation:caus2 11s ease-in-out infinite;opacity:.8}
+@keyframes caus1{0%,100%{transform:translate(0,0);opacity:.9}50%{transform:translate(14px,4px);opacity:.5}}
+@keyframes caus2{0%,100%{transform:translate(0,0);opacity:.4}50%{transform:translate(-16px,-3px);opacity:.9}}
+.island .ly.foam{animation:lap 5.5s ease-in-out infinite}
+@keyframes lap{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(7px) scaleY(.97);opacity:.75}}
+.island .ly.foam2{animation:lap2 5.5s ease-in-out infinite;opacity:.5}
+@keyframes lap2{0%,100%{transform:translateY(-9px) scaleY(1.03);opacity:.15}50%{transform:translateY(-1px);opacity:.6}}
+.glints i{position:absolute;width:18px;height:3px;border-radius:2px;background:#fff;box-shadow:0 0 6px #fff;opacity:0;animation:twinkle 3.2s ease-in-out infinite}
+.glints i:nth-child(2n){animation-delay:-1.1s;width:12px}.glints i:nth-child(3n){animation-delay:-2.2s}
+@keyframes twinkle{0%,100%{opacity:0;transform:scaleX(.4)}50%{opacity:.95;transform:scaleX(1)}}
+.softcloud{position:absolute;height:60px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));animation:drift 70s linear infinite;pointer-events:none}
+.softcloud.a{top:8%;width:220px}.softcloud.b{top:22%;width:160px;height:44px;animation-duration:95s;animation-delay:-40s;opacity:.8}
+@keyframes drift{from{transform:translateX(-260px)}to{transform:translateX(110vw)}}
+/* 時間帯で空が変わる */
+.skytint{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s;mix-blend-mode:multiply}
+body[data-sky="dusk"] .skytint{opacity:1;background:linear-gradient(180deg,#ff9a5c 0%,#ffcf8a 30%,#ffe9c2 50%,#fff 70%)}
+body[data-sky="night"] .skytint{opacity:1;background:linear-gradient(180deg,#1b2a6b 0%,#2b4a9a 35%,#5a86c8 55%,#a7c6ea 75%,#fff 100%)}
+body[data-sky="dawn"] .skytint{opacity:1;background:linear-gradient(180deg,#f9b8c8 0%,#ffe0c8 40%,#fff 70%)}
+.stars{position:absolute;inset:0 0 50%;pointer-events:none;opacity:0;transition:opacity 1.5s;
+  background-image:radial-gradient(circle,#fff 1.2px,transparent 2px),radial-gradient(circle,#fff 1px,transparent 1.8px),radial-gradient(circle,#fff .8px,transparent 1.6px);
+  background-size:140px 120px,90px 80px,60px 70px;background-position:10px 20px,40px 60px,70px 10px}
+body[data-sky="night"] .stars{opacity:.9;animation:twinkle2 4s ease-in-out infinite}
+@keyframes twinkle2{0%,100%{opacity:.9}50%{opacity:.55}}
+.moonbig{position:absolute;right:14%;top:9%;width:54px;height:54px;border-radius:50%;background:#fff6c8;box-shadow:0 0 30px 8px rgba(255,246,200,.5);opacity:0;transition:opacity 1.5s;pointer-events:none}
+body[data-sky="night"] .moonbig{opacity:1}
+
+/* ============ ロゴ（黄色いもこもこ吹き出し） ============ */
+.logo{position:absolute;left:50%;top:30px;transform:translateX(-50%);z-index:3;width:min(76%,380px);aspect-ratio:740/537;container-type:inline-size;
+  filter:drop-shadow(0 5px 0 rgba(35,49,79,.2)) drop-shadow(0 12px 16px rgba(0,30,60,.28));animation:logo-in .9s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes logo-in{from{transform:translateX(-50%) scale(.4) rotate(-8deg);opacity:0}to{transform:translateX(-50%);opacity:1}}
+.lg-blob{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:none}
+.lg-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7% 5% 5%}
+.lg-main{font-family:"Dela Gothic One",var(--pop);font-weight:400;color:#111;line-height:1;text-align:center;display:grid;gap:.04em;transform:rotate(-2deg)}
+.lg-main span{display:block;white-space:nowrap}
+.lg-main .l1{font-size:clamp(26px,13cqw,64px);letter-spacing:.04em}
+.lg-main .l2{font-size:clamp(34px,17cqw,82px);letter-spacing:.02em}
+.lg-main .ch,.lg-sub .ch{display:inline-block;font-style:normal;
+  text-shadow:2.5px 2.5px 0 #fff,-2.5px -2.5px 0 #fff,2.5px -2.5px 0 #fff,-2.5px 2.5px 0 #fff,0 3px 0 #fff,0 -3px 0 #fff,3px 0 0 #fff,-3px 0 0 #fff,0 5px 0 rgba(0,0,0,.18)}
+.lg-main .ch:nth-child(1){transform:rotate(-5deg) translateY(2%)}.lg-main .ch:nth-child(2){transform:rotate(3deg) translateY(-4%)}
+.lg-main .ch:nth-child(3){transform:rotate(-2deg) translateY(3%)}.lg-main .ch:nth-child(4){transform:rotate(4deg) translateY(-2%)}
+.lg-sub{display:flex;align-items:center;gap:.01em;margin-top:.3em;font-family:"Dela Gothic One",var(--pop);font-size:clamp(17px,7.8cqw,40px);line-height:1;transform:rotate(-2deg)}
+.lg-sub .ch{animation:bob 2.6s ease-in-out infinite}
+.lg-sub .ch:nth-child(2n){animation-delay:-.6s}.lg-sub .ch:nth-child(3n){animation-delay:-1.2s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7%) rotate(2deg)}}
+.lg-spark{width:.85em;height:.85em;margin-right:.08em}.lg-cake{width:.95em;height:.95em;margin-left:.12em}
+.lg-date{font-family:var(--body);font-weight:900;font-size:clamp(10px,3cqw,14px);letter-spacing:.1em;color:#7a5a00;margin-top:.45em;opacity:.95}
+.lg-bubble{position:absolute;left:2%;top:-9%;z-index:2;background:#fff;color:#111;border-radius:999px;padding:.38em 1em;font-family:"Dela Gothic One",var(--pop);font-size:clamp(11px,4.1cqw,19px);line-height:1.2;white-space:nowrap;box-shadow:0 2px 0 rgba(35,49,79,.18);transform:rotate(-3deg);animation:bubble-in .7s .5s cubic-bezier(.2,1.6,.4,1) both}
+.lg-bubble::after{content:"";position:absolute;left:22%;bottom:-.6em;width:1em;height:.75em;background:#fff;clip-path:polygon(0 0,100% 0,35% 100%)}
+@keyframes bubble-in{from{transform:rotate(-3deg) scale(0);opacity:0}to{transform:rotate(-3deg);opacity:1}}
+.sndbtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;z-index:4;width:40px;height:40px;border-radius:50%;border:3px solid var(--ink);background:#fff;box-shadow:0 3px 0 var(--ink);display:grid;place-items:center;padding:0}
+.sndbtn.wavebtn{top:58px;color:var(--sea-deep)}
+.sndbtn.wavebtn[aria-pressed="true"]{background:var(--sea);color:#fff}
+.sndbtn svg{width:22px;height:22px}.sndbtn .off{display:none}.sndbtn[aria-pressed="false"] .on{display:none}.sndbtn[aria-pressed="false"] .off{display:block}
+
+.miis{position:absolute;left:0;right:0;bottom:7%;display:flex;justify-content:center;align-items:flex-end;gap:clamp(2px,2vw,22px);z-index:2}
+.mii{position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mii img{height:clamp(200px,56vw,280px);width:auto;display:block;position:relative;z-index:1;animation:hop 3.2s ease-in-out infinite;transform-origin:50% 100%}
+.mii.yui img{animation-delay:-1.6s;height:calc(clamp(200px,56vw,280px)*.93)}
+.mii img.jump{animation:jump .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes jump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-26px) scale(.96,1.06)}100%{transform:translateY(0) scale(1)}}
+.mii::after{content:"";position:absolute;bottom:22px;width:70%;height:14px;border-radius:50%;background:rgba(80,60,20,.18)}
+@keyframes hop{0%,82%,100%{transform:translateY(0) scale(1,1)}88%{transform:translateY(-14px) scale(.98,1.03)}94%{transform:translateY(0) scale(1.03,.97)}}
+.nameplate{margin-top:-4px;position:relative;z-index:2;background:#fff;border:3px solid var(--ink);border-radius:99px;padding:0 12px;font-weight:900;font-size:13px;box-shadow:0 3px 0 var(--ink)}
+.mii.sai .nameplate{background:var(--lagoon)}.mii.yui .nameplate{background:#ffd0e0}
+.bubble{position:absolute;z-index:3;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:6px 12px;font-weight:900;font-size:13px;line-height:1.4;box-shadow:0 3px 0 var(--ink);white-space:nowrap}
+.bubble::after{content:"";position:absolute;bottom:-12px;width:16px;height:16px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+.island.talking .bubble.count{opacity:0;transition:opacity .2s}
+.bubble.count{transition:opacity .4s .3s;left:50%;transform:translateX(-50%);bottom:calc(7% + clamp(200px,56vw,280px) + 20px);font-family:var(--body);font-weight:900;font-size:14px;animation:float 3s ease-in-out infinite}
+.bubble.count::after{left:calc(50% - 8px);bottom:-11px}
+.bubble.count b{font-family:var(--pop);font-size:26px;color:var(--shu);font-weight:400;font-variant-numeric:tabular-nums}
+.bubble.count .th{display:block;font-size:11.5px;color:var(--sea-deep);letter-spacing:.08em;margin-top:-2px;font-weight:900}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+.bubble.talk{bottom:calc(100% - 10px);left:50%;transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .2s;z-index:5;background:#fffbe6}
+.bubble.talk::after{left:calc(50% - 8px);background:#fffbe6}
+.bubble.talk.show{opacity:1;transform:translateX(-50%) scale(1)}
+.mii.yui .bubble.talk{background:#fff0f5}.mii.yui .bubble.talk::after{background:#fff0f5}
+
+/* ============ タブ ============ */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--sand) url("sandtex.webp") 0 0/256px 256px;border-top:4px solid var(--ink);box-shadow:0 -6px 18px rgba(0,30,60,.25);
+  padding:8px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.tab{--c:var(--sea);border:3px solid var(--ink);background:#fff;border-radius:16px;padding:4px 2px 3px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:0;box-shadow:0 3px 0 var(--ink);transition:transform .1s}
+.tab svg{width:26px;height:26px}
+.tab[aria-selected="true"]{background:var(--c);color:#fff;transform:translateY(-4px);box-shadow:0 7px 0 var(--ink)}
+.tab:nth-child(1){--c:var(--shu)}.tab:nth-child(2){--c:#f5a524}.tab:nth-child(3){--c:var(--hibiscus)}.tab:nth-child(4){--c:var(--sea)}.tab:nth-child(5){--c:var(--leaf)}.tab:nth-child(6){--c:var(--ai)}
+@media (max-width:420px){.tab{font-size:10px;padding:3px 0 2px}.tab svg{width:22px;height:22px}}
+
+/* ============ ステータス ============ */
+.status{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media (max-width:480px){.status{grid-template-columns:1fr}}
+.pcard{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:8px 10px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 0 var(--ink);min-width:0}
+.pcard img{height:64px;width:auto;flex:0 0 auto}
+.pcard.sai{background:linear-gradient(135deg,#e6fbfc,#fff)}.pcard.yui{background:linear-gradient(135deg,#ffeef4,#fff)}
+.pc-in{min-width:0;flex:1}
+.pc-name{font-family:var(--pop);font-size:16px;display:flex;align-items:center;gap:8px}
+.lv{font-family:var(--pop);font-size:13px;background:var(--sun);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:0 9px;line-height:1.5}
+.pc-stats{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.stat{--c:var(--sea);display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:1px 9px 1px 3px;box-shadow:0 2px 0 var(--ink)}
+.stat i{font-style:normal;font-size:11px;font-weight:900;background:var(--c);color:#fff;border-radius:999px;padding:0 8px;line-height:1.7;letter-spacing:.02em}
+.stat.ink i{color:var(--ink)}
+.stat b{font-family:var(--pop);font-weight:400;font-size:17px;color:var(--ink);line-height:1.1;min-width:1ch;text-align:center}
+.love{grid-column:1/-1;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:8px 12px;box-shadow:0 4px 0 var(--ink)}
+.love-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:900}
+.love-h b{font-family:var(--pop);font-size:22px;color:var(--hibiscus);font-weight:400}
+.love-bar{height:14px;border:3px solid var(--ink);border-radius:99px;overflow:hidden;background:#fff;margin:4px 0}
+.love-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--hibiscus),var(--sun));transition:width .8s}
+.love-s{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.love-s span{font-size:11.5px;font-weight:900;color:var(--ink);background:var(--sand);border:2px solid var(--ink);border-radius:999px;padding:0 8px;line-height:1.7}
+.love-s span b{font-family:var(--pop);font-weight:400;font-size:13px;margin-left:3px}
+
+/* ============ 画面切り替え ============ */
+main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.4,1)}
+@keyframes enter{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+
+/* ============ オープニング ============ */
+.splash{position:fixed;inset:0;z-index:100;background:#13b5c8 url("water.webp") 0 0/384px 384px;display:grid;place-items:center;transition:opacity .6s,transform .6s;cursor:pointer;
+  padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}
+.splash.out{opacity:0;transform:scale(1.06);pointer-events:none}
+.splash-in{display:grid;grid-template-columns:1fr 1fr;justify-items:center;align-items:end;width:100%;max-width:560px;position:relative;padding-top:min(62vw,300px)}
+.splash .logo{top:0;width:min(94%,460px);animation-delay:.1s}
+.splash-mii{height:clamp(190px,46vw,280px);width:auto;animation:sin .8s cubic-bezier(.2,1.5,.4,1) both}
+.splash-mii.l{animation-delay:.25s;transform-origin:50% 100%}.splash-mii.r{animation-delay:.4s}
+@keyframes sin{from{transform:translateY(60px) scale(.7);opacity:0}to{transform:none;opacity:1}}
+.splash-tap{position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:#fff;font-weight:900;animation:blink 1.4s ease-in-out infinite;text-shadow:1px 1px 0 var(--ink)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ============ 行程エディター ============ */
+.modal .box.editor{text-align:left;max-width:560px;max-height:calc(100vh - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;background:#fff}
+.ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.ed-head h2{font-size:20px;color:var(--c)}
+.ed-head .x{border:3px solid var(--ink);background:#fff;border-radius:50%;width:36px;height:36px;font-family:var(--pop);font-size:18px;line-height:1;box-shadow:0 3px 0 var(--ink)}
+.ed-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:480px){.ed-grid{grid-template-columns:1fr}}
+.fld{display:grid;gap:2px;font-size:12.5px;font-weight:900;color:var(--ink);margin-bottom:8px}
+.fld input,.fld textarea,.ed-stop input{width:100%;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;min-width:0}
+.fld textarea{min-height:60px;resize:vertical}
+.ed-stops{display:grid;gap:8px;margin:6px 0 10px}
+.ed-stop{background:var(--sand);border:2px solid var(--ink);border-radius:14px;padding:8px;display:grid;gap:6px}
+.ed-stop-row{display:grid;grid-template-columns:72px 1fr auto;gap:6px;align-items:center}
+.ed-stop-row2{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+@media (max-width:480px){.ed-stop-row2{grid-template-columns:1fr}}
+.ed-btns{display:flex;gap:4px}
+.ed-btns button{border:2px solid var(--ink);background:#fff;border-radius:8px;width:30px;height:30px;padding:0;font-size:12px;font-weight:900}
+.chk{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:900;white-space:nowrap}
+.chk input{width:18px;height:18px;accent-color:var(--shu)}
+.ed-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.st-badge{display:inline-block;margin-left:6px;font-size:10px;background:var(--shu);color:#fff;border-radius:99px;padding:0 7px;vertical-align:middle;font-weight:900}
+.daycard .ribbon .theme{font-size:12.5px;font-weight:900;background:rgba(255,255,255,.22);border-radius:999px;padding:0 9px;margin-left:auto}
+
+/* ============ 島ニュース ============ */
+.news{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 12px;box-shadow:0 4px 0 var(--ink);margin-bottom:14px}
+.news-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.news-tag{font-family:var(--pop);font-size:14px;background:var(--ai);color:#fff;border-radius:10px;padding:1px 10px}
+.news ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.news li{font-size:13.5px;font-weight:700;display:flex;gap:8px;align-items:baseline;padding:3px 0;border-top:1px dashed var(--line)}
+.news li:first-child{border-top:0}
+.news .when{font-size:11px;font-weight:900;color:var(--sea-deep);background:var(--foam);border-radius:999px;padding:0 7px;flex:0 0 auto;line-height:1.7}
+.news li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sea);flex:0 0 auto;align-self:center}
+.news li.k-stamp::before,.news li.k-done::before{background:var(--shu)}.news li.k-food::before{background:var(--leaf)}.news li.k-diary::before,.news li.k-letter::before{background:var(--hibiscus)}.news li.k-mission::before{background:#f5a524}.news li.k-plan::before{background:var(--ai)}
+/* ============ 日の出・月 ============ */
+.sunrow{display:flex;gap:8px 10px;flex-wrap:wrap;font-size:12.5px;font-weight:900;color:var(--ink);margin:8px 0 4px}
+.sunrow .sr{background:#fff;border:2px solid var(--line);border-radius:999px;padding:1px 9px 1px 5px}
+.sunrow .sr{display:inline-flex;align-items:center;gap:4px}
+.sunrow svg{width:20px;height:20px}
+.moon-svg{width:20px;height:20px}
+.daytabs button.today{position:relative}
+.daytabs button.today::after{content:"";position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:var(--shu);border:2px solid #fff;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+/* ============ 持ち物 ============ */
+.items{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.item{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 8px 6px 12px;display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;transition:background .3s}
+.item.both{background:linear-gradient(90deg,#fff8d6,#e6fbfc);border-color:var(--leaf);box-shadow:0 0 0 3px rgba(63,174,73,.18)}
+.item .it{font-weight:700;font-size:14px;min-width:0}
+.item .it small{display:inline-block;margin-left:6px;font-size:11px;font-weight:900;color:#fff;background:var(--ai);border-radius:99px;padding:0 7px;vertical-align:middle}
+.iboxes{display:grid;grid-template-columns:38px 38px;gap:4px}
+.ibox{position:relative;width:38px;height:38px;border:2px dashed #cfd8e6;border-radius:10px;display:grid;place-items:center;cursor:pointer;background:var(--foam)}
+.ibox input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.ibox img{height:30px;width:auto;opacity:.3;filter:grayscale(1);transition:.2s}
+.ibox:has(input:checked){border:2px solid var(--leaf);background:#e8f8e8}
+.ibox:has(input:checked) img{opacity:1;filter:none;transform:scale(1.05)}
+.ibox:has(input:disabled){cursor:default}
+.idel{border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;min-width:26px;height:26px;padding:0 6px;font-weight:900;font-size:14px;line-height:1;display:grid;place-items:center;box-shadow:0 2px 0 var(--ink)}
+.item.confirm{background:#fff2f0;border-color:var(--shu)}
+.item.confirm .idel{background:var(--shu);color:#fff;border-color:var(--ink);font-size:12px;padding:0 10px;animation:pop .25s}
+.iadd{display:grid;grid-template-columns:1fr auto auto;gap:6px;margin-top:8px}
+.iadd input,.iadd select{border:2px solid var(--ink);border-radius:10px;padding:6px 8px;font:inherit;background:#fff;min-width:0}
+/* ============ 手紙 ============ */
+.letters{margin-top:16px;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;box-shadow:0 4px 0 var(--ink)}
+.letters h3{font-size:17px}
+.letter-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media (max-width:560px){.letter-grid{grid-template-columns:1fr}}
+.letter{background:var(--sand);border:2px solid var(--ink);border-radius:16px;padding:10px;min-width:0}
+.letter .env{width:72px;display:block;margin:0 auto 4px}
+.lt-h{font-weight:900;text-align:center;font-size:13px;margin-bottom:6px}
+.letter textarea{width:100%;min-height:120px;border:2px solid var(--ink);border-radius:10px;padding:8px;font:inherit;resize:vertical;background:#fff;margin-bottom:6px}
+.lt-body{white-space:pre-wrap;background:#fff;border-radius:10px;padding:10px;line-height:1.9;overflow-wrap:anywhere;animation:enter .6s ease}
+.letter .sealed{min-height:80px;text-align:center;color:var(--muted);font-weight:700;display:grid;place-items:center}
+/* ============ グルメ図鑑 ============ */
+.bar.green i{background:repeating-linear-gradient(45deg,var(--leaf) 0 10px,#7ccb45 10px 20px)}
+.foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.food{background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--ink);display:grid;grid-template-rows:auto 1fr}
+.food.got{border-color:var(--leaf)}
+.food-pic{position:relative;aspect-ratio:4/3;border:0;background:var(--foam);padding:0;overflow:hidden;display:grid;place-items:center;width:100%}
+.food-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.food-pic svg{width:70%;opacity:.8}
+.food-pic:not(:disabled){cursor:pointer}
+.get-hint{position:absolute;right:6px;bottom:6px;background:var(--sea);color:#fff;font-size:11px;font-weight:900;border-radius:99px;padding:1px 8px}
+.got-badge{position:absolute;left:-4px;top:8px;background:var(--shu);color:#fff;font-family:var(--pop);font-size:12px;padding:1px 10px 1px 12px;border-radius:0 99px 99px 0;transform:rotate(-6deg);box-shadow:0 2px 0 var(--ink)}
+.food-in{padding:8px 10px 10px}
+.food-n{font-weight:900;font-size:14px;line-height:1.3}
+.food-d{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;font-weight:700}
+.food-w{font-size:12px;font-weight:900;color:var(--sea-deep);margin-top:4px}
+.food.got .food-w{color:var(--leaf)}
+/* ============ いいね・称号 ============ */
+.lb-bot .like{display:inline-flex;align-items:center;gap:6px}
+.lb-bot .like svg{width:22px;height:22px}
+.lb-bot .like.on{background:rgba(255,92,147,.3)}
+.grid .tag.green{background:var(--leaf)}
+.grid .heart{position:absolute;right:4px;top:2px;color:var(--hibiscus);font-size:16px;text-shadow:0 0 3px #fff}
+.result .subtitles{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
+.result .subtitles span{background:rgba(255,255,255,.15);border:2px solid var(--sun);border-radius:99px;padding:0 10px;font-size:12px}
+
+/* ============ 誕生日 ============ */
+.cake{width:22px;height:22px;vertical-align:middle}.cake.s{width:18px;height:18px}.cake.r{transform:scaleX(-1)}
+.bday{display:flex;align-items:center;gap:10px;margin:8px 0 2px;background:linear-gradient(90deg,#fff0f5,#fff8d6);border:2px solid var(--hibiscus);border-radius:14px;padding:8px 12px;
+  background-image:radial-gradient(circle at 12% 30%,rgba(255,92,147,.25) 2px,transparent 3px),radial-gradient(circle at 88% 70%,rgba(255,210,63,.5) 2px,transparent 3px),radial-gradient(circle at 60% 20%,rgba(19,181,200,.3) 2px,transparent 3px),linear-gradient(90deg,#fff0f5,#fff8d6)}
+.bday .cake{width:30px;height:30px;flex:0 0 auto}
+.bday b{font-family:var(--pop);font-weight:400;color:var(--hibiscus);font-size:15px;display:block}
+.bday span{font-size:12.5px;color:var(--ink);font-weight:700}
+.daytabs button.bday-tab::before{content:"";position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:var(--hibiscus);border:2px solid #fff}
+.daytabs button{position:relative}
+.bubble.count .cake{margin-right:2px}
+
+/* ============ ログイン ============ */
+.modal .box.login{max-width:420px}
+.login .whopick button[aria-pressed="true"]{background:var(--sun);transform:translateY(-3px);box-shadow:0 7px 0 var(--ink)}
+.login-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
+.login-form input{border:3px solid var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:16px;min-width:0;background:#fff}
+.foot{text-align:center;padding:10px 0 20px}
+.foot .linkbtn{color:#fff;opacity:.8;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+/* ============ 画面の地（砂浜のボード） ============ */
+.board-wrap{background:var(--sand) url("sandtex.webp") 0 0/256px 256px;border:4px solid var(--ink);border-radius:28px;padding:18px clamp(12px,3.5vw,22px) 22px;margin-top:-18px;position:relative;z-index:4;box-shadow:0 6px 0 var(--ink),0 18px 40px rgba(0,30,60,.35)}
+.board-wrap::before{content:"";position:absolute;inset:0;border-radius:24px;box-shadow:inset 0 2px 0 rgba(255,255,255,.7),inset 0 -3px 0 rgba(180,140,80,.25);pointer-events:none}
+section.view{position:relative}
+.head{display:flex;align-items:center;gap:10px;margin:2px 0 12px;flex-wrap:wrap}
+.head .tag{background:var(--c,var(--shu));color:#fff;font-family:var(--pop);font-size:clamp(18px,5vw,23px);padding:4px 18px 6px;border-radius:14px;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transform:rotate(-1.5deg)}
+.head .aside{margin-left:auto;font-size:13px;color:var(--muted);font-weight:700}
+
+/* 吹き出し付きのMiiコメント */
+.say{display:flex;gap:8px;align-items:flex-end;margin:10px 0}
+.say img{width:46px;flex:0 0 auto}
+.say .b{background:#fff;border:3px solid var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;font-weight:700;min-width:0}
+
+/* ============ 島めぐりマップ ============ */
+.mapbox{display:grid;grid-template-columns:minmax(0,200px) 1fr;gap:14px;align-items:start}
+@media (max-width:560px){.mapbox{grid-template-columns:1fr}}
+.map{background:radial-gradient(circle at 30% 20%,#9eeef0,var(--sea) 70%);border:3px solid var(--ink);border-radius:20px;padding:6px;max-width:100%}
+@media (max-width:560px){.map{max-width:230px;margin:0 auto;width:100%}}
+.map svg{width:100%;height:auto;display:block}
+.map .pin{cursor:pointer}
+.map .pin circle.dot{transition:r .2s}
+.map .pin.on circle.dot{r:13}
+.route{stroke-dasharray:6 7;animation:march 1.2s linear infinite}
+@keyframes march{to{stroke-dashoffset:-13}}
+.daytabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.daytabs button{--c:var(--sea);border:3px solid var(--ink);background:#fff;border-radius:12px;padding:2px 10px;line-height:1.3;font-weight:900;text-align:center;box-shadow:0 3px 0 var(--ink)}
+.daytabs button small{display:block;font-size:10.5px;font-weight:900;letter-spacing:.04em;opacity:.85}
+.daytabs button[aria-pressed="true"]{background:var(--c);color:#fff}
+.daycard{background:var(--card);border:3px solid var(--ink);border-radius:20px;overflow:hidden;box-shadow:0 5px 0 var(--ink)}
+.daycard .ribbon{background:var(--c);color:#fff;padding:10px 14px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.daycard .ribbon .no{font-family:var(--pop);font-size:13px;background:#fff;color:var(--c);border-radius:999px;padding:0 10px;line-height:1.7}
+.daycard .ribbon h3{font-size:19px}
+.daycard .inner{padding:4px 14px 14px}
+.stops{list-style:none;margin:0;padding:0;position:relative}
+.stops::before{content:"";position:absolute;left:27px;top:18px;bottom:18px;border-left:3px dotted var(--sand-deep)}
+.stops li{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:10px 0;position:relative}
+.stops .t{font-size:12.5px;font-weight:900;background:#fff;border:2px solid var(--ink);border-radius:10px;text-align:center;height:max-content;position:relative;z-index:1;font-variant-numeric:tabular-nums;padding:1px 0}
+.stops .n{font-weight:900}
+.stops .d{font-size:13px;color:var(--muted);font-weight:700}
+.stops a{font-size:12px}
+.infobox{background:#fff;border:2px dashed var(--line);border-radius:14px;padding:8px 12px;font-size:13px;display:grid;gap:6px}
+.infobox .row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.infobox .k{font-weight:900}
+.infobox .v{min-width:0;flex:1}
+.linkbtn{border:0;background:none;color:var(--sea-deep);font-weight:900;font-size:12px;padding:0;text-decoration:underline}
+.edit-row{display:flex;gap:6px;width:100%}
+.edit-row input{flex:1;min-width:0;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;font:inherit;background:#fff;color:var(--ink)}
+
+/* ============ ガチャ ============ */
+.gacha{margin-top:18px;background:linear-gradient(160deg,#ff8a5c,var(--shu));border:3px solid var(--ink);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--ink);color:#fff;position:relative;overflow:hidden}
+.gacha h3{font-size:19px;text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+.gacha-stage{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0}
+.machine{width:78px;flex:0 0 auto}
+.machine .globe{transform-box:fill-box;transform-origin:50% 50%}
+.machine.shake .globe{animation:shake .7s ease}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+.mission-list{display:grid;gap:8px}
+.mission{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:8px 10px;display:flex;gap:10px;align-items:center;animation:pop .4s cubic-bezier(.2,1.5,.4,1)}
+.mission .cap{width:26px;height:26px;border-radius:50%;flex:0 0 auto;border:2px solid var(--ink);background:linear-gradient(var(--c,var(--sun)) 50%,#fff 50%)}
+.mission .txt{flex:1;min-width:0;font-weight:700}
+.mission.done .txt{text-decoration:line-through;text-decoration-color:var(--shu);text-decoration-thickness:2px;opacity:.7}
+.mission .ok{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:2px 10px;font-weight:900;font-size:12px;flex:0 0 auto}
+.mission.done .ok{background:var(--sun)}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.gacha .hint{font-size:12px;opacity:.9;margin-top:8px}
+
+/* ============ スタンプ ============ */
+.prog-row{display:flex;align-items:center;gap:10px}
+.prog-row .num{font-family:var(--pop);font-size:17px;white-space:nowrap}
+.bar{flex:1;height:16px;border:3px solid var(--ink);border-radius:99px;overflow:hidden;background:#fff}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(45deg,var(--shu) 0 10px,#ff7a6b 10px 20px);transition:width .8s}
+.spots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:14px}
+.spot{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px;position:relative;overflow:hidden;display:grid;gap:6px;align-content:start;box-shadow:0 4px 0 var(--ink)}
+.spot .top{display:flex;gap:6px;align-items:center}
+.spot .day{font-size:11px;font-weight:900;color:#fff;background:var(--c);border-radius:999px;padding:0 9px;line-height:1.7}
+.spot .nm{font-weight:900;font-size:15px;line-height:1.35}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slot{aspect-ratio:1;border:3px dashed #cfd8e6;border-radius:14px;display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted);overflow:hidden;position:relative;background:var(--foam);padding:0;max-width:100%}
+.slot img.ph{width:100%;height:100%;object-fit:cover}
+.slot img.face{height:72%;width:auto;opacity:.32}
+.slot .who{position:absolute;left:5px;top:5px;background:var(--ink);color:#fff;font-size:10px;font-weight:900;border-radius:99px;padding:0 7px;z-index:1}
+.slot.mine{border-color:var(--sea);color:var(--sea-deep);font-weight:900;cursor:pointer;background:#e3fafb}
+.slot.mine span.plus{font-family:var(--pop);font-size:26px;line-height:1}
+.stampmark{position:absolute;right:6px;top:4px;width:96px;height:96px;pointer-events:none;transform:rotate(-14deg);opacity:.92}
+.stampmark.new{animation:thump .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes thump{0%{transform:rotate(-14deg) scale(2.6);opacity:0}60%{opacity:1}100%{transform:rotate(-14deg) scale(1)}}
+.treasure{margin-top:16px;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;box-shadow:0 4px 0 var(--ink)}
+.treasure svg{width:64px}
+.treasure textarea{width:100%;min-height:90px;border:2px solid var(--ink);border-radius:10px;padding:8px;font:inherit;margin-top:6px}
+.treasure .msg{white-space:pre-wrap;font-weight:700}
+
+/* ============ 日記 ============ */
+.diary{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.diary{grid-template-columns:1fr}}
+.page{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px 14px;min-width:0;box-shadow:0 4px 0 var(--ink);
+  background-image:repeating-linear-gradient(transparent 0 31px,#d8eef0 31px 32px);background-position:0 54px}
+.page.yui{border-top:10px solid var(--hibiscus)}.page.sai{border-top:10px solid var(--sea)}
+.page h3{font-size:15px;display:flex;align-items:center;gap:8px}
+.page h3 img{height:40px;width:auto}
+.page textarea{width:100%;min-height:160px;border:0;background:transparent;font:inherit;line-height:32px;color:var(--ink);resize:vertical;padding:0;margin-top:4px}
+.page .body{white-space:pre-wrap;line-height:32px;margin-top:4px;overflow-wrap:anywhere}
+.sealed{display:grid;place-items:center;text-align:center;min-height:170px;color:var(--muted);font-weight:700}
+.sealed svg{width:58px;margin:0 auto 4px;display:block}
+.banner{margin-bottom:12px;background:var(--ai);color:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;font-weight:900;display:flex;align-items:center;gap:8px}
+.moon{width:22px;height:22px;border-radius:50%;box-shadow:inset -6px -2px 0 0 var(--sun);flex:0 0 auto}
+.remind{margin-top:16px;background:var(--ai);color:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;box-shadow:0 4px 0 var(--ink);
+  background-image:radial-gradient(circle at 15% 30%,#fff 1px,transparent 2px),radial-gradient(circle at 70% 20%,#fff 1px,transparent 2px),radial-gradient(circle at 85% 70%,#fff 1.5px,transparent 2.5px),radial-gradient(circle at 40% 80%,#fff 1px,transparent 2px)}
+.remind h3{font-size:17px;display:flex;align-items:center;gap:8px}
+
+/* ============ アルバム ============ */
+.uploadbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 2px}
+.prog{font-size:13px;font-weight:900;color:var(--sea-deep)}
+.album-day{margin-top:16px;content-visibility:auto;contain-intrinsic-size:auto 300px}
+.album-day h3{font-size:16px;display:flex;align-items:center;gap:8px}
+.album-day h3 .dot{width:14px;height:14px;border-radius:50%;background:var(--c);border:2px solid var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:8px}
+.grid button{padding:0;border:3px solid #fff;aspect-ratio:1;background:var(--foam);overflow:hidden;border-radius:10px;position:relative;max-width:100%;box-shadow:0 2px 0 rgba(35,49,79,.25)}
+.grid button:nth-child(3n){transform:rotate(1.2deg)}.grid button:nth-child(3n+1){transform:rotate(-1deg)}
+.grid img{width:100%;height:100%;object-fit:cover;display:block}
+.grid .tag{position:absolute;left:4px;bottom:4px;background:var(--shu);color:#fff;font-size:10px;border-radius:99px;padding:0 6px;font-weight:900}
+.empty{background:#fff;border:3px dashed var(--sand-deep);border-radius:18px;padding:20px;text-align:center;color:var(--muted);margin-top:12px;font-weight:700}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(6,30,40,.95);display:grid;grid-template-rows:auto 1fr auto;color:#fff;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.lb-top,.lb-bot{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;gap:10px}
+.lb-top button,.lb-bot button{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:99px;padding:6px 16px;font-weight:900}
+.lb-stage{overflow:auto;display:grid;place-items:center;touch-action:pan-x pan-y pinch-zoom}
+.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.lb-stage.zoom img{max-width:none;max-height:none}
+
+/* ============ リザルト ============ */
+.result{background:linear-gradient(180deg,#1d3a8a,var(--ai));color:#fff;border:3px solid var(--ink);border-radius:24px;padding:18px;box-shadow:0 5px 0 var(--ink);position:relative;overflow:hidden;font-weight:900}
+.result .rays{position:absolute;left:50%;top:120px;width:640px;height:640px;margin:-320px 0 0 -320px;background:repeating-conic-gradient(rgba(255,255,255,.08) 0 10deg,transparent 10deg 20deg);animation:spin 40s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result h3{font-family:var(--pop);font-size:26px;color:var(--sun);text-align:center;position:relative;text-shadow:3px 3px 0 var(--shu)}
+.result .pair{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin-top:8px;position:relative}
+.result .pair img{height:150px;width:auto}
+.result .rows{display:grid;gap:8px;margin-top:10px;position:relative;background:rgba(0,0,0,.18);border-radius:16px;padding:10px 14px}
+.result .r{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px dashed rgba(255,255,255,.3);padding-bottom:4px}
+.result .r:last-child{border-bottom:0}
+.result .r b{font-family:var(--pop);font-size:28px;font-weight:400;color:var(--sun);font-variant-numeric:tabular-nums}
+.result .rank{margin-top:14px;text-align:center;position:relative}
+.result .rank strong{display:inline-block;font-family:var(--pop);font-weight:400;font-size:clamp(20px,6vw,26px);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:14px;padding:4px 16px;margin-top:6px;box-shadow:0 4px 0 var(--ink)}
+.locked{filter:grayscale(.6);opacity:.75}
+.dayres{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.dayres .c{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px 12px;font-size:13.5px;font-weight:700;box-shadow:0 3px 0 var(--ink);border-top:10px solid var(--c)}
+.dayres .c h4{margin:0 0 4px;font-family:var(--pop);font-weight:400;font-size:14px;color:var(--c)}
+
+/* ============ モーダル等 ============ */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(10,60,80,.55);display:grid;place-items:center;padding:20px}
+.modal .box{background:var(--sand);border:4px solid var(--ink);border-radius:24px;padding:20px;max-width:440px;width:100%;text-align:center;box-shadow:0 6px 0 var(--ink)}
+.modal h2{font-size:22px}
+.whopick{display:flex;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.whopick button{border:3px solid var(--ink);background:#fff;border-radius:20px;padding:10px 10px 8px;width:130px;font-weight:900;box-shadow:0 4px 0 var(--ink)}
+.whopick img{height:140px;width:auto;display:block;margin:0 auto 4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--ink);color:#fff;padding:8px 16px;border-radius:99px;font-weight:900;font-size:13px;max-width:calc(100% - 32px);text-align:center;border:3px solid #fff}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:65}
+.paused *,.paused *::before,.paused *::after{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="island" aria-label="ふたりの島">
+    <img class="ly sea" src="back.webp" alt="" width="1500" height="1500" fetchpriority="high" decoding="async">
+    <img class="ly glow g1" src="glow1.webp" alt="" width="1000" height="1000" decoding="async">
+    <img class="ly glow g2" src="glow2.webp" alt="" width="1000" height="1000" decoding="async">
+    <div class="skytint" aria-hidden="true"></div><div class="stars" aria-hidden="true"></div><div class="moonbig" aria-hidden="true"></div>
+    <img class="ly foam2" src="foam.webp" alt="" width="1500" height="1500" decoding="async">
+    <img class="ly" src="sand.webp" alt="" width="1500" height="1500" decoding="async">
+    <img class="ly foam" src="foam.webp" alt="" width="1500" height="1500" decoding="async">
+    <div class="glints" aria-hidden="true"><i style="left:12%;top:44%"></i><i style="left:31%;top:50%"></i><i style="left:58%;top:42%"></i><i style="left:74%;top:47%"></i><i style="left:44%;top:56%"></i><i style="left:86%;top:53%"></i><i style="left:22%;top:60%"></i><i style="left:66%;top:58%"></i></div>
+    <div class="softcloud a" aria-hidden="true"></div><div class="softcloud b" aria-hidden="true"></div>
+    <img class="ly" src="front.webp" alt="" width="1500" height="1500" decoding="async">
+
+<div class="logo" id="logo-hero">
+      <div class="lg-bubble">さいけうとゆいちゃんの</div>
+      <img class="lg-blob" src="blob.webp" alt="" width="740" height="537" decoding="async">
+      <div class="lg-text"><h1 class="lg-main"><span class="l1"><i class="ch">ふ</i><i class="ch">た</i><i class="ch">り</i><i class="ch">の</i></span><span class="l2"><i class="ch">島</i><i class="ch">ぐ</i><i class="ch">ら</i><i class="ch">し</i></span></h1>
+        <div class="lg-sub" aria-label="5泊6日誕生日旅行"><svg class="lg-spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h7M5 6l5 4M5 18l5-4" stroke="#3fae49" stroke-width="3.4" stroke-linecap="round"/></svg><i class="ch" style="color:#ee4b3a">5</i><i class="ch" style="color:#f5a524">泊</i><i class="ch" style="color:#3fae49">6</i><i class="ch" style="color:#13b5c8">日</i><i class="ch" style="color:#ff5c93">誕</i><i class="ch" style="color:#8a5cf6">生</i><i class="ch" style="color:#ee4b3a">日</i><i class="ch" style="color:#f5a524">旅</i><i class="ch" style="color:#13b5c8">行</i><svg class="lg-cake" viewBox="0 0 28 28" aria-hidden="true"><path d="M4 14h20v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#ff8aa8" stroke="#23314f" stroke-width="2"/><path d="M4 14c3 0 3 3 6 3s3-3 6-3 3 3 6 3" fill="none" stroke="#fff" stroke-width="2.4"/><rect x="12.5" y="5" width="3" height="7" fill="#fff" stroke="#23314f" stroke-width="1.5"/><ellipse cx="14" cy="4" rx="1.6" ry="2.2" fill="#ffb300"/></svg></div>
+        <div class="lg-date">OKINAWA 2026.11.19 — 11.24</div></div>
+    </div>
+    <button class="sndbtn wavebtn" id="wave" aria-pressed="false" title="波の音"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M2 12c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/><path d="M2 18c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/></svg></button>
+    <button class="sndbtn" id="snd" aria-pressed="true" title="効果音"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></button>
+
+    <div class="bubble count" id="count">…</div>
+    <div class="miis">
+      <div class="mii sai" role="button" tabindex="0" aria-label="さいけうに話しかける"><img src="sai.webp" alt="さいけうのMii" width="1130" height="2157"><span class="nameplate">さいけう</span></div>
+      <div class="mii yui" role="button" tabindex="0" aria-label="ゆいちゃんに話しかける"><img src="yui.webp" alt="ゆいちゃんのMii" width="842" height="1947"><span class="nameplate">ゆいちゃん</span></div>
+    </div>
+  </header>
+
+  <main class="board-wrap">
+    <section class="view" id="v-plan"></section>
+    <section class="view" id="v-stamp" hidden></section>
+    <section class="view" id="v-diary" hidden></section>
+    <section class="view" id="v-album" hidden></section>
+    <section class="view" id="v-zukan" hidden></section>
+    <section class="view" id="v-result" hidden></section>
+  </main>
+</div>
+
+<nav class="tabs" aria-label="ページ切り替え"><div class="in" role="tablist">
+  <button class="tab" role="tab" data-v="plan" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>しおり</button>
+  <button class="tab" role="tab" data-v="stamp" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M8 12l3 3 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg>スタンプ</button>
+  <button class="tab" role="tab" data-v="diary" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>日記</button>
+  <button class="tab" role="tab" data-v="album" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>アルバム</button>
+  <button class="tab" role="tab" data-v="zukan" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 14h16"/><path d="M5 14a7 7 0 0 1 14 0"/><path d="M3 18h18"/><path d="M12 7V5M9 6l1 1M15 6l-1 1"/></svg>ずかん</button>
+  <button class="tab" role="tab" data-v="result" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg>リザルト</button>
+</div></nav>
+
+<input type="file" id="f-album" accept="image/*" multiple hidden>
+<input type="file" id="f-stamp" accept="image/*" hidden>
+<input type="file" id="f-food" accept="image/*" hidden>
+<div id="layer"></div>
+<div class="foot"><button class="linkbtn" id="logout">ログアウト</button></div>
+<div id="splash" class="splash" hidden><div class="splash-in"><img class="splash-mii l" src="sai.webp" alt=""><div class="logo" id="logo-splash">
+      <div class="lg-bubble">さいけうとゆいちゃんの</div>
+      <img class="lg-blob" src="blob.webp" alt="" width="740" height="537" decoding="async">
+      <div class="lg-text"><h1 class="lg-main"><span class="l1"><i class="ch">ふ</i><i class="ch">た</i><i class="ch">り</i><i class="ch">の</i></span><span class="l2"><i class="ch">島</i><i class="ch">ぐ</i><i class="ch">ら</i><i class="ch">し</i></span></h1>
+        <div class="lg-sub" aria-label="5泊6日誕生日旅行"><svg class="lg-spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h7M5 6l5 4M5 18l5-4" stroke="#3fae49" stroke-width="3.4" stroke-linecap="round"/></svg><i class="ch" style="color:#ee4b3a">5</i><i class="ch" style="color:#f5a524">泊</i><i class="ch" style="color:#3fae49">6</i><i class="ch" style="color:#13b5c8">日</i><i class="ch" style="color:#ff5c93">誕</i><i class="ch" style="color:#8a5cf6">生</i><i class="ch" style="color:#ee4b3a">日</i><i class="ch" style="color:#f5a524">旅</i><i class="ch" style="color:#13b5c8">行</i><svg class="lg-cake" viewBox="0 0 28 28" aria-hidden="true"><path d="M4 14h20v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#ff8aa8" stroke="#23314f" stroke-width="2"/><path d="M4 14c3 0 3 3 6 3s3-3 6-3 3 3 6 3" fill="none" stroke="#fff" stroke-width="2.4"/><rect x="12.5" y="5" width="3" height="7" fill="#fff" stroke="#23314f" stroke-width="1.5"/><ellipse cx="14" cy="4" rx="1.6" ry="2.2" fill="#ffb300"/></svg></div>
+        <div class="lg-date">OKINAWA 2026.11.19 — 11.24</div></div>
+    </div><img class="splash-mii r" src="yui.webp" alt=""></div><div class="splash-tap">タップしてはじめる</div></div>
+
+<script>
+(()=>{
+const MII={sai:"sai.webp",yui:"yui.webp"};
+const NAME={sai:"さいけう",yui:"ゆいちゃん"};
+const other=w=>w==="sai"?"yui":"sai";
+const START=Date.UTC(2026,10,19)-9*3600e3; // 11/19 00:00 JST
+const uid=()=>Math.random().toString(36).slice(2,8);
+const BDAY={"11/19":"yui","11/20":"sai"};               // 日付→誕生日の人
+const bdayOf=d=>d?(BDAY[d.date]||null):null;
+const CAKE=(cls="")=>`<svg class="cake ${cls}" viewBox="0 0 28 28" aria-hidden="true"><path d="M4 14h20v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#ff8aa8" stroke="#23314f" stroke-width="2"/><path d="M4 14c3 0 3 3 6 3s3-3 6-3 3 3 6 3" fill="none" stroke="#fff" stroke-width="2.4"/><rect x="12.5" y="5" width="3" height="7" fill="#fff" stroke="#23314f" stroke-width="1.5"/><ellipse cx="14" cy="4" rx="1.6" ry="2.2" fill="#ffb300"/></svg>`;
+
+/* ---------- 行程の初期値（あとから画面で編集できる） ---------- */
+const DEFAULT_DAYS=[
+ {n:1,date:"11/19",dow:"木",title:"那覇に到着！",theme:"ゆいちゃんの誕生日",stay:"那覇",flight:"",hotel:"",note:"11月下旬の夜は20℃を下回ることも。羽織るものを1枚持っていこう。",
+  stops:[{id:"naha-in",t:"昼",n:"那覇空港に到着",d:"沖縄にとうちゃく！レンタカーを受け取って出発",q:"那覇空港",stamp:true},{id:"senaga",t:"14:00",n:"瀬長島ウミカジテラス",d:"海沿いの白いテラス。飛行機が頭上を飛んでいく",q:"瀬長島ウミカジテラス",stamp:true},{id:"s1c",t:"17:00",n:"ホテルにチェックイン",d:"荷物を置いて身軽に",q:"",stamp:false},{id:"kokusai",t:"18:30",n:"国際通りで沖縄料理",d:"ゴーヤーチャンプルー、ラフテー、オリオンビール",q:"国際通り 那覇",stamp:true}]},
+ {n:2,date:"11/20",dow:"金",title:"南部ドライブ",theme:"さいけうの誕生日",stay:"北谷",flight:"",hotel:"",note:"",
+  stops:[{id:"sefa",t:"9:00",n:"斎場御嶽",d:"琉球いちばんの聖地。三角岩のすき間から海が見える",q:"斎場御嶽",stamp:true},{id:"nirai",t:"10:30",n:"ニライカナイ橋",d:"高台から海へ下るカーブの絶景",q:"ニライカナイ橋",stamp:true},{id:"s2b",t:"11:30",n:"海辺のカフェでひと休み",d:"浜辺の茶屋など、海が見える席で",q:"浜辺の茶屋",stamp:false},{id:"ou",t:"13:00",n:"奥武島で天ぷら",d:"小さな島の名物。揚げたてを半分こ",q:"奥武島",stamp:true},{id:"chatan",t:"17:00",n:"北谷アメリカンビレッジ",d:"観覧車と海に沈む夕日",q:"北谷アメリカンビレッジ",stamp:true}]},
+ {n:3,date:"11/21",dow:"土",title:"青の洞窟と西海岸",theme:"青い海の日",stay:"恩納村",flight:"",hotel:"",note:"北風で波が高い日は洞窟に入れないことがあります。ツアーは前日に開催確認を。中止の日は恩納村のカフェ巡りに切り替え。",
+  stops:[{id:"aono",t:"9:00",n:"真栄田岬 青の洞窟シュノーケル",d:"ツアーに参加。ウェットスーツで冬でもOK",q:"真栄田岬 青の洞窟",stamp:true},{id:"manza",t:"13:00",n:"万座毛",d:"象の鼻の形をした断崖",q:"万座毛",stamp:true},{id:"s3c",t:"15:00",n:"恩納村のカフェ",d:"ツアーのあとは温かい飲み物で",q:"恩納村 カフェ",stamp:false},{id:"zanpa",t:"16:45",n:"残波岬で夕日",d:"白い灯台と断崖。日の入りは17:38ごろ",q:"残波岬",stamp:true}]},
+ {n:4,date:"11/22",dow:"日",title:"美ら海と本部半島",theme:"海の生きもの",stay:"本部",flight:"",hotel:"",note:"水族館の営業時間は公式サイトで確認しておこう。",
+  stops:[{id:"churaumi",t:"9:00",n:"沖縄美ら海水族館",d:"ジンベエザメの大水槽。開館直後がすいている",q:"沖縄美ら海水族館",stamp:true},{id:"emerald",t:"12:00",n:"エメラルドビーチ",d:"海洋博公園の中。白い砂と青い海を見ながらひと休み",q:"エメラルドビーチ",stamp:true},{id:"bise",t:"13:30",n:"備瀬のフクギ並木",d:"木のトンネルをのんびりお散歩",q:"備瀬のフクギ並木",stamp:true},{id:"s4c",t:"15:00",n:"おやつ休憩",d:"ブルーシールなどでアイス",q:"",stamp:false},{id:"sesoko",t:"17:00",n:"瀬底ビーチで夕日",d:"泳ぐ時期は終わっているので、散歩と夕日を",q:"瀬底ビーチ",stamp:true}]},
+ {n:5,date:"11/23",dow:"月・祝",title:"古宇利島 → 那覇へ",theme:"恋の島",stay:"那覇",flight:"",hotel:"",note:"祝日なので古宇利島は混みやすいです。午前中に行くのがおすすめ。",
+  stops:[{id:"nakijin",t:"9:00",n:"今帰仁城跡",d:"世界遺産。石垣の上から海が見える",q:"今帰仁城跡",stamp:true},{id:"kouri",t:"10:30",n:"古宇利大橋",d:"海の上をまっすぐ走る橋",q:"古宇利大橋",stamp:true},{id:"heart",t:"11:00",n:"ハートロック",d:"ハートの形に見える岩",q:"古宇利島 ハートロック",stamp:true},{id:"s5c",t:"12:00",n:"島のカフェでランチ",d:"海が見えるお店で",q:"",stamp:false},{id:"kyoda",t:"14:30",n:"道の駅 許田",d:"高速に乗る前に。沖縄限定のスイーツとお土産",q:"道の駅 許田",stamp:true},{id:"s5d",t:"15:30",n:"那覇へ戻る",d:"高速で約1時間半",q:"",stamp:false}]},
+ {n:6,date:"11/24",dow:"火",title:"お土産と帰り道",theme:"またね沖縄",stay:"",flight:"",hotel:"",note:"",
+  stops:[{id:"shuri",t:"9:00",n:"首里城",d:"朱色の門と石畳の道。朝いちばんがすいている",q:"首里城",stamp:true},{id:"makishi",t:"11:00",n:"第一牧志公設市場",d:"市場の活気とサーターアンダギー",q:"第一牧志公設市場",stamp:true},{id:"s6b",t:"12:30",n:"国際通りでお土産",d:"ちんすこう、紅いもタルト",q:"",stamp:false},{id:"s6c",t:"14:30",n:"レンタカー返却",d:"給油を忘れずに",q:"",stamp:false},{id:"naha-out",t:"夕方",n:"那覇空港から帰路",d:"またね、沖縄。最後のスタンプ",q:"那覇空港",stamp:true}]}
+];
+const PINS={1:[66,462],2:[118,402],3:[150,346],4:[168,206],5:[214,160],6:[106,434]};
+
+/* ---------- ミッション：タグで「その日の行程」に合うものを出す ---------- */
+const TAGWORDS=[
+ ["airport",["空港","飛行機","搭乗"]],["aquarium",["水族館","美ら海","ジンベエ"]],["beach",["ビーチ","浜","砂浜","海水浴"]],["sea",["海","岬","洞窟","シュノーケル","ダイビング","橋","島","港"]],
+ ["snorkel",["シュノーケル","洞窟","ダイビング","ツアー"]],["cafe",["カフェ","茶屋","喫茶","アイス","ブルーシール","おやつ","スイーツ"]],["food",["そば","天ぷら","ごはん","ランチ","料理","市場","食堂","ステーキ","タコライス","夕食","ディナー","居酒屋"]],
+ ["market",["市場","公設"]],["street",["国際通り","商店街","お土産","ショッピング","アメリカンビレッジ","ビレッジ","モール"]],["view",["展望","絶景","岬","万座毛","橋","高台","夕日","サンセット"]],
+ ["sunset",["夕日","サンセット","夕方"]],["walk",["並木","散歩","さんぽ","遊歩道","公園","散策"]],["bridge",["橋"]],["island",["島"]],["hotel",["ホテル","チェックイン","宿","泊"]],["drive",["ドライブ","レンタカー","戻る","移動","高速"]],
+ ["wheel",["観覧車"]],["terrace",["テラス","ウミカジ"]],["heart",["ハート"]],["culture",["首里城","城","グスク","御嶽","博物館","工房","琉球","ガラス","シーサー作り"]],["pool",["プール","スパ","温泉"]],["night",["夜","ナイト","星"]]
+];
+function tagsOf(text){const s=String(text||"");const out=new Set();for(const [tag,words] of TAGWORDS)if(words.some(w=>s.includes(w)))out.add(tag);return out}
+function dayTags(d){const set=new Set(["drive"]);if(bdayOf(d))set.add("birthday");for(const s of d.stops||[]){for(const t of tagsOf(s.n+" "+s.d+" "+s.q))set.add(t)}for(const t of tagsOf(d.title+" "+d.theme+" "+d.stay))set.add(t);if(d.hotel||d.stay)set.add("hotel");return set}
+// [タグ, お題]  タグ"any"はどの日でも
+const M=[
+ ["airport","到着ロビーで「着いたー！」のツーショット"],["airport","空港の到着口にあるシーサーを探して、同じ顔マネで写真"],["airport","飛行機を背景に、ジャンプした瞬間の写真を撮る"],["airport","空港で「また来ようね」の写真"],["airport","搭乗口で、次に行きたい場所を言い合う"],["airport","帰りの飛行機の窓から、沖縄の海を最後に撮る"],["airport","帰りの飛行機で、旅のいちばんの思い出を言い合う"],
+ ["terrace","ウミカジテラスで、飛行機が飛ぶ瞬間を撮る"],["terrace","テラスで、相手が選んだお店の食べ物をひとつ食べる"],["terrace","白い階段で、上と下に分かれて写真を撮り合う"],
+ ["street","国際通りで、お互いに似合うかりゆしシャツを選び合う（試着だけでもOK）"],["street","国際通りで、相手に似合いそうなお土産を見つけて見せ合う"],["street","国際通りで、変わった看板をひとつ見つけて写真"],["street","お互いへのお土産をこっそり1つ買って交換"],["street","おそろいの小物をひとつ買う"],["street","最後にもう一度シーサーと写真"],
+ ["food","オリオンビールかシークヮーサージュースで乾杯写真"],["food","夜ごはんで「この旅でいちばん楽しみなこと」を言い合う"],["food","ステーキか沖縄そば、どちらかに挑戦"],["food","食べたことのない沖縄料理をひとつ注文"],["food","お店の人におすすめを聞いて、それを頼む"],["food","相手が頼みそうなメニューを予想してから注文"],["food","ひと口ずつおすそ分けする"],["food","今日のごはんに点数をつけて発表し合う"],
+ ["market","市場でサーターアンダギーを食べ比べ"],["market","市場で、見たことのない魚か果物を見つけて写真"],["market","市場の2階で、食べたことのない沖縄料理をひとつ注文"],["market","市場で、お店の人と一言おしゃべりする"],
+ ["view","展望所で、ふたり同じポーズの写真"],["view","絶景ポイントで、海の青さランキングを言い合う"],["view","風に吹かれている顔の写真"],["view","景色を背に、ふたりのシルエット写真"],["view","いちばん好きな景色のところで車を停める"],
+ ["bridge","橋を渡るとき、車の中で「せーの」で一言さけぶ"],["bridge","橋のカーブを、車の中から動画で撮る"],["bridge","橋を渡るとき、海の色を写真に撮る"],["bridge","橋の手前の海辺で、橋をバックにツーショット"],
+ ["cafe","カフェの海が見える席で、ふたりの手だけ写真"],["cafe","カフェで、いちばん映えるメニューを頼む"],["cafe","相手のメニューを選んであげる"],["cafe","温かい飲み物で乾杯"],["cafe","ブルーシールなどのアイスで、まだ食べたことのない味に挑戦"],["cafe","ふたりで違う味にして、ひと口交換"],
+ ["sunset","夕日が沈む瞬間を10秒の動画に"],["sunset","夕日の色が変わっていくのを3枚連続で撮る"],["sunset","夕日を見ながら、今日いちばんうれしかったことを話す"],["sunset","夕日が沈むまで、ふたりで砂浜に座っている"],["sunset","夕日を背に、ふたりのシルエット写真"],
+ ["beach","ビーチで、ふたりの足元だけの写真"],["beach","きれいな貝殻をひとつずつ拾う（持ち帰りOKな場所で）"],["beach","砂浜に、ふたりの名前を書いて写真"],["beach","海沿いを、手をつないで5分お散歩"],["beach","波打ち際で、波から逃げる動画を撮る"],
+ ["snorkel","海から上がったら、まず相手に「楽しかった？」と聞く"],["snorkel","ツアーのあと、温かい飲み物で乾杯"],["snorkel","ウェットスーツ姿のツーショットを撮る（撮影サービスがあれば）"],["snorkel","水中で「青い！」の顔の写真（防水ケースがあれば）"],["snorkel","ツアーが中止になったら、代わりに行きたい場所を相手が決める"],["snorkel","朝いちばんに、今日の天気と海の様子を相手に実況する"],
+ ["aquarium","ジンベエザメの水槽の前で、ふたりのシルエット写真"],["aquarium","水族館で「相手に似ている生きもの」を見つけて写真"],["aquarium","大水槽の前で、5分だけ黙って一緒に眺める"],["aquarium","マンタかジンベエザメが真上を通った瞬間を撮る"],["aquarium","水族館のお土産屋で、相手に似合うぬいぐるみを選ぶ"],["aquarium","開館前の入口で記念写真"],
+ ["walk","並木道で、後ろ姿のツーショット"],["walk","木もれ日の下の写真"],["walk","散歩の途中で、相手のいいところを3つ言う"],["walk","散歩中に見つけた花の写真を撮る"],
+ ["wheel","観覧車の前で、ふたりで指ハートの写真"],["wheel","観覧車に乗ったら、てっぺんでツーショット"],
+ ["heart","ハートの前で、ふたりの手でハートを作る"],["heart","ハートの前で、ふたりで同じポーズ"],
+ ["island","島を一周ドライブして、いちばん好きな景色で車を停める"],["island","島の売店で、島の味をひとつ試す"],["island","島に着いたら、潮の香りを深呼吸"],
+ ["hotel","ホテルの部屋に入った瞬間の感想を動画で残す"],["hotel","寝る前に、今日の写真ベスト3を選び合う"],["hotel","寝る前に、明日いちばん楽しみな場所を言い合う"],["hotel","ホテルの窓からの景色を写真に撮る"],["hotel","朝ごはんで、相手にひと口ずつおすそ分けする"],
+ ["drive","運転してくれた人に「ありがとう」を言う"],["drive","ドライブ中、窓から見えた海の色を一言で表現し合う"],["drive","ドライブ中、見えたヤシの木の数を数える"],["drive","カーラジオで沖縄の地元局を流してみる"],["drive","ドライブ中、沖縄っぽい曲を1曲かける"],["drive","運転を交代したら、助手席の人がおやつを渡す"],["drive","信号待ちで、相手のいいところをひとつ言う"],["drive","沖縄の地名クイズを出し合う（北谷・読谷・豊見城など）"],["drive","旅のテーマソングをふたりで1曲決める"],["drive","道の駅で、紅いもかシークヮーサーのスイーツを買う"],
+ ["culture","琉球の衣装や工芸品を見て、相手に似合うものを選ぶ"],["culture","歴史の場所で、ガイドの説明をひとつ覚えて相手にクイズ"],["pool","水辺でのんびりしながら、旅の後半の計画を立てる"],["night","夜、空を見上げて星をひとつ見つける"],["night","夜の海辺で、波の音を1分間だけ聞く"],
+ // 誕生日の日だけ出るお題（{who}=主役、{other}=お祝いする人）
+ ["birthday","朝いちばんに「{who}、おめでとう」の写真を撮る"],["birthday","{who}にケーキかデザートを選んであげて、ろうそくの代わりにスマホのライトで乾杯"],["birthday","「おめでとう」を今日中に10回言う"],["birthday","{who}の今日の希望を、ひとつ必ずかなえる"],["birthday","バースデープレートを出してくれるお店を探して、お願いしてみる"],["birthday","{who}の誕生日ポーズでツーショット（{other}が撮る）"],["birthday","ホテルの部屋で、ふたりだけのハッピーバースデーを歌う"],["birthday","誕生日の{who}は今日のドライブDJ。好きな曲を流す"],["birthday","{other}から{who}へ、好きなところを3つ言う"],["birthday","プレゼントの代わりに、沖縄で見つけたものをひとつ{who}に贈る"],["birthday","{who}の年の数だけ、今日のいいところを数える（多すぎたら10個でOK）"],["birthday","夜、今日いちばんうれしかった瞬間を{who}が発表する"],
+ // どこでもできるお題
+ ["any","ふたりとも笑っている写真を1枚撮る"],["any","相手の知らなかった一面を見つけて伝える"],["any","今日のおそろいポイントを探す（色・ポーズなど）"],["any","相手の写真を、相手に内緒で1枚撮る"],["any","「今日いちばんおいしかったもの」を同時に言う"],["any","道で見つけたシーサーの数を数える"],["any","知らない人に、ふたりの写真を撮ってもらう"],["any","今日の空の写真をそれぞれ撮って見せ合う"],["any","沖縄の方言をひとつ覚えて使ってみる（めんそーれ、なんくるないさ など）"],["any","10分間、スマホを置いて景色だけ見る"],["any","相手にありがとうを言う回数を3回以上にする"],["any","ふたりの影だけが写った写真を撮る"],["any","寄り道したい場所を、相手のリクエストでひとつ追加"],["any","今日の思い出を、ひとことでタイトルにする"],
+ ["any","コンビニで沖縄限定の商品を探して、ひとつずつ買う"],["any","さんぴん茶で乾杯する"],["any","サーターアンダギーを買って、ふたりで同時にかじる"],["any","スーパーで、本土では見かけない食べ物をひとつ見つける"],["any","A&Wかジェフで、沖縄のファストフードに挑戦"],["any","沖縄そばのお店で、コーレーグースを1滴だけかけてみる"],["any","ポークたまごおにぎりを食べる"],["any","泡盛かシークヮーサーのドリンクで乾杯"],["any","ゴーヤーを使った料理をひとつ食べる"],["any","紅いものお菓子を、ふたりで食べ比べ"],
+ ["any","赤瓦の屋根の上にいるシーサーを見つけて写真"],["any","石敢當（いしがんとう）を見つけて写真"],["any","ハイビスカスの花を見つけて、花の前でツーショット"],["any","ヤシの木の下で、ふたりで見上げる写真"],["any","「めんそーれ」と書いてある看板を見つける"],["any","エメラルドグリーンの海が見えたら、車を停めて10秒だけ眺める"],["any","道ばたで見かけたネコの写真を撮る"],["any","沖縄の空の雲を見て、何の形に見えるか言い合う"],["any","海に向かって、旅の目標をこっそり言う"],
+ ["any","お店の人に「おすすめは何ですか？」と聞いてみる"],["any","地元の人に、おすすめの場所をひとつ聞く"],["any","かりゆしウェアの人を見つけたら、こっそり数える"],["any","夕方、海か空がオレンジ色になった瞬間をふたりで撮る"],["any","今日のふたりのベストショットを、寝る前に1枚決める"],["any","相手の今日のコーデをほめる"],["any","「沖縄に住むならどこがいい？」を話す"],["any","次に沖縄に来たらやりたいことを、ひとつずつ言う"],["any","今日の自分たちに点数をつける（100点満点で）"],["any","今日の「ありがとう」を相手にひとつ伝える"]
+];
+const MISSIONS=M.map(([tag,t],i)=>({id:"m"+i,tag,t}));
+const MBYID=Object.fromEntries(MISSIONS.map(m=>[m.id,m]));
+function mtext(m,d){const b=bdayOf(d)||"yui";return (m?.t||"?").replace(/\{who\}/g,NAME[b]).replace(/\{other\}/g,NAME[other(b)])}
+function poolFor(d){const tags=dayTags(d);return {day:MISSIONS.filter(m=>m.tag!=="any"&&tags.has(m.tag)),any:MISSIONS.filter(m=>m.tag==="any")}}
+const DEFAULT_SECRET="スタンプぜんぶ、ふたりで歩きました。\n同じ景色を見て、同じものを食べて、同じタイミングで笑った6日間。\nまた一緒に、次の島へ行こうね。";
+
+/* ---------- 沖縄グルメ図鑑 ---------- */
+const FOODS=[
+ {id:"soba",n:"沖縄そば",d:"ソーキそばか三枚肉そば。コーレーグースを1滴",w:"そば屋・食堂"},{id:"taco",n:"タコライス",d:"金武町うまれ。チーズとレタスたっぷり",w:"食堂・カフェ"},
+ {id:"goya",n:"ゴーヤーチャンプルー",d:"苦いけどクセになる。島豆腐と一緒に",w:"居酒屋・食堂"},{id:"rafute",n:"ラフテー",d:"泡盛でとろとろに煮た豚の角煮",w:"居酒屋"},
+ {id:"umibudo",n:"海ぶどう",d:"プチプチ。ポン酢をちょっとだけ",w:"居酒屋・市場"},{id:"jimami",n:"ジーマーミ豆腐",d:"ピーナッツの豆腐。もちもち甘じょっぱい",w:"居酒屋・スーパー"},
+ {id:"mozuku",n:"もずく",d:"酢の物でも天ぷらでも。沖縄は日本一の産地",w:"食堂・市場"},{id:"tempura",n:"沖縄天ぷら",d:"衣が厚くておやつ感覚。魚・もずく・いも",w:"奥武島・市場"},
+ {id:"potama",n:"ポークたまごおにぎり",d:"朝ごはんの定番。空港や那覇にお店",w:"専門店・コンビニ"},{id:"sata",n:"サーターアンダギー",d:"外サクサク中しっとりのドーナツ",w:"市場・おみやげ屋"},
+ {id:"blueseal",n:"ブルーシール",d:"紅イモ、塩ちんすこう、シークヮーサー味も",w:"アイス屋・コンビニ"},{id:"chinsuko",n:"ちんすこう",d:"塩味・紅イモ味・黒糖味…食べ比べ",w:"おみやげ屋"},
+ {id:"tart",n:"紅いもタルト",d:"むらさき色のタルト。おみやげの王様",w:"おみやげ屋"},{id:"zenzai",n:"沖縄ぜんざい",d:"かき氷に甘い金時豆。冷たいのが沖縄流",w:"甘味処・食堂"},
+ {id:"shikuwasa",n:"シークヮーサー",d:"ジュース・サワー・スイーツ、どれでもOK",w:"どこでも"},{id:"orion",n:"オリオンビール",d:"沖縄の空の下で飲む一杯",w:"居酒屋・コンビニ"},
+ {id:"awamori",n:"泡盛",d:"シークヮーサー割りや水割りで",w:"居酒屋"},{id:"steak",n:"ステーキ",d:"しめはステーキが沖縄流。A1ソースで",w:"ステーキハウス"},
+ {id:"aw",n:"A&W",d:"沖縄だけのファストフード。ルートビア飲み放題",w:"A&W各店"},{id:"sanpin",n:"さんぴん茶",d:"沖縄のジャスミン茶。自販機にもある",w:"どこでも"},
+ {id:"tebichi",n:"てびち",d:"豚足をとろとろに煮込んだ一品。コラーゲンたっぷり",w:"居酒屋・食堂"},{id:"mimiga",n:"ミミガー",d:"豚の耳の和え物。コリコリ食感",w:"居酒屋"},
+ {id:"nakami",n:"中味汁",d:"豚モツの澄んだスープ。やさしい味",w:"食堂"},{id:"somin",n:"ソーミンチャンプルー",d:"そうめんの炒めもの。シンプルでクセになる",w:"食堂"},
+ {id:"fu",n:"フーチャンプルー",d:"車麩を卵にひたして炒める沖縄の家庭料理",w:"食堂"},{id:"rakkyo",n:"島らっきょう",d:"塩漬けか天ぷらで。シャキッと辛い",w:"居酒屋"},
+ {id:"yushi",n:"ゆし豆腐",d:"固める前のふわふわ豆腐。朝ごはんに",w:"食堂・そば屋"},{id:"agu",n:"アグー豚",d:"沖縄の黒豚。しゃぶしゃぶやとんかつで",w:"専門店"},
+ {id:"gurukun",n:"グルクンの唐揚げ",d:"沖縄の県魚。骨までサクサク",w:"居酒屋・食堂"},{id:"hirayachi",n:"ヒラヤーチー",d:"沖縄風の薄いお好み焼き",w:"居酒屋"},
+ {id:"chinbin",n:"ちんびん",d:"黒糖の薄いクレープ。くるくる巻いて食べる",w:"市場・おやつ屋"},{id:"shiosoft",n:"塩ソフトクリーム",d:"雪塩やぬちまーすの、ほんのりしょっぱいソフト",w:"道の駅・観光地"},
+ {id:"kokuto",n:"黒糖",d:"かち割り黒糖をひとかけ。島ごとに味がちがう",w:"市場・おみやげ屋"},{id:"nuyaru",n:"ぬーやるバーガー",d:"ジェフのゴーヤー入りバーガー",w:"ジェフ各店"},
+ {id:"tacos",n:"タコス",d:"沖縄のタコスは薄くてパリッとした生地",w:"タコス屋"},{id:"garlic",n:"ガーリックシュリンプ",d:"殻ごとガーリックで炒めたエビ。屋台やフードトラックで",w:"北谷・恩納村の屋台"},{id:"hibiscus",n:"ハイビスカスティー",d:"真っ赤ですっぱい。見た目もかわいい",w:"カフェ"},
+ {id:"inari",n:"いなりとチキン",d:"那覇の定番テイクアウト。朝から行列",w:"那覇の専門店"},{id:"jushi",n:"ジューシー",d:"沖縄の炊き込みごはん。そばのお供に",w:"食堂・そば屋"},
+ {id:"gyu",n:"もとぶ牛・石垣牛",d:"沖縄のブランド牛。焼肉かステーキで",w:"焼肉・ステーキ"},{id:"shiosenbei",n:"塩せんべい",d:"軽くてほんのり塩味。沖縄の駄菓子",w:"スーパー・コンビニ"}
+];
+const FOODBY=Object.fromEntries(FOODS.map(f=>[f.id,f]));
+
+/* ---------- 持ち物リスト（初期値） ---------- */
+const DEFAULT_ITEMS=[
+ ["免許証（運転する人）","sai"],["保険証","both"],["飛行機のチケット・予約画面","both"],["レンタカーの予約確認","sai"],["現金・カード","both"],
+ ["スマホの充電器","both"],["モバイルバッテリー","both"],["日焼け止め","both"],["サングラス","both"],["帽子","both"],["羽織るもの（朝晩20℃以下）","both"],
+ ["水着（ツアーのウェットスーツの下に）","both"],["タオル","both"],["サンダル","both"],["常備薬・酔い止め","both"],["エコバッグ","both"],["防水スマホケース","sai"],["折りたたみ傘","both"],["ヘアゴム・ヘアアイロン","yui"],["コンタクト・メガネ","yui"]
+].map((x,i)=>({id:"i"+i,t:x[0],who:x[1],by:"default"}));
+
+/* ---------- 日の出・日の入り（那覇）・月齢 ---------- */
+const SUN={1:["06:50","17:39",9.2],2:["06:51","17:38",10.2],3:["06:52","17:38",11.2],4:["06:52","17:38",12.2],5:["06:53","17:38",13.2],6:["06:54","17:37",14.2]};
+function moonSVG(age,r=11){
+  const th=2*Math.PI*age/29.53,k=(1-Math.cos(th))/2,rx=Math.max(.01,r*Math.abs(2*k-1)),waxing=age<14.77,sweep=k>.5?1:0;
+  const path=`M0,${-r} A${r},${r} 0 0,1 0,${r} A${rx},${r} 0 0,${sweep} 0,${-r} Z`;
+  return `<svg class="moon-svg" viewBox="${-r-2} ${-r-2} ${2*r+4} ${2*r+4}" aria-hidden="true"><circle r="${r}" fill="#2b3a66"/><path d="${path}" fill="#fff6c8" transform="scale(${waxing?1:-1},1)"/><circle r="${r}" fill="none" stroke="#23314f" stroke-width="1.5"/></svg>`;
+}
+const moonName=age=>age>=13.8&&age<=15.8?"ほぼ満月":age>=11?"満月まぢか":age>=7?"半月すぎ":"三日月";
+const LETTER_OPEN=Date.UTC(2026,10,24,9); // 11/24 18:00 JST
+
+/* ---------- Miiのおしゃべり ---------- */
+const TALK={
+ before:{sai:["沖縄、あと{d}日！","しおり、ちゃんと見た？","ゆいちゃん、何着ていく？","ガチャ、おためしで回してみる？","飛行機の時間、入れておいてね"],yui:["あと{d}日で沖縄〜！","美ら海水族館たのしみ！","ちんすこう、何味がいいかな","さいけう、運転よろしくね","ふたりの日記、楽しみにしてる"]},
+ during:{sai:["今日はDAY{d}！","スタンプ、押しに行こう","写真いっぱい撮ろうね","今日のミッション、回した？","夜は日記、忘れずに！"],yui:["DAY{d}、楽しも〜！","海きれい〜！","おなかすいた…","今日もいい天気！","ミッション、クリアできるかな"]},
+ after:{sai:["おかえり！","リザルト見た？","アルバム、見返そうよ","楽しかったね","また行こうね"],yui:["ただいま〜","楽しかった〜！","写真、見返したい","また沖縄行きたい！","ありがとう"]}
+};
+
+/* ---------- ユーティリティ ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ls={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
+const URLS={};const BLANK="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+const blob=id=>id?(URLS[id]||BLANK):"";
+const mapUrl=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+function tripDay(){return Math.floor((Date.now()-START)/864e5)+1}
+function jstHour(){return new Date(Date.now()+9*3600e3).getUTCHours()}
+const DC=n=>`var(--d${n})`;
+const HEAD=(label,c,aside="")=>`<div class="head"><span class="tag" style="--c:${c}">${label}</span>${aside?`<span class="aside">${aside}</span>`:""}</div>`;
+const SAY=(w,t)=>`<div class="say"><img src="${MII[w]}" alt="${NAME[w]}"><div class="b">${t}</div></div>`;
+
+/* ---------- 効果音（WebAudio、ミュート可） ---------- */
+let actx=null;const SND={on:ls.get("snd")!=="off"};
+function beep(kind){
+  if(!SND.on)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+    const t=actx.currentTime,g=actx.createGain();g.connect(actx.destination);g.gain.value=.0001;
+    const notes={tap:[[660,.06]],stamp:[[523,.08],[659,.08],[784,.14]],gacha:[[392,.05],[494,.05],[587,.05],[784,.12]],clear:[[784,.07],[1046,.16]],open:[[523,.06],[659,.06],[784,.06],[1046,.2]]}[kind]||[[660,.06]];
+    let at=t;for(const [f,d] of notes){const o=actx.createOscillator();o.type="triangle";o.frequency.value=f;o.connect(g);o.start(at);o.stop(at+d);g.gain.setValueAtTime(.12,at);g.gain.exponentialRampToValueAtTime(.0001,at+d);at+=d}
+  }catch{}
+}
+
+/* ---------- 波の音（合成の環境音） ---------- */
+const WAVE={on:false,nodes:null};
+function wavesStart(){
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+    const sr=actx.sampleRate,len=sr*6,buf=actx.createBuffer(2,len,sr);
+    for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);let last=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.5}}
+    const src=actx.createBufferSource();src.buffer=buf;src.loop=true;
+    const lp=actx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=520;lp.Q.value=.7;
+    const hp=actx.createBiquadFilter();hp.type="highpass";hp.frequency.value=60;
+    const g=actx.createGain();g.gain.value=0;
+    const lfo=actx.createOscillator();lfo.type="sine";lfo.frequency.value=.085;const lg=actx.createGain();lg.gain.value=.11;
+    const lfo2=actx.createOscillator();lfo2.type="sine";lfo2.frequency.value=.031;const lg2=actx.createGain();lg2.gain.value=.05;
+    const base=actx.createConstantSource();base.offset.value=.16;
+    lfo.connect(lg).connect(g.gain);lfo2.connect(lg2).connect(g.gain);base.connect(g.gain);
+    src.connect(hp).connect(lp).connect(g).connect(actx.destination);
+    src.start();lfo.start();lfo2.start();base.start();
+    WAVE.nodes={src,lfo,lfo2,base,g};WAVE.on=true;
+  }catch(e){console.warn(e);toast("この端末では波の音を再生できませんでした")}
+}
+function wavesStop(){if(!WAVE.nodes)return;const {src,lfo,lfo2,base,g}=WAVE.nodes;try{g.gain.cancelScheduledValues(actx.currentTime);g.gain.setTargetAtTime(0,actx.currentTime,.3);setTimeout(()=>{try{src.stop();lfo.stop();lfo2.stop();base.stop()}catch{}},900)}catch{}WAVE.nodes=null;WAVE.on=false}
+
+/* ---------- 状態 ---------- */
+const S={db:null,assets:null,user:null,uid:null,who:null,photos:[],missions:{},diary:{},secret:null,members:{},items:null,letters:{},
+  plan:null,planVer:0,view:"plan",planDay:Math.min(Math.max(tripDay(),1),6),diaryDay:Math.min(Math.max(tripDay(),1),6),albumDay:"all",canWrite:true,isOwner:false,lb:null,trial:null,editing:null};
+const DAYS=()=>S.plan?.days||DEFAULT_DAYS;
+const SPOTS=()=>DAYS().flatMap(d=>(d.stops||[]).filter(s=>s.stamp).map(s=>({id:s.id,d:d.n,n:s.n})));
+const ITEMS=()=>S.items?.items||DEFAULT_ITEMS;
+function foodPhoto(id){return S.photos.find(p=>p.food===id)}
+const relTime=t=>{const s=(Date.now()-t)/1e3;if(s<60)return"たった今";if(s<3600)return Math.floor(s/60)+"分前";if(s<86400)return Math.floor(s/3600)+"時間前";const d=Math.floor(s/86400);return d===1?"昨日":d+"日前"};
+
+function toast(t){const el=document.createElement("div");el.className="toast";el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
+function writeErr(e){console.warn(e);toast(e&&e.code==="quota_exceeded"?"保存できる量の上限に達しました":"保存できませんでした。共有設定で「編集者」になっているか確認してね")}
+
+/* ---------- 空の時間帯・カウントダウン・おしゃべり ---------- */
+function skyMode(){const h=jstHour();document.body.dataset.sky=h>=19||h<5?"night":h>=16?"dusk":h<7?"dawn":"day"}
+function renderCount(){
+  const d=tripDay(),el=$("#count");if(!el)return;
+  if(d<1){const left=Math.ceil((START-Date.now())/864e5);el.innerHTML=`沖縄まで あと <b>${left}</b> 日！`}
+  else if(d<=6){const dd=DAYS()[d-1],b=bdayOf(dd);el.innerHTML=b?`${CAKE("s")} 今日は <b style="font-size:20px">${NAME[b]}</b> の誕生日！`:`島ぐらし <b>${d}</b> 日目！${dd?.theme?`<small class="th">${esc(dd.theme)}</small>`:""}`}
+  else el.innerHTML=`おかえり！ リザルトを見てね`;
+}
+const TALK_BDAY={yui:{sai:["ゆいちゃん、誕生日おめでとう！","今日は主役はゆいちゃん！","ケーキ、どこで食べる？","誕生日に沖縄って最高じゃない？"],yui:["今日はわたしの誕生日〜！","沖縄で誕生日、うれしい！","ありがとう、さいけう！","ケーキ食べたいな…"]},
+  sai:{sai:["今日はおれの誕生日！","ゆいちゃん、ありがとう！","沖縄で迎える誕生日、最高！","今日はDJやらせて"],yui:["さいけう、誕生日おめでとう！","今日の主役はさいけう！","何でも言ってね、今日だけは","ケーキ探しに行こう！"]}};
+function talk(w){
+  const d=tripDay(),mode=d<1?"before":d<=6?"during":"after";let lines=TALK[mode][w];
+  const b=d>=1&&d<=6?bdayOf(DAYS()[d-1]):null;if(b&&Math.random()<.7)lines=TALK_BDAY[b][w];
+  say(w,lines[Math.floor(Math.random()*lines.length)].replace("{d}",d<1?Math.ceil((START-Date.now())/864e5):d));
+}
+function cheer(a,b){say("sai",a);setTimeout(()=>say("yui",b||a),350)}
+function say(w,t){
+  const host=document.querySelector(".mii."+w);if(!host)return;let b=host.querySelector(".talk");if(!b){b=document.createElement("div");b.className="bubble talk";host.appendChild(b)}
+  b.textContent=t;b.classList.remove("show");void b.offsetWidth;b.classList.add("show");beep("tap");const isl=$(".island");isl.classList.add("talking");
+  const img=host.querySelector("img");img.classList.remove("jump");void img.offsetWidth;img.classList.add("jump");
+  clearTimeout(host._t);host._t=setTimeout(()=>{b.classList.remove("show");isl.classList.remove("talking")},2600);
+}
+document.querySelectorAll(".mii").forEach(m=>m.addEventListener("click",()=>talk(m.classList.contains("sai")?"sai":"yui")));
+
+/* ---------- タブ ---------- */
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  if(S.view===b.dataset.v)return;beep("tap");S.view=b.dataset.v;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===b));
+  document.querySelectorAll("section.view").forEach(s=>s.hidden=s.id!=="v-"+S.view);render();
+  const m=$("main");m.classList.remove("enter");void m.offsetWidth;m.classList.add("enter");
+  const top=$(".board-wrap").getBoundingClientRect().top+scrollY-8;if(scrollY>top)scrollTo({top,behavior:"smooth"});
+}));
+// 入力中は再描画を待つ（相手の保存で自分の下書きが消えないように）
+function safeRender(){const a=document.activeElement;if(a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT")&&a.closest("main")){S.pendingRender=true;return}render()}
+document.querySelector("main").addEventListener("focusout",()=>{setTimeout(()=>{const a=document.activeElement;if(S.pendingRender&&!(a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT")&&a.closest("main"))){S.pendingRender=false;render()}},50)});
+function render(){S.pendingRender=false;({plan:renderPlan,stamp:renderStamp,diary:renderDiary,album:renderAlbum,zukan:renderZukan,result:renderResult})[S.view]()}
+
+/* ---------- 沖縄グルメ図鑑 ---------- */
+let pendingFood=null;
+function renderZukan(){
+  const got=FOODS.filter(f=>foodPhoto(f.id)).length,all=got===FOODS.length;
+  $("#v-zukan").innerHTML=`
+  ${HEAD("沖縄グルメ図鑑","var(--leaf)",`${got} / ${FOODS.length}`)}
+  <div class="prog-row"><div class="bar green"><i style="width:${got/FOODS.length*100}%"></i></div><span class="num">${Math.round(got/FOODS.length*100)}%</span></div>
+  ${SAY(S.who==="yui"?"sai":"yui",all?"ぜんぶ食べた！沖縄グルメマスター！":"食べたら写真をあげて「ゲット」しよう。どっちが先に見つけるかな？")}
+  <div class="foods">${FOODS.map(f=>{const p=foodPhoto(f.id);const can=!p&&S.canWrite&&S.assets;
+    return `<div class="food ${p?"got":""}">
+      <button class="food-pic" ${can?`data-food="${f.id}"`:p?`data-fopen="${p.id}"`:"disabled"} aria-label="${p?"写真をひらく":"写真をあげてゲット"}">
+        ${p?`<img src="${blob(p.thumb||p.full)}" alt="${esc(f.n)}" loading="lazy">`:`<svg viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="48" rx="30" ry="14" fill="#fff" stroke="#23314f" stroke-width="3"/><ellipse cx="40" cy="44" rx="18" ry="8" fill="#e9fbfb" stroke="#23314f" stroke-width="2"/><text x="40" y="36" text-anchor="middle" font-family="Mochiy Pop One,sans-serif" font-size="26" fill="#23314f">?</text></svg>`}
+        ${p?`<span class="got-badge">たべた！</span>`:can?`<span class="get-hint">＋ 写真</span>`:""}
+      </button>
+      <div class="food-in"><div class="food-n">${esc(f.n)}</div><div class="food-d">${esc(f.d)}</div><div class="food-w">${p?`${NAME[p.who]}がゲット（DAY${p.day||"?"}）`:`どこで：${esc(f.w)}`}</div></div>
+    </div>`}).join("")}</div>
+  <div class="treasure" style="margin-top:14px"><svg viewBox="0 0 64 56" aria-hidden="true"><ellipse cx="32" cy="40" rx="26" ry="10" fill="#fff" stroke="#23314f" stroke-width="3"/><path d="M14 38 q18 -30 36 0" fill="#ffb347" stroke="#23314f" stroke-width="3"/><circle cx="24" cy="30" r="3" fill="#ee4b3a"/><circle cx="36" cy="26" r="3" fill="#3fae49"/><circle cx="42" cy="33" r="3" fill="#ffd23f"/></svg>
+    <div><h3 style="font-size:17px">${all?"沖縄グルメマスター！":"コンプリートすると…"}</h3><div class="small muted">${all?`${FOODS.length}品ぜんぶ制覇。リザルトに「グルメマスター」の称号がつきます。`:`${FOODS.length}品ぜんぶ食べると「グルメマスター」、半分で「食いしんぼうペア」の称号がつきます。`}</div></div></div>`;
+}
+$("#v-zukan").addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.food){pendingFood=t.dataset.food;$("#f-food").click()}
+  else if(t.dataset.fopen){const list=S.photos.filter(p=>p.food);openLB(list,list.findIndex(p=>p.id===t.dataset.fopen))}
+});
+$("#f-food").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingFood)return;
+  const fd=FOODBY[pendingFood];toast(`「${fd.n}」をアップロード中…`);const day=tripDay()>=1&&tripDay()<=6?tripDay():0;
+  try{await uploadPhoto(f,{food:pendingFood,day});confetti();beep("stamp");say(S.who||"sai",`${fd.n}ゲット！`);
+    if(FOODS.every(x=>foodPhoto(x.id)))setTimeout(()=>{beep("open");cheer("グルメマスター！","ぜんぶ食べた〜！")},600)}catch(err){upErr(err)}});
+function dayPicker(sel,attr){const td=tripDay();return `<div class="daytabs">${DAYS().map(d=>`<button class="${d.n===td?"today":""} ${bdayOf(d)?"bday-tab":""}" style="--c:${DC(d.n)}" data-${attr}="${d.n}" aria-pressed="${d.n===sel}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>`}
+
+/* ---------- ステータス（Lv・仲良し度） ---------- */
+function stats(){
+  const spots=SPOTS(),stamped=spots.filter(s=>{const p=spotPhotos(s.id);return p.sai&&p.yui}).length;
+  const ms=Object.values(S.missions).flatMap(m=>m.draws||[]).filter(x=>x.done).length;
+  const diaries=DAYS().filter(d=>S.diary[`d${d.n}_sai`]&&S.diary[`d${d.n}_yui`]).length;
+  const foods=FOODS.filter(f=>foodPhoto(f.id)).length;
+  const per=w=>({photos:S.photos.filter(p=>p.who===w).length,diary:DAYS().filter(d=>S.diary[`d${d.n}_${w}`]).length,missions:Object.values(S.missions).flatMap(m=>m.draws||[]).filter(x=>x.done&&x.by===w).length,foods:S.photos.filter(p=>p.food&&p.who===w).length});
+  const pts=stamped*10+ms*8+diaries*12+foods*4+Math.min(S.photos.length,200)*.5;
+  const love=Math.min(100,Math.round((stamped/Math.max(1,spots.length))*40+(diaries/6)*30+Math.min(ms,12)/12*15+(foods/FOODS.length)*15));
+  return {spots:spots.length,stamped,ms,diaries,foods,pts,love,sai:per("sai"),yui:per("yui")};
+}
+function lvOf(p){return 1+Math.floor((p.photos*.5+p.diary*4+p.missions*3+p.foods*2)/6)}
+function statusHTML(){
+  const st=stats();
+  const card=w=>{const p=st[w],lv=lvOf(p);return `<div class="pcard ${w}"><img src="${MII[w]}" alt=""><div class="pc-in"><div class="pc-name">${NAME[w]}<span class="lv">Lv.${lv}</span></div><div class="pc-stats"><span class="stat" style="--c:var(--sea)"><i>写真</i><b>${p.photos}</b></span><span class="stat" style="--c:var(--hibiscus)"><i>日記</i><b>${p.diary}</b></span><span class="stat ink" style="--c:var(--sun)"><i>ミッション</i><b>${p.missions}</b></span></div></div></div>`};
+  return `<div class="status">${card("sai")}${card("yui")}
+    <div class="love"><div class="love-h"><span>ふたりの仲良し度</span><b>${st.love}%</b></div><div class="love-bar"><i style="width:${st.love}%"></i></div><div class="love-s"><span>スタンプ<b>${st.stamped}/${st.spots}</b></span><span>日記<b>${st.diaries}/6</b></span><span>ミッション<b>${st.ms}</b></span><span>グルメ<b>${st.foods}/${FOODS.length}</b></span></div></div></div>`;
+}
+
+/* ---------- 島ニュース（できごと） ---------- */
+function newsItems(){
+  const ev=[];const spotName=id=>SPOTS().find(s=>s.id===id)?.n||"どこか";
+  const albumRuns=[];
+  for(const p of S.photos){
+    if(p.spot){ev.push({at:p.at,t:`${NAME[p.who]}が「${spotName(p.spot)}」でとうちゃく写真をあげた`,k:"stamp"});continue}
+    if(p.food){ev.push({at:p.at,t:`${NAME[p.who]}が図鑑の「${FOODBY[p.food]?.n||"？"}」をゲット！`,k:"food"});continue}
+    const last=albumRuns[albumRuns.length-1];
+    if(last&&last.who===p.who&&p.at-last.at<15*60e3){last.n++;last.at=p.at}else albumRuns.push({who:p.who,at:p.at,n:1});
+  }
+  for(const r of albumRuns)ev.push({at:r.at,t:`${NAME[r.who]}がアルバムに写真を${r.n}枚追加した`,k:"album"});
+  for(const s of SPOTS()){const p=spotPhotos(s.id);if(p.sai&&p.yui)ev.push({at:Math.max(p.sai.at,p.yui.at),t:`「${s.n}」のスタンプがそろった！`,k:"done"})}
+  for(const [k,m] of Object.entries(S.missions)){const n=+k.replace("day","");for(const x of m.draws||[]){if(x.done&&x.doneAt)ev.push({at:x.doneAt,t:`${NAME[x.by]||"ふたり"}がDAY${n}のミッション「${mtext(MBYID[x.id],DAYS()[n-1]).slice(0,18)}…」をクリア`,k:"mission"})}}
+  for(const [k,d] of Object.entries(S.diary)){const m=k.match(/^d(\d)_(sai|yui)$/);if(m&&d.at)ev.push({at:d.at,t:`${NAME[m[2]]}がDAY${m[1]}の日記を書いた`,k:"diary"})}
+  for(const [w,l] of Object.entries(S.letters)){if(l?.at)ev.push({at:l.at,t:`${NAME[w]}が最終日にひらく手紙を書いた`,k:"letter"})}
+  if(S.plan?.updatedAt)ev.push({at:S.plan.updatedAt,t:`${NAME[S.plan.by]||"だれか"}がしおりを更新した`,k:"plan"});
+  return ev.sort((a,b)=>b.at-a.at).slice(0,6);
+}
+function newsHTML(){
+  const ev=newsItems();
+  return `<div class="news"><div class="news-h"><span class="news-tag">島ニュース</span></div>${ev.length?`<ul>${ev.map(e=>`<li class="k-${e.k}"><span class="when">${relTime(e.at)}</span>${esc(e.t)}</li>`).join("")}</ul>`:`<div class="small muted">まだニュースはありません。写真や日記で、島がにぎやかになっていくよ。</div>`}</div>`;
+}
+
+/* ---------- 地図 ---------- */
+function mapSVG(sel){
+  const route=DAYS().map(d=>PINS[d.n]).filter(Boolean);
+  const land="M60 455 L90 492 L140 500 L172 472 L176 422 L200 380 L214 332 L248 300 L264 250 L290 200 L300 150 L318 100 L328 52 L314 30 L294 56 L284 110 L262 150 L240 172 L226 180 L192 168 L160 184 L146 214 L172 236 L198 236 L204 262 L190 290 L164 322 L140 360 L114 390 L94 420 L68 432 Z";
+  return `<svg viewBox="20 10 320 500" role="img" aria-label="沖縄本島の島めぐりルート">
+   <path d="${land}" fill="none" stroke="#fbe7b5" stroke-width="12" stroke-linejoin="round" opacity=".9"/>
+   <path d="${land}" fill="#8fd654" stroke="#23314f" stroke-width="4" stroke-linejoin="round"/>
+   <ellipse cx="216" cy="158" rx="14" ry="10" fill="#8fd654" stroke="#23314f" stroke-width="3"/><ellipse cx="138" cy="228" rx="9" ry="7" fill="#8fd654" stroke="#23314f" stroke-width="3"/>
+   <text x="250" y="420" font-family="DotGothic16,monospace" font-size="16" fill="#fff">OKINAWA</text>
+   <polyline class="route" points="${route.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#23314f" stroke-width="3" stroke-linecap="round"/>
+   ${DAYS().map(d=>{const [x,y]=PINS[d.n];const c=getComputedStyle(document.documentElement).getPropertyValue("--d"+d.n).trim();return `<g class="pin ${d.n===sel?"on":""}" data-pd="${d.n}" tabindex="0" role="button" aria-label="DAY${d.n}"><circle class="dot" cx="${x}" cy="${y}" r="10" fill="${c}" stroke="#23314f" stroke-width="3"/><text x="${x}" y="${y+5}" text-anchor="middle" font-family="DotGothic16,monospace" font-size="13" fill="#fff" pointer-events="none">${d.n}</text></g>`}).join("")}
+  </svg>`;
+}
+
+/* ---------- しおり ---------- */
+function renderPlan(){
+  const d=DAYS()[S.planDay-1];
+  const fl=d.n===1||d.n===6;
+  const sun=SUN[d.n];
+  $("#v-plan").innerHTML=`
+  ${statusHTML()}
+  ${newsHTML()}
+  ${HEAD("島めぐりのしおり","var(--shu)",S.canWrite?`<button class="btn mini" id="edit-day">この日を編集</button>`:"")}
+  <div class="mapbox">
+    <div class="map">${mapSVG(S.planDay)}</div>
+    <div style="min-width:0">
+      ${dayPicker(S.planDay,"pd")}
+      <article class="daycard" style="--c:${DC(d.n)}">
+        <div class="ribbon"><span class="no">DAY${d.n}</span><h3>${esc(d.date)}（${esc(d.dow)}）${esc(d.title)}</h3><span class="theme">${esc(d.theme||"")}</span></div>
+        <div class="inner">
+          ${bdayOf(d)?`<div class="bday">${CAKE()}<div><b>${NAME[bdayOf(d)]}の誕生日！</b><span>今日の主役は${NAME[bdayOf(d)]}。ガチャには誕生日のお題が出ます</span></div>${CAKE("r")}</div>`:""}
+          ${sun?`<div class="sunrow"><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="5" fill="#ffd23f" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M12 3v3M5 7l2 2M19 7l-2 2" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の出 ${sun[0]}</span><span class="sr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="5" fill="#ff8a5c" stroke="#23314f" stroke-width="1.5"/><path d="M3 19h18M8 21h8" stroke="#23314f" stroke-width="1.5" stroke-linecap="round"/></svg>日の入り ${sun[1]}</span><span class="sr">${moonSVG(sun[2])}${moonName(sun[2])}${d.n===6?"（最終日の夜はほぼ満月）":""}</span></div>`:""}
+          <ul class="stops">${(d.stops||[]).map(s=>`<li><span class="t">${esc(s.t)}</span><div><div class="n">${esc(s.n)}${s.stamp?`<span class="st-badge">スタンプ</span>`:""}</div>${s.d?`<div class="d">${esc(s.d)}</div>`:""}${s.q?`<a href="${mapUrl(s.q)}" target="_blank" rel="noopener">地図をひらく</a>`:""}</div></li>`).join("")||`<li class="muted small">予定がまだありません。「この日を編集」から追加してね</li>`}</ul>
+          ${(fl||d.stay||d.hotel)?`<div class="infobox">${fl?`<div class="row"><span class="k">${d.n===1?"行きの飛行機":"帰りの飛行機"}</span><span class="v">${d.flight?esc(d.flight):`<span class="muted">便名と時間を入れてね</span>`}</span></div>`:""}${(d.stay||d.hotel)?`<div class="row"><span class="k">今夜の宿</span><span class="v">${d.hotel?esc(d.hotel):`<span class="muted">${esc(d.stay)}エリア（ホテル名を入れてね）</span>`}</span></div>`:""}</div>`:""}
+        </div>
+      </article>
+      ${d.note?SAY(d.n%2?"yui":"sai",esc(d.note)):""}
+    </div>
+  </div>
+  ${gachaHTML(d)}
+  ${itemsHTML()}`;
+}
+/* ---------- 持ち物リスト ---------- */
+function itemsHTML(){
+  const items=ITEMS(),me=S.who;
+  const mine=items.filter(i=>i.who==="both"||i.who===me||!me);
+  const doneN=mine.filter(i=>me?i.done?.[me]:false).length;
+  const row=i=>{const box=w=>`<label class="ibox ${w}" title="${NAME[w]}"><input type="checkbox" data-item="${i.id}" data-w="${w}" ${i.done?.[w]?"checked":""} ${S.canWrite&&(w===me)?"":"disabled"}><img src="${MII[w]}" alt="${NAME[w]}"></label>`;
+    const conf=S.confirmDel===i.id;
+    return `<li class="item ${i.done?.sai&&i.done?.yui?"both":""} ${conf?"confirm":""}"><span class="it">${esc(i.t)}${i.who!=="both"?`<small>${NAME[i.who]}</small>`:""}</span><span class="iboxes">${i.who!=="yui"?box("sai"):"<span></span>"}${i.who!=="sai"?box("yui"):"<span></span>"}</span>${S.canWrite?`<button class="idel" data-idel="${i.id}" aria-label="${conf?"この持ち物を消す":"削除"}">${conf?"けす":"×"}</button>`:""}</li>`};
+  return `<div class="prep"><div class="head" style="margin-top:18px"><span class="tag" style="--c:var(--leaf)">旅のもちもの</span><span class="aside">${me?`${NAME[me]}：${doneN}/${mine.length}`:""}</span></div>
+    <div class="small muted" style="margin:-4px 0 8px">それぞれ自分のぶんにチェック。ふたりともそろうと光ります。いらないものは「×」を2回押すと消えます。</div>
+    <ul class="items">${items.map(row).join("")}</ul>
+    ${S.canWrite?`<form class="iadd" id="iadd"><input id="iadd-in" maxlength="40" placeholder="持ち物を追加（例：酔い止め）"><select id="iadd-who"><option value="both">ふたり</option><option value="sai">さいけう</option><option value="yui">ゆいちゃん</option></select><button class="btn mini" type="submit">追加</button></form>`:""}
+  </div>`;
+}
+async function saveItems(items){try{await S.db.doc("prep/items").set({items,at:Date.now()})}catch(err){writeErr(err)}}
+function gachaHTML(d){
+  const n=d.n,today=tripDay(),m=S.missions["day"+n]||{draws:[]},draws=m.draws||[];
+  const isToday=n===today,trial=today<1,left=3-draws.length;
+  const pool=poolFor(d);
+  let action="";
+  if(isToday)action=left>0?`<button class="btn" id="draw">${draws.length?"もう1回まわす":"ガチャをまわす"}</button><span class="small">今日はあと${left}回</span>`:`<span class="small">今日のガチャはおしまい。お題をクリアしよう</span>`;
+  else if(trial)action=`<button class="btn" id="trial">おためしでまわす</button><span class="small">本番は旅行当日の朝から</span>`;
+  else if(n>today)action=`<span class="small">${esc(d.date)}の朝にまわせるよ</span>`;
+  else action=draws.length?"":`<span class="small">この日はガチャをまわさなかったよ</span>`;
+  const caps=["var(--sun)","var(--sea)","var(--hibiscus)"];
+  const list=draws.map((x,i)=>{const mm=MBYID[x.id]||{t:x.t||"?"};return `<div class="mission ${x.done?"done":""}"><span class="cap" style="--c:${caps[i%3]}"></span><span class="txt">${esc(mtext(mm,d))}</span><button class="ok" data-done="${n}:${i}" ${S.canWrite?"":"disabled"}>${x.done?"クリア！":"クリアした"}</button></div>`}).join("");
+  const tr=S.trial&&S.trial.n===n?`<div class="mission"><span class="cap"></span><span class="txt">${esc(mtext(MBYID[S.trial.id],d))}</span><span class="small">おためし</span></div>`:"";
+  return `<div class="gacha"><h3>今日のミッションガチャ　DAY${n}</h3>
+    <div class="gacha-stage">
+      <svg class="machine" id="cap" viewBox="0 0 80 100" aria-hidden="true"><g class="globe"><circle cx="40" cy="36" r="30" fill="#e9fbfb" stroke="#23314f" stroke-width="4"/><circle cx="28" cy="40" r="8" fill="#ffd23f" stroke="#23314f" stroke-width="2"/><circle cx="46" cy="46" r="8" fill="#13b5c8" stroke="#23314f" stroke-width="2"/><circle cx="40" cy="26" r="8" fill="#ff5c93" stroke="#23314f" stroke-width="2"/><circle cx="54" cy="30" r="7" fill="#3fae49" stroke="#23314f" stroke-width="2"/><path d="M22 22 q6 -8 14 -10" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g><path d="M14 62 h52 l6 34 h-64z" fill="#ffd23f" stroke="#23314f" stroke-width="4" stroke-linejoin="round"/><circle cx="40" cy="78" r="8" fill="#fff" stroke="#23314f" stroke-width="3"/><path d="M36 78 h8" stroke="#23314f" stroke-width="3"/></svg>
+      <div style="display:grid;gap:6px">${action}</div></div>
+    <div class="mission-list">${list}${tr}</div>
+    <div class="hint">この日の予定（${[...dayTags(d)].filter(t=>t!=="drive"&&t!=="hotel").length?"行き先に合わせた"+pool.day.length+"種類":"どこでもできる"}＋どこでもできる${pool.any.length}種類）から出ます。1回目は行き先のお題が出やすいよ。</div></div>`;
+}
+function pickMission(d,draws,first){
+  const pool=poolFor(d),used=new Set(draws.map(x=>x.id));
+  const dayC=pool.day.filter(m=>!used.has(m.id)),anyC=pool.any.filter(m=>!used.has(m.id));
+  const bC=dayC.filter(m=>m.tag==="birthday");
+  let cand=(first&&bC.length)?bC:(first&&dayC.length)?dayC:(Math.random()<.5&&dayC.length?dayC:anyC);if(!cand.length)cand=dayC.length?dayC:anyC;
+  return cand[Math.floor(Math.random()*cand.length)];
+}
+$("#v-plan").addEventListener("keydown",e=>{const p=e.target.closest(".pin");if(p&&(e.key==="Enter"||e.key===" ")){e.preventDefault();S.planDay=+p.dataset.pd;S.trial=null;renderPlan()}});
+$("#v-plan").addEventListener("click",async e=>{
+  const pin=e.target.closest(".pin");if(pin){beep("tap");S.planDay=+pin.dataset.pd;S.trial=null;renderPlan();return}
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.pd){beep("tap");S.planDay=+t.dataset.pd;S.trial=null;renderPlan();return}
+  if(t.id==="edit-day"){openEditor(S.planDay);return}
+  const d=DAYS()[S.planDay-1];
+  if(t.id==="trial"){spin(()=>{const m=pickMission(d,[],true);S.trial={n:d.n,id:m.id};beep("gacha");renderPlan()});return}
+  if(t.id==="draw"){const n=d.n,ref=S.db.doc("missions/day"+n),cur=(S.missions["day"+n]||{draws:[]}).draws||[];if(cur.length>=3)return;
+    t.disabled=true;spin(async()=>{const m=pickMission(d,cur,cur.length===0);if(!m){toast("お題がもうありません");return}
+      try{await ref.set({draws:[...cur,{id:m.id,by:S.who,at:Date.now(),done:false}]});beep("gacha")}catch(err){writeErr(err);t.disabled=false}});return}
+  if(t.dataset.done){const [n,i]=t.dataset.done.split(":").map(Number),cur=JSON.parse(JSON.stringify(S.missions["day"+n].draws));
+    cur[i].done=!cur[i].done;if(cur[i].done){cur[i].doneAt=Date.now();cur[i].by=cur[i].by||S.who;confetti();beep("clear");say(S.who||"sai","ミッションクリア！")}else delete cur[i].doneAt;try{await S.db.doc("missions/day"+n).set({draws:cur})}catch(err){writeErr(err)}}
+  if(t.dataset.idel){const id=t.dataset.idel;
+    if(S.confirmDel!==id){S.confirmDel=id;beep("tap");renderPlan();clearTimeout(S._cd);S._cd=setTimeout(()=>{if(S.confirmDel===id){S.confirmDel=null;if(S.view==="plan")safeRender()}},4000);return}
+    S.confirmDel=null;const items=ITEMS().filter(i=>i.id!==id);await saveItems(items);beep("clear");toast("持ち物を消しました")}
+});
+$("#v-plan").addEventListener("change",async e=>{
+  const c=e.target.closest("input[data-item]");if(!c)return;
+  const items=JSON.parse(JSON.stringify(ITEMS()));const it=items.find(i=>i.id===c.dataset.item);if(!it)return;
+  it.done=it.done||{};it.done[c.dataset.w]=c.checked;if(c.checked)beep("tap");
+  const li=c.closest(".item");if(li&&it.done.sai&&it.done.yui){li.classList.add("both");beep("clear")}
+  await saveItems(items);
+});
+$("#v-plan").addEventListener("submit",async e=>{
+  if(e.target.id!=="iadd")return;e.preventDefault();
+  const v=$("#iadd-in").value.trim();if(!v)return;const who=$("#iadd-who").value;
+  const items=JSON.parse(JSON.stringify(ITEMS()));items.push({id:"u"+uid(),t:v,who,by:S.who||"sai"});$("#iadd-in").value="";$("#iadd-in").blur();
+  await saveItems(items);beep("tap");
+});
+function spin(after){const c=$("#cap");if(c){c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}setTimeout(after,matchMedia("(prefers-reduced-motion:reduce)").matches?0:700)}
+
+/* ---------- 行程エディター ---------- */
+function openEditor(n){
+  const d=JSON.parse(JSON.stringify(DAYS()[n-1]));S.editing=d;drawEditor();
+}
+function drawEditor(){
+  const d=S.editing;if(!d){$("#layer").innerHTML="";return}
+  const f=(k,label,ph="")=>`<label class="fld"><span>${label}</span><input data-k="${k}" value="${esc(d[k]||"")}" placeholder="${esc(ph)}" maxlength="120"></label>`;
+  $("#layer").innerHTML=`<div class="modal"><div class="box editor" style="--c:${DC(d.n)}">
+    <div class="ed-head"><h2>DAY${d.n} の予定を編集</h2><button class="x" id="ed-close" aria-label="とじる">×</button></div>
+    <div class="ed-grid">${f("date","日付","11/19")}${f("dow","曜日","木")}${f("title","タイトル","那覇に到着！")}${f("theme","テーマ","はじまりの島")}${d.n===1||d.n===6?f("flight",d.n===1?"行きの飛行機":"帰りの飛行機","便名・時間"):""}${f("stay","泊まるエリア","那覇")}${f("hotel","ホテル名","")}</div>
+    <label class="fld"><span>メモ（Miiが吹き出しで教えてくれます）</span><textarea data-k="note" maxlength="300">${esc(d.note||"")}</textarea></label>
+    <div class="ed-stops">${(d.stops||[]).map((s,i)=>`<div class="ed-stop" data-i="${i}">
+      <div class="ed-stop-row"><input class="t" data-s="t" value="${esc(s.t)}" placeholder="10:00" maxlength="8"><input class="n" data-s="n" value="${esc(s.n)}" placeholder="行き先・やること" maxlength="60"><div class="ed-btns"><button data-mv="-1" aria-label="上へ">▲</button><button data-mv="1" aria-label="下へ">▼</button><button data-del aria-label="削除">×</button></div></div>
+      <input class="d" data-s="d" value="${esc(s.d||"")}" placeholder="ひとことメモ" maxlength="80">
+      <div class="ed-stop-row2"><input class="q" data-s="q" value="${esc(s.q||"")}" placeholder="地図で検索する名前（空欄なら地図なし）" maxlength="60"><label class="chk"><input type="checkbox" data-s="stamp" ${s.stamp?"checked":""}>スタンプの場所にする</label></div></div>`).join("")}
+    </div>
+    <button class="btn ghost" id="ed-add">＋ 予定を追加</button>
+    <div class="ed-foot"><span class="small muted">ミッションガチャとスタンプラリーは、ここに書いた行き先に合わせて自動で変わります。</span><button class="btn sea" id="ed-save">保存する</button></div>
+  </div></div>`;
+}
+function collectEditor(){
+  const d=S.editing,box=$(".editor");box.querySelectorAll("input[data-k],textarea[data-k]").forEach(i=>d[i.dataset.k]=i.value.trim());
+  d.stops=[...box.querySelectorAll(".ed-stop")].map((el,i)=>{const o=d.stops[i]||{id:"x"+uid()};el.querySelectorAll("[data-s]").forEach(inp=>{o[inp.dataset.s]=inp.type==="checkbox"?inp.checked:inp.value.trim()});return o});
+}
+$("#layer").addEventListener("click",async e=>{
+  if(!S.editing)return;const t=e.target.closest("button");if(!t)return;
+  if(t.id==="ed-close"){S.editing=null;drawEditor();return}
+  collectEditor();
+  if(t.id==="ed-add"){S.editing.stops.push({id:"x"+uid(),t:"",n:"",d:"",q:"",stamp:false});drawEditor();$(".ed-stop:last-child .n")?.focus();return}
+  const row=t.closest(".ed-stop");
+  if(row&&t.dataset.mv){const i=+row.dataset.i,j=i+(+t.dataset.mv);if(j<0||j>=S.editing.stops.length)return;[S.editing.stops[i],S.editing.stops[j]]=[S.editing.stops[j],S.editing.stops[i]];drawEditor();return}
+  if(row&&t.hasAttribute("data-del")){S.editing.stops.splice(+row.dataset.i,1);drawEditor();return}
+  if(t.id==="ed-save"){
+    const d=S.editing;d.stops=d.stops.filter(s=>s.n);d.stops.forEach(s=>{if(!s.id)s.id="x"+uid()});
+    const days=JSON.parse(JSON.stringify(DAYS()));days[d.n-1]=d;
+    try{await S.db.doc("trip/plan").set({days,updatedAt:Date.now(),by:S.who});S.editing=null;drawEditor();toast("保存しました");beep("clear")}catch(err){writeErr(err)}
+  }
+});
+
+/* ---------- スタンプ ---------- */
+function spotPhotos(id){const r={};for(const p of S.photos)if(p.spot===id&&!r[p.who])r[p.who]=p;return r}
+function stampSVG(name,isNew){return `<svg class="stampmark ${isNew?"new":""}" viewBox="0 0 100 100" aria-label="スタンプ"><g fill="none" stroke="var(--shu)"><circle cx="50" cy="50" r="46" stroke-width="4"/><circle cx="50" cy="50" r="38" stroke-width="1.5"/></g><text x="50" y="44" text-anchor="middle" font-family="Mochiy Pop One, sans-serif" font-size="15" fill="var(--shu)">とうちゃく</text><path d="M28 54h44" stroke="var(--shu)" stroke-width="1.5"/><text x="50" y="70" text-anchor="middle" font-family="DotGothic16, monospace" font-size="10" fill="var(--shu)">${esc(name.length>7?name.slice(0,7):name)}</text></svg>`}
+function stampedIds(){return SPOTS().filter(s=>{const p=spotPhotos(s.id);return p.sai&&p.yui}).map(s=>s.id)}
+function renderStamp(){
+  const spots=SPOTS(),done=stampedIds(),seen=new Set((ls.get("seenStamps")||"").split(",").filter(Boolean));
+  const all=spots.length>0&&done.length===spots.length;
+  const chest=all?`<svg viewBox="0 0 64 56"><path d="M6 24 h52 v28 h-52z" fill="#c98a4b" stroke="#23314f" stroke-width="3"/><path d="M6 24 L12 4 h40 l6 20" fill="#e3a35c" stroke="#23314f" stroke-width="3" stroke-linejoin="round" transform="rotate(-18 6 24)"/><path d="M14 22 l4 -10 M30 20 l2 -12 M46 22 l-2 -10" stroke="#ffd23f" stroke-width="3" stroke-linecap="round"/><rect x="28" y="30" width="8" height="10" fill="#ffd23f" stroke="#23314f" stroke-width="2"/></svg>`
+    :`<svg viewBox="0 0 64 56"><path d="M6 24 h52 v28 h-52z" fill="#c98a4b" stroke="#23314f" stroke-width="3"/><path d="M6 24 q0 -18 26 -18 q26 0 26 18z" fill="#e3a35c" stroke="#23314f" stroke-width="3"/><path d="M6 30 h52" stroke="#23314f" stroke-width="3"/><rect x="27" y="24" width="10" height="13" rx="2" fill="#ffd23f" stroke="#23314f" stroke-width="2"/><circle cx="32" cy="30" r="2" fill="#23314f"/></svg>`;
+  $("#v-stamp").innerHTML=`
+  ${HEAD("ふたりのスタンプラリー","#f5a524")}
+  <div class="prog-row"><div class="bar"><i style="width:${spots.length?done.length/spots.length*100:0}%"></i></div><span class="num">${done.length}/${spots.length}</span></div>
+  ${SAY(S.who==="yui"?"sai":"yui","着いたら、ふたりがそれぞれ写真をあげてね。そろったらスタンプがポン！")}
+  <div class="spots">${spots.map(s=>{const p=spotPhotos(s.id),ok=p.sai&&p.yui;
+    const slot=w=>{const ph=p[w],mine=w===S.who&&!ph&&S.canWrite&&S.assets;
+      return `<button class="slot ${mine?"mine":""}" ${mine?`data-up="${s.id}"`:ph?`data-open="${ph.id}"`:"disabled"}><span class="who">${NAME[w]}</span>${ph?`<img class="ph" src="${blob(ph.thumb||ph.full)}" alt="${NAME[w]}の写真" loading="lazy">`:mine?`<span><span class="plus">＋</span><br>写真をあげて<br>とうちゃく！</span>`:`<img class="face" src="${MII[w]}" alt="">`}</button>`};
+    return `<div class="spot" style="--c:${DC(s.d)}"><div class="top"><span class="day">DAY${s.d} ${esc(DAYS()[s.d-1].date)}</span></div><div class="nm">${esc(s.n)}</div><div class="slots">${slot("sai")}${slot("yui")}</div>${ok?stampSVG(s.n,!seen.has(s.id)):""}</div>`}).join("")||`<div class="empty">スタンプの場所がまだありません。しおりの「この日を編集」で、行き先に「スタンプの場所にする」をつけてね。</div>`}</div>
+  <div class="treasure">${chest}<div>${all?`<h3 style="font-size:17px">隠しメッセージ</h3><div class="msg">${esc(S.secret??DEFAULT_SECRET)}</div>`:`<h3 style="font-size:17px">？？？の宝箱</h3><div class="small muted">スタンプがぜんぶそろうと、宝箱がひらきます。</div>`}
+    ${S.isOwner&&!all?`<details style="margin-top:6px"><summary class="small">宝箱のメッセージを書きかえる（さいけうだけに見えています）</summary><textarea id="secret-in" maxlength="1000">${esc(S.secret??DEFAULT_SECRET)}</textarea><button class="btn" id="secret-save" style="margin-top:8px">保存</button></details>`:""}</div>
+  </div>`;
+  const newly=done.filter(id=>!seen.has(id));
+  if(newly.length){ls.set("seenStamps",done.join(","));confetti();beep("stamp");cheer("スタンプゲット！","やったー！");if(all)setTimeout(()=>{toast("全スタンプ制覇！宝箱がひらいたよ");beep("open");cheer("ぜんぶ集めた！","宝箱ひらいた！")},700)}
+}
+let pendingSpot=null;
+$("#v-stamp").addEventListener("click",async e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.up){pendingSpot=t.dataset.up;$("#f-stamp").click()}
+  else if(t.dataset.open){const list=S.photos.filter(p=>p.spot);openLB(list,list.findIndex(p=>p.id===t.dataset.open))}
+  else if(t.id==="secret-save"){try{await S.db.doc("config/secret").set({msg:$("#secret-in").value});toast("保存しました")}catch(err){writeErr(err)}}
+});
+$("#f-stamp").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingSpot)return;
+  const spot=SPOTS().find(s=>s.id===pendingSpot);if(!spot)return;toast("アップロード中…");
+  try{await uploadPhoto(f,{spot:spot.id,day:spot.d});toast(spotPhotos(spot.id)[other(S.who)]?"スタンプゲット！":`${NAME[other(S.who)]}の写真を待ってるよ`)}catch(err){upErr(err)}});
+
+/* ---------- 日記 ---------- */
+function renderDiary(){
+  const n=S.diaryDay,mine=S.diary[`d${n}_${S.who}`],theirs=S.diary[`d${n}_${other(S.who)}`];
+  const both=mine&&theirs,o=other(S.who);
+  const night=tripDay()===n&&jstHour()>=21&&!mine;
+  const lock=`<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 52s-20-12-20-28a11 11 0 0 1 20-6 11 11 0 0 1 20 6c0 16-20 28-20 28z" fill="#ff5c93" stroke="#23314f" stroke-width="3"/><rect x="21" y="26" width="18" height="14" rx="3" fill="#ffd23f" stroke="#23314f" stroke-width="2.5"/><path d="M24 26v-4a6 6 0 0 1 12 0v4" fill="none" stroke="#23314f" stroke-width="2.5"/></svg>`;
+  $("#v-diary").innerHTML=`
+  ${HEAD("ふたりの交換日記","var(--hibiscus)","1日1回、一言ずつ")}
+  ${dayPicker(n,"dd")}
+  ${night?`<div class="banner"><span class="moon"></span>1日のしめくくり。今日の日記を書こう</div>`:""}
+  <div class="diary">
+    <div class="page ${S.who}"><h3><img src="${MII[S.who]}" alt="">${NAME[S.who]}（あなた）</h3>
+      ${S.canWrite?`<textarea id="diary-in" maxlength="2000" placeholder="今日いちばん楽しかったことは？">${esc(mine?.text||"")}</textarea><button class="btn pink" id="diary-save">${mine?"書き直して保存":"書いた！"}</button>`:`<div class="body">${esc(mine?.text||"")}</div>`}
+    </div>
+    <div class="page ${o}"><h3><img src="${MII[o]}" alt="">${NAME[o]}</h3>
+      ${both?`<div class="body">${esc(theirs.text)}</div>`:`<div class="sealed"><div>${lock}${theirs?`${NAME[o]}は書き終わったよ。<br>あなたが書くと、ふたりの日記がひらきます`:mine?`${NAME[o]}が書くのを待っています`:`ふたりとも書いたら、ここに${NAME[o]}の日記が出てきます`}</div></div>`}
+    </div>
+  </div>
+  <div class="remind"><h3><span class="moon"></span>毎晩23時のおしらせ</h3>
+    <p class="small">旅行中の6日間、毎晩23時にスマホへ「交換日記を書こう」と通知が来るように、カレンダーの予定を追加できます。ふたりともそれぞれのスマホで追加してね。</p>
+    <button class="btn" id="ics">カレンダーに追加するファイルを保存</button>
+    <p class="small" style="opacity:.85;margin-bottom:0">保存したファイルを開くと、カレンダーアプリに6日分の予定が入ります。</p></div>
+  ${letterHTML()}`;
+}
+$("#v-diary").addEventListener("click",async e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.dd){beep("tap");S.diaryDay=+t.dataset.dd;renderDiary();return}
+  if(t.id==="diary-save"){const v=$("#diary-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
+    try{await S.db.doc(`diary/d${S.diaryDay}_${S.who}`).set({text:v,who:S.who,at:Date.now()});toast("保存しました");beep("clear");if(S.diary[`d${S.diaryDay}_${other(S.who)}`]){confetti();beep("open");cheer("日記がひらいた！","見せて見せて！")}}catch(err){writeErr(err)}}
+  if(t.id==="letter-save"){const v=$("#letter-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
+    try{await S.db.doc(`letters/${S.who}`).set({text:v,who:S.who,at:Date.now()});toast("手紙をしまいました。最終日の夜にひらきます");beep("clear")}catch(err){writeErr(err)}}
+  if(t.id==="ics")saveICS();
+});
+function letterHTML(){
+  const open=Date.now()>=LETTER_OPEN,me=S.who,o=other(me||"sai");const mine=S.letters[me],theirs=S.letters[o];
+  const env=(w,sealed)=>`<svg class="env" viewBox="0 0 80 56" aria-hidden="true"><rect x="2" y="10" width="76" height="44" rx="6" fill="${w==="yui"?"#ffe3ec":"#dff6f8"}" stroke="#23314f" stroke-width="3"/><path d="M2 14 L40 36 L78 14" fill="none" stroke="#23314f" stroke-width="3" stroke-linejoin="round"/>${sealed?`<circle cx="40" cy="34" r="8" fill="#ee4b3a" stroke="#23314f" stroke-width="2.5"/>`:`<path d="M6 12 L40 -4 L74 12" fill="${w==="yui"?"#ffe3ec":"#dff6f8"}" stroke="#23314f" stroke-width="3" stroke-linejoin="round" transform="translate(0 8)"/>`}</svg>`;
+  return `<div class="letters"><h3>最終日の夜にひらく手紙</h3>
+    <p class="small">旅行の前に、相手への手紙を書いておこう。11/24の18時になると、ふたりの手紙が同時にひらきます。</p>
+    <div class="letter-grid">
+      <div class="letter mine">${env(me||"sai",!open)}<div class="lt-h">${NAME[me||"sai"]}から${NAME[o]}へ</div>
+        ${open?`<div class="lt-body">${mine?esc(mine.text):"<span class='muted'>手紙はありませんでした</span>"}</div>`:S.canWrite?`<textarea id="letter-in" maxlength="3000" placeholder="旅のあとに読んでほしいこと、いま思っていること…">${esc(mine?.text||"")}</textarea><button class="btn pink" id="letter-save">${mine?"書き直してしまう":"手紙をしまう"}</button>${mine?`<div class="small muted">しまった日：${new Date(mine.at+9*3600e3).toISOString().slice(5,10).replace("-","/")}</div>`:""}`:""}
+      </div>
+      <div class="letter theirs">${env(o,!open)}<div class="lt-h">${NAME[o]}から${NAME[me||"sai"]}へ</div>
+        ${open?`<div class="lt-body">${theirs?esc(theirs.text):"<span class='muted'>手紙はありませんでした</span>"}</div>`:`<div class="sealed small">${theirs?`${NAME[o]}の手紙が届いています。<br>11/24 18:00 にひらきます`:`まだ届いていません`}</div>`}
+      </div>
+    </div></div>`;
+}
+async function saveICS(){
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//futari-shimagurashi//JP","CALSCALE:GREGORIAN"];
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  for(let n=1;n<=6;n++){const day=String(18+n).padStart(2,"0");
+    L.push("BEGIN:VEVENT",`UID:futari-diary-${n}@shimagurashi`,`DTSTAMP:${stamp}`,`DTSTART:202611${day}T140000Z`,`DTEND:202611${day}T141500Z`,`SUMMARY:ふたりの交換日記を書こう（DAY${n}）`,"DESCRIPTION:今日いちばん楽しかったことを一言。ふたりとも書くと日記がひらくよ。","BEGIN:VALARM","ACTION:DISPLAY","TRIGGER:PT0M","DESCRIPTION:交換日記の時間です","END:VALARM","END:VEVENT")}
+  L.push("END:VCALENDAR");
+  downloadBlob("okinawa-diary-reminder.ics",new Blob([L.join("\r\n")],{type:"text/calendar"}));
+}
+
+/* ---------- アルバム ---------- */
+function albumGroups(){const g={};for(const p of S.photos){const k=p.day||0;(g[k]=g[k]||[]).push(p)}return Object.keys(g).map(Number).sort((a,b)=>a-b).map(k=>({k,items:g[k]}))}
+function renderAlbum(){
+  const sel=S.albumDay,groups=albumGroups().filter(x=>sel==="all"||x.k===+sel);
+  const uploadDay=sel!=="all"?+sel:(tripDay()>=1&&tripDay()<=6?tripDay():0);
+  $("#v-album").innerHTML=`
+  ${HEAD("思い出アルバム","var(--sea)",`${S.photos.length}枚`)}
+  <div class="daytabs"><button style="--c:var(--ink)" data-ad="all" aria-pressed="${sel==="all"}">ぜんぶ<small>ALL</small></button>${DAYS().map(d=>`<button style="--c:${DC(d.n)}" data-ad="${d.n}" aria-pressed="${String(d.n)===String(sel)}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>
+  ${S.assets&&S.canWrite?`<div class="uploadbar"><button class="btn sea" id="up">写真を追加${uploadDay?`（DAY${uploadDay}）`:""}</button><span class="prog" id="prog"></span></div><div class="small muted">何枚でもまとめて選べます。元の画質のまま保存されます。</div>`:`<div class="small muted">写真の追加は、共有設定で「編集者」になっている人ができます。</div>`}
+  ${groups.length?groups.map(gr=>`<div class="album-day" style="--c:${gr.k?DC(gr.k):"var(--muted)"}"><h3><span class="dot"></span>${gr.k?`DAY${gr.k}　${esc(DAYS()[gr.k-1]?.date||"")}`:"旅行の前"}</h3>
+    <div class="grid">${gr.items.map(p=>`<button data-ph="${p.id}" aria-label="写真をひらく"><img src="${blob(p.thumb||p.full)}" alt="" loading="lazy" decoding="async">${p.spot?`<span class="tag">スタンプ</span>`:p.food?`<span class="tag green">グルメ</span>`:""}${p.likes?.sai&&p.likes?.yui?`<span class="heart" aria-label="ふたりのお気に入り">♥</span>`:""}</button>`).join("")}</div></div>`).join("")
+    :`<div class="empty">まだ写真がありません。<br>旅行中に撮った写真を「写真を追加」からあげると、日ごとにここに並びます。</div>`}`;
+  S.uploadDay=uploadDay;
+}
+$("#v-album").addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.ad){beep("tap");S.albumDay=t.dataset.ad;renderAlbum()}
+  else if(t.id==="up")$("#f-album").click();
+  else if(t.dataset.ph){const list=albumGroups().filter(x=>S.albumDay==="all"||x.k===+S.albumDay).flatMap(x=>x.items);openLB(list,list.findIndex(p=>p.id===t.dataset.ph))}
+});
+$("#f-album").addEventListener("change",async e=>{
+  const files=[...e.target.files];e.target.value="";if(!files.length)return;
+  let done=0,fail=0;const day=S.uploadDay;const setP=()=>{const el=$("#prog");if(el)el.textContent=`アップロード中 ${done} / ${files.length}`};setP();
+  const q=files.slice();const worker=async()=>{while(q.length){const f=q.shift();try{await uploadPhoto(f,{day})}catch(err){fail++;console.warn(err)}done++;setP()}};
+  await Promise.all([worker(),worker()]);
+  const el=$("#prog");if(el)el.textContent=fail?`${files.length-fail}枚追加、${fail}枚は読み込めませんでした`:`${files.length}枚追加しました`;
+  if(!fail){confetti();beep("clear")}
+});
+
+/* ---------- 画像 ---------- */
+async function decode(file){try{return await createImageBitmap(file,{imageOrientation:"from-image"})}catch{}
+  return await new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>res(i);i.onerror=()=>rej({code:"decode"});i.src=u})}
+function toJpeg(src,max,q){const w=src.width,h=src.height,s=Math.min(1,max/Math.max(w,h));const c=document.createElement("canvas");c.width=Math.round(w*s);c.height=Math.round(h*s);c.getContext("2d").drawImage(src,0,0,c.width,c.height);return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej({code:"encode"}),"image/jpeg",q))}
+async function uploadPhoto(file,{spot=null,day=0,food=null}){
+  if(!S.assets)throw{code:"not_granted"};
+  const img=await decode(file);
+  // 保存先の容量（無料枠1GB）を考えて、長辺2560pxに整えて保存（スマホで見るには十分な高画質）
+  const full=await toJpeg(img,2560,.88);const thumb=await toJpeg(img,720,.8);
+  const [F,T]=await Promise.all([S.assets.upload(full,{type:"image/jpeg"}),S.assets.upload(thumb,{type:"image/jpeg"})]);
+  await ensureUrls([F.id,T.id]);
+  await S.db.collection("photos").add({full:F.id,thumb:T.id,w:img.width,h:img.height,who:S.who,day,spot,food,at:Date.now()});
+}
+function upErr(err){console.warn(err);toast(err&&err.code==="decode"?"この写真は読み込めませんでした。別の写真で試してね":err&&err.code==="too_large"?"写真が大きすぎました":"アップロードできませんでした。共有設定で「編集者」になっているか確認してね")}
+
+/* ---------- ライトボックス ---------- */
+function openLB(list,i){S.lb={list,i:Math.max(0,i)};drawLB();const p=list[S.lb.i];if(p&&!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb)drawLB()})}
+function drawLB(){
+  const L=$("#layer");if(!S.lb){L.innerHTML="";return}
+  const {list,i}=S.lb,p=list[i];const sp=SPOTS().find(s=>s.id===p.spot);const fd=p.food?FOODBY[p.food]:null;
+  const likes=p.likes||{},liked=S.who&&likes[S.who],n=["sai","yui"].filter(w=>likes[w]).length;
+  L.innerHTML=`<div class="lightbox" role="dialog" aria-label="写真"><div class="lb-top"><span class="small">${i+1} / ${list.length}　${NAME[p.who]||""}${sp?`　${esc(sp.n)}`:fd?`　${esc(fd.n)}`:""}</span><button id="lb-x">とじる</button></div>
+  <div class="lb-stage" id="lb-stage"><img src="${blob(p.full)}" alt="" style="background:url('${blob(p.thumb)}') center/contain no-repeat"></div>
+  <div class="lb-bot"><button id="lb-p" ${i?"":"disabled"}>まえ</button><button class="like ${liked?"on":""}" id="lb-like" ${S.canWrite&&S.who?"":"disabled"} aria-pressed="${!!liked}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="${liked?"#ff5c93":"none"}" stroke="currentColor" stroke-width="2"/></svg>${n?`<b>${n}</b>`:""}${n===2?`<span class="small">ふたりのお気に入り</span>`:""}</button><button id="lb-n" ${i<list.length-1?"":"disabled"}>つぎ</button></div></div>`;
+  const st=$("#lb-stage");let x0=null;
+  st.addEventListener("click",()=>st.classList.toggle("zoom"));
+  st.addEventListener("touchstart",e=>{x0=e.touches.length===1?e.touches[0].clientX:null},{passive:true});
+  st.addEventListener("touchend",e=>{if(x0==null||st.classList.contains("zoom"))return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>60)move(dx<0?1:-1)});
+  $("#lb-x").onclick=()=>{S.lb=null;drawLB()};$("#lb-p").onclick=()=>move(-1);$("#lb-n").onclick=()=>move(1);
+  $("#lb-like").onclick=async()=>{const v=!liked;p.likes={...likes,[S.who]:v};drawLB();if(v)beep("tap");
+    try{await S.db.doc("photos/"+p.id).update({likes:{[S.who]:v}})}catch(err){writeErr(err)}};
+}
+function move(d){const n=S.lb.i+d;if(n<0||n>=S.lb.list.length)return;S.lb.i=n;drawLB();const p=S.lb.list[n];if(!URLS[p.full])ensureUrls([p.full]).then(()=>{if(S.lb&&S.lb.i===n)drawLB()})}
+document.addEventListener("keydown",e=>{if(S.lb){if(e.key==="Escape"){S.lb=null;drawLB()}if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)}else if(S.editing&&e.key==="Escape"){S.editing=null;drawEditor()}});
+
+/* ---------- リザルト ---------- */
+function dayStats(n){
+  const sp=SPOTS().filter(s=>s.d===n);const stamps=sp.filter(s=>spotPhotos(s.id).sai&&spotPhotos(s.id).yui).length;
+  return {stamps,spots:sp.length,photos:S.photos.filter(p=>p.day===n).length,ms:(S.missions["day"+n]?.draws||[]).filter(x=>x.done).length,diary:!!(S.diary[`d${n}_sai`]&&S.diary[`d${n}_yui`])};
+}
+function renderResult(){
+  const today=tripDay(),final=today>=6,st=stats();
+  const rank=rankOf(st);
+  $("#v-result").innerHTML=`
+  ${HEAD("旅のリザルト","var(--ai)",final?"結果発表！":"最終日 11/24 にひらきます")}
+  <div class="result ${final?"":"locked"}"><div class="rays"></div>
+    <h3>${final?"RESULT":"COMING SOON"}</h3>
+    <div class="pair"><img src="${MII.sai}" alt="さいけう"><img src="${MII.yui}" alt="ゆいちゃん"></div>
+    <div class="rows">
+      <div class="r"><span>あつめたスタンプ</span><b data-n="${st.stamped}">${final?0:"??"}</b></div>
+      <div class="r"><span>クリアしたミッション</span><b data-n="${st.ms}">${final?0:"??"}</b></div>
+      <div class="r"><span>ひらいた交換日記</span><b data-n="${st.diaries}">${final?0:"??"}</b></div>
+      <div class="r"><span>ゲットしたグルメ</span><b data-n="${st.foods}">${final?0:"??"}</b></div>
+      <div class="r"><span>撮った写真</span><b data-n="${S.photos.length}">${final?0:"??"}</b></div>
+    </div>
+    <div class="rank">${final?`ふたりの称号<strong>${rank.main}</strong>${rank.sub.length?`<div class="subtitles">${rank.sub.map(s=>`<span>${s}</span>`).join("")}</div>`:""}`:"旅の最終日に、ふたりの称号が発表されます"}</div>
+    ${final?`<div style="text-align:center;margin-top:14px"><button class="btn" id="result-png">リザルトを画像で保存</button></div>`:""}
+  </div>
+  <h3 style="font-size:17px;margin-top:18px">1日ごとのきろく</h3>
+  <div class="dayres">${DAYS().map(d=>{const s=dayStats(d.n),open=today>=d.n;return `<div class="c ${open?"":"locked"}" style="--c:${DC(d.n)}"><h4>DAY${d.n} ${esc(d.date)}</h4>${open?`スタンプ ${s.stamps}/${s.spots}<br>ミッション ${s.ms}<br>写真 ${s.photos}枚<br>日記 ${s.diary?"ひらいた":"まだ"}`:"まだ先の日"}</div>`}).join("")}</div>`;
+  if(final){document.querySelectorAll(".result b[data-n]").forEach(b=>{const n=+b.dataset.n;let k=0;const step=Math.max(1,Math.ceil(n/30));const t=setInterval(()=>{k=Math.min(n,k+step);b.textContent=k;if(k>=n)clearInterval(t)},40)});
+    if(!ls.get("finalSeen")){ls.set("finalSeen","1");confetti();beep("open");cheer("おつかれさま！","楽しかったね！")}
+    $("#result-png")?.addEventListener("click",()=>saveResultCard(st,rank));}
+}
+function rankOf(st){
+  const main=st.pts>=220?"伝説の島ぐらしカップル":st.pts>=150?"沖縄マスターなふたり":st.pts>=80?"なかよし島めぐりペア":"のんびり旅のふたり";
+  const sub=[];if(st.foods>=FOODS.length)sub.push("グルメマスター");else if(st.foods>=Math.ceil(FOODS.length/2))sub.push("食いしんぼうペア");
+  if(st.spots&&st.stamped>=st.spots)sub.push("スタンプコンプリート");if(st.diaries>=6)sub.push("交換日記皆勤賞");if(S.photos.length>=200)sub.push("カメラマン");if(st.ms>=12)sub.push("ミッションの達人");
+  return {main,sub};
+}
+async function saveResultCard(st,rank){
+  toast("画像を作っています…");
+  try{await document.fonts.load('40px "Mochiy Pop One"');await document.fonts.load('30px "DotGothic16"')}catch{}
+  const load=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src});
+  try{
+    const [water,sai,yui]=await Promise.all([load("water.webp"),load(MII.sai),load(MII.yui)]);
+    const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
+    const pat=g.createPattern(water,"repeat");g.fillStyle="#13b5c8";g.fillRect(0,0,W,H);g.fillStyle=pat;g.fillRect(0,0,W,H);
+    g.fillStyle="#fbe7b5";rr(g,50,70,W-100,H-140,44);g.fill();g.lineWidth=10;g.strokeStyle="#23314f";g.stroke();
+    g.textAlign="center";g.fillStyle="#23314f";g.font='400 34px "DotGothic16",monospace';g.fillText("OKINAWA 2026.11.19 - 11.24",W/2,150);
+    g.font='400 66px "Mochiy Pop One",sans-serif';g.fillStyle="#ee4b3a";g.fillText("ふたりの島ぐらし",W/2,236);g.fillStyle="#23314f";g.font='400 36px "Mochiy Pop One",sans-serif';g.fillText("5泊6日 誕生日旅行のリザルト",W/2,300);
+    const mh=400;const sw=sai.width*mh/sai.height,yw=yui.width*mh*.93/yui.height;
+    g.drawImage(sai,W/2-sw-10,330,sw,mh);g.drawImage(yui,W/2+10,330+mh*.07,yw,mh*.93);
+    g.font='700 30px "Zen Maru Gothic",sans-serif';g.fillText("さいけう",W/2-sw/2-10,770);g.fillText("ゆいちゃん",W/2+yw/2+10,770);
+    const rows=[["あつめたスタンプ",st.stamped],["クリアしたミッション",st.ms],["ひらいた交換日記",st.diaries],["ゲットしたグルメ",st.foods],["撮った写真",S.photos.length]];
+    g.fillStyle="#fff";rr(g,110,800,W-220,290,28);g.fill();g.lineWidth=6;g.stroke();
+    rows.forEach((r,i)=>{const y=850+i*55;g.textAlign="left";g.fillStyle="#23314f";g.font='700 28px "Zen Maru Gothic",sans-serif';g.fillText(r[0],150,y);g.textAlign="right";g.fillStyle="#ee4b3a";g.font='400 40px "DotGothic16",monospace';g.fillText(String(r[1]),W-150,y+4)});
+    g.textAlign="center";g.fillStyle="#23314f";g.font='700 28px "Zen Maru Gothic",sans-serif';g.fillText("ふたりの称号",W/2,1150);
+    g.fillStyle="#ffd23f";rr(g,120,1170,W-240,84,24);g.fill();g.lineWidth=6;g.strokeStyle="#23314f";g.stroke();
+    g.fillStyle="#23314f";g.font='400 44px "Mochiy Pop One",sans-serif';g.fillText(rank.main,W/2,1228);
+    if(rank.sub.length){g.font='700 24px "Zen Maru Gothic",sans-serif';g.fillText(rank.sub.join("　/　"),W/2,1286)}
+    const blobPng=await new Promise(res=>c.toBlob(res,"image/png"));
+    downloadBlob("futari-okinawa-result.png",blobPng);
+  }catch(err){console.warn(err);if(!(err&&err.code==="declined"))toast("画像を作れませんでした")}
+}
+function downloadBlob(name,b){const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+
+/* ---------- 紙吹雪 ---------- */
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const c=document.createElement("canvas");c.className="confetti";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
+  const g=c.getContext("2d"),cs=getComputedStyle(document.documentElement),cols=["--sun","--shu","--sea","--leaf","--hibiscus"].map(v=>cs.getPropertyValue(v).trim());
+  const P=Array.from({length:110},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.3,vy:2+Math.random()*3,vx:-1.5+Math.random()*3,r:Math.random()*6.28,s:5+Math.random()*7,c:cols[Math.floor(Math.random()*cols.length)]}));
+  let f=0;(function tick(){g.clearRect(0,0,c.width,c.height);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.r+=.1;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);g.restore()}
+    if(++f<120)requestAnimationFrame(tick);else c.remove()})();
+}
+
+/* ---------- ログイン（ふたりだけ） ---------- */
+const EMAILS={sai:"sai@futari-shimagurashi.app",yui:"yui@futari-shimagurashi.app"};
+let pickWho=null;
+function showLogin(msg){
+  $("#layer").innerHTML=`<div class="modal"><div class="box login"><h2>ふたりの島ぐらし</h2><p class="small muted">${msg||"どっちか選んで、あいことばを入れてね"}</p>
+  <div class="whopick">${["sai","yui"].map(w=>`<button type="button" data-who="${w}" aria-pressed="${pickWho===w}"><img src="${MII[w]}" alt="">${NAME[w]}</button>`).join("")}</div>
+  <form id="login-form" class="login-form" ${pickWho?"":"hidden"}><input id="pw" type="password" autocomplete="current-password" placeholder="${pickWho?NAME[pickWho]+"のあいことば":"あいことば"}" required><button class="btn sea" type="submit" id="login-btn">はいる</button></form>
+  <div id="login-err" class="small" style="color:var(--shu);min-height:1.5em;font-weight:900"></div></div></div>`;
+  document.querySelectorAll("[data-who]").forEach(b=>b.onclick=()=>{pickWho=b.dataset.who;beep("tap");showLogin();setTimeout(()=>$("#pw")?.focus(),50)});
+  $("#login-form").onsubmit=async e=>{e.preventDefault();const pw=$("#pw").value;const btn=$("#login-btn");btn.disabled=true;btn.textContent="…";
+    try{const {error}=await sb.auth.signInWithPassword({email:EMAILS[pickWho],password:pw});
+      if(error){$("#login-err").textContent="あいことばがちがうみたい。もう一度ためしてね";btn.disabled=false;btn.textContent="はいる";beep("tap");return}
+      $("#layer").innerHTML="";beep("open");confetti();}
+    catch(err){console.warn(err);$("#login-err").textContent="つながりませんでした。電波を確認してもう一度";btn.disabled=false;btn.textContent="はいる"}};
+}
+async function logout(){await sb.auth.signOut();S.who=null;location.reload()}
+
+/* ---------- オープニング・サウンド切替 ---------- */
+const sp=$("#splash");
+function closeSplash(){if(sp.hidden)return;sp.classList.add("out");setTimeout(()=>{sp.hidden=true},650);try{sessionStorage.setItem("seen","1")}catch{}}
+let seen=false;try{seen=!!sessionStorage.getItem("seen")}catch{}
+if(!seen){sp.hidden=false;sp.addEventListener("click",()=>{beep("open");closeSplash()});setTimeout(closeSplash,4200)}
+$("#logout")?.addEventListener("click",()=>{if(confirmLogout){logout()}else{confirmLogout=true;$("#logout").textContent="もう一度押すとログアウト";setTimeout(()=>{confirmLogout=false;const b=$("#logout");if(b)b.textContent="ログアウト"},3000)}});let confirmLogout=false;
+const sndBtn=$("#snd");if(sndBtn){const upd=()=>{sndBtn.setAttribute("aria-pressed",SND.on);sndBtn.title=SND.on?"効果音をオフ":"効果音をオン"};upd();sndBtn.addEventListener("click",()=>{SND.on=!SND.on;ls.set("snd",SND.on?"on":"off");upd();if(SND.on)beep("tap")})}
+const wvBtn=$("#wave");if(wvBtn){const upd=()=>{wvBtn.setAttribute("aria-pressed",WAVE.on);wvBtn.title=WAVE.on?"波の音をとめる":"波の音をながす"};upd();
+  wvBtn.addEventListener("click",()=>{if(WAVE.on){wavesStop();ls.set("wave","off")}else{wavesStart();ls.set("wave","on")}upd()});
+  if(ls.get("wave")==="on"){const once=()=>{if(!WAVE.on){wavesStart();upd()}document.removeEventListener("pointerdown",once)};document.addEventListener("pointerdown",once)}}
+document.addEventListener("visibilitychange",()=>document.body.classList.toggle("paused",document.hidden));
+
+/* ---------- 起動 ---------- */
+skyMode();renderCount();setInterval(()=>{skyMode();renderCount()},60e3);
+(()=>{const d=tripDay();if(d<1||d>6)return;const b=bdayOf(DAYS()[d-1]);if(!b)return;const key="bday_"+d;if(ls.get(key))return;ls.set(key,"1");
+  setTimeout(()=>{confetti();beep("open");cheer(b==="yui"?"ゆいちゃん、誕生日おめでとう！":"今日はおれの誕生日！",b==="yui"?"今日はわたしの誕生日〜！":"さいけう、おめでとう！")},1600)})();
+render();
+/* ---------- Supabase ---------- */
+const SB_URL="__SB_URL__",SB_KEY="__SB_KEY__";
+const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+const BUCKET="photos";
+async function ensureUrls(ids){
+  const missing=[...new Set(ids.filter(id=>id&&!URLS[id]))];if(!missing.length)return;
+  for(let i=0;i<missing.length;i+=200){const chunk=missing.slice(i,i+200);
+    try{const {data,error}=await sb.storage.from(BUCKET).createSignedUrls(chunk,60*60*24*7);if(error)throw error;for(const r of data||[]){if(r.signedUrl&&!r.error)URLS[r.path]=r.signedUrl}}catch(e){console.warn("signed urls",e)}}
+}
+function makeDb(){
+  const cache=new Map();          // collection -> Map(id -> data)
+  const listeners=[];
+  const col=c=>{if(!cache.has(c))cache.set(c,new Map());return cache.get(c)};
+  const snapDoc=(c,id)=>{const d=col(c).get(id);return {id,exists:!!d,data:()=>d}};
+  const snapCol=c=>{const docs=[...col(c).entries()].map(([id,d])=>({id,exists:true,data:()=>d}));return {docs,size:docs.length,empty:!docs.length}};
+  const notify=(c,id)=>{for(const l of listeners){if(l.c!==c)continue;if(l.id&&l.id!==id)continue;try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}};
+  const split=p=>{const s=p.split("/");return [s.slice(0,-1).join("/"),s[s.length-1]]};
+  const deepMerge=(a,b)=>{const o={...(a||{})};for(const k in b){o[k]=(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k]))?deepMerge(a[k],b[k]):b[k]}return o};
+  async function write(c,id,data){col(c).set(id,data);notify(c,id);
+    const {error}=await sb.from("docs").upsert({collection:c,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});
+    if(error){console.warn(error);throw {code:error.code==="42501"?"invalid_argument":"unavailable",message:error.message}}}
+  const docRef=(c,id)=>({id,path:c+"/"+id,
+    get:async()=>snapDoc(c,id),
+    set:data=>write(c,id,JSON.parse(JSON.stringify(data))),
+    update:async patch=>{const cur=col(c).get(id);if(!cur)throw {code:"invalid_argument",message:"no doc"};return write(c,id,deepMerge(cur,JSON.parse(JSON.stringify(patch))))},
+    delete:async()=>{col(c).delete(id);notify(c,id);const {error}=await sb.from("docs").delete().match({collection:c,id});if(error)throw {code:"unavailable",message:error.message}},
+    onSnapshot:(fn)=>{const l={c,id,fn};listeners.push(l);if(db.ready)fn(snapDoc(c,id));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
+  const colRef=c=>({path:c,doc:id=>docRef(c,id||uid()+uid()),add:async data=>{const r=docRef(c,Date.now().toString(36)+uid());await r.set(data);return r},
+    onSnapshot:(fn)=>{const l={c,id:null,fn};listeners.push(l);if(db.ready)fn(snapCol(c));return()=>{const i=listeners.indexOf(l);if(i>=0)listeners.splice(i,1)}}});
+  const db={ready:false,doc:p=>{const [c,id]=split(p);return docRef(c,id)},collection:c=>colRef(c),
+    async load(){const {data,error}=await sb.from("docs").select("collection,id,data");if(error)throw error;cache.clear();for(const r of data||[])col(r.collection).set(r.id,r.data);
+      db.ready=true;for(const c of new Set(listeners.map(l=>l.c))){for(const l of listeners.filter(x=>x.c===c)){try{l.fn(l.id?snapDoc(c,l.id):snapCol(c))}catch(e){console.warn(e)}}}},
+    subscribe(){sb.channel("docs-live").on("postgres_changes",{event:"*",schema:"public",table:"docs"},p=>{
+        if(p.eventType==="DELETE"){const o=p.old;if(o&&o.collection){col(o.collection).delete(o.id);notify(o.collection,o.id)}return}
+        const n=p.new;if(!n)return;const prev=col(n.collection).get(n.id);if(JSON.stringify(prev)===JSON.stringify(n.data))return;col(n.collection).set(n.id,n.data);notify(n.collection,n.id)})
+      .subscribe(st=>{if(st==="CHANNEL_ERROR")console.warn("realtime error")})},
+    async refresh(){try{await db.load()}catch(e){console.warn(e)}}};
+  return db;
+}
+const assetsApi={async upload(b,{type}={}){const ext=(type||b.type||"image/jpeg").split("/")[1]||"jpg";const path=`${Date.now().toString(36)}-${uid()}${uid()}.${ext}`;
+  const {error}=await sb.storage.from(BUCKET).upload(path,b,{contentType:type||b.type||"image/jpeg",upsert:false});if(error){console.warn(error);throw {code:error.statusCode==="413"?"too_large":"upstream_error",message:error.message}}return {id:path,url:""}}};
+
+async function start(session){
+  const email=session?.user?.email||"";const who=Object.keys(EMAILS).find(k=>EMAILS[k]===email);
+  if(!who){await sb.auth.signOut();showLogin("このアカウントでは入れません");return}
+  S.who=who;S.isOwner=who==="sai";S.canWrite=true;S.assets=assetsApi;ls.set("who",who);
+  const db=makeDb();S.db=db;
+  const sub=(path,fn)=>db.collection(path).onSnapshot(fn);
+  db.doc("trip/plan").onSnapshot(d=>{S.plan=d.exists?d.data():null;safeRender()});
+  sub("photos",async s=>{S.photos=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.at||0)-(b.at||0));await ensureUrls(S.photos.flatMap(p=>[p.thumb]));safeRender()});
+  sub("missions",s=>{S.missions={};s.docs.forEach(d=>S.missions[d.id]=d.data());if(S.view==="plan"||S.view==="result")safeRender()});
+  sub("diary",s=>{S.diary={};s.docs.forEach(d=>S.diary[d.id]=d.data());safeRender()});
+  db.doc("config/secret").onSnapshot(d=>{S.secret=d.exists?d.data().msg:null;if(S.view==="stamp")safeRender()});
+  db.doc("prep/items").onSnapshot(d=>{S.items=d.exists?d.data():null;if(S.view==="plan")safeRender()});
+  sub("letters",s=>{S.letters={};s.docs.forEach(d=>S.letters[d.id]=d.data());if(S.view==="diary"||S.view==="plan")safeRender()});
+  try{await db.load()}catch(e){console.warn(e);toast("データを読み込めませんでした。電波を確認して開き直してね")}
+  db.subscribe();
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)db.refresh()});
+  render();
+}
+(async()=>{
+  const {data:{session}}=await sb.auth.getSession();
+  if(session)start(session);else showLogin();
+  sb.auth.onAuthStateChange((ev,sess)=>{if(ev==="SIGNED_IN"&&sess&&!S.who)start(sess)});
+})();
+})();
+</script>
+
+</body>
+</html>
