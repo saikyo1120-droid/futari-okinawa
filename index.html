@@ -111,12 +111,16 @@ body[data-sky="night"] .moonbig{opacity:1}
 .mii{position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mii img{height:clamp(200px,56vw,280px);width:auto;display:block;position:relative;z-index:1;animation:hop 3.2s ease-in-out infinite;transform-origin:50% 100%}
 .mii.yui img{animation-delay:-1.6s;height:calc(clamp(200px,56vw,280px)*.93)}
+.mii.kon img{animation:hop 2.1s ease-in-out infinite;animation-delay:-.7s;height:calc(clamp(200px,56vw,280px)*.5)}
+.mii.kon .nameplate{background:#dff3ff;font-size:11.5px;padding:0 9px}
+.mii.kon .bubble.talk{background:#eef7ff}.mii.kon .bubble.talk::after{background:#eef7ff}
 .mii img.jump{animation:jump .6s cubic-bezier(.3,1.6,.5,1)}
 @keyframes jump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-26px) scale(.96,1.06)}100%{transform:translateY(0) scale(1)}}
 .mii::after{content:"";position:absolute;bottom:22px;width:70%;height:14px;border-radius:50%;background:rgba(80,60,20,.18)}
 @keyframes hop{0%,82%,100%{transform:translateY(0) scale(1,1)}88%{transform:translateY(-14px) scale(.98,1.03)}94%{transform:translateY(0) scale(1.03,.97)}}
 .nameplate{margin-top:-4px;position:relative;z-index:2;background:#fff;border:3px solid var(--ink);border-radius:99px;padding:0 12px;font-weight:900;font-size:13px;box-shadow:0 3px 0 var(--ink)}
 .mii.sai .nameplate{background:var(--lagoon)}.mii.yui .nameplate{background:#ffd0e0}
+.mii.kon::after{bottom:16px;height:9px}
 .bubble{position:absolute;z-index:3;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:6px 12px;font-weight:900;font-size:13px;line-height:1.4;box-shadow:0 3px 0 var(--ink);white-space:nowrap}
 .bubble::after{content:"";position:absolute;bottom:-12px;width:16px;height:16px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
 .island.talking .bubble.count{opacity:0;transition:opacity .2s}
@@ -175,6 +179,7 @@ main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.
 .splash .logo{top:0;width:min(94%,460px);animation-delay:.1s}
 .splash-mii{height:clamp(190px,46vw,280px);width:auto;animation:sin .8s cubic-bezier(.2,1.5,.4,1) both}
 .splash-mii.l{animation-delay:.25s;transform-origin:50% 100%}.splash-mii.r{animation-delay:.4s}
+.splash-mii.k{position:absolute;right:4%;bottom:-6px;height:clamp(95px,23vw,140px);animation-delay:.55s}
 @keyframes sin{from{transform:translateY(60px) scale(.7);opacity:0}to{transform:none;opacity:1}}
 .splash-tap{position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:#fff;font-weight:900;animation:blink 1.4s ease-in-out infinite;text-shadow:1px 1px 0 var(--ink)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -617,6 +622,7 @@ section.view{position:relative}
     <div class="miis">
       <div class="mii sai" role="button" tabindex="0" aria-label="さいけうに話しかける"><img src="sai.webp" alt="さいけうのMii" width="1130" height="2157"><span class="nameplate">さいけう</span></div>
       <div class="mii yui" role="button" tabindex="0" aria-label="ゆいちゃんに話しかける"><img src="yui.webp" alt="ゆいちゃんのMii" width="842" height="1947"><span class="nameplate">ゆいちゃん</span></div>
+      <div class="mii kon" role="button" tabindex="0" aria-label="こんぺきに話しかける"><img src="kon.webp" alt="こんぺきのMii" width="859" height="1521"><span class="nameplate">こんぺき</span></div>
     </div>
   </header>
 
@@ -654,7 +660,7 @@ section.view{position:relative}
         <text class="lg-sub" x="370" y="432"><tspan fill="#ee4b3a">5</tspan><tspan fill="#f5a524">泊</tspan><tspan fill="#3fae49">6</tspan><tspan fill="#13b5c8">日</tspan><tspan fill="#ff5c93">誕</tspan><tspan fill="#8a5cf6">生</tspan><tspan fill="#ee4b3a">日</tspan><tspan fill="#f5a524">旅</tspan><tspan fill="#13b5c8">行</tspan></text>
         <text class="lg-date" x="370" y="474">OKINAWA 2026.11.19 — 11.24</text>
       </svg>
-    </div><img class="splash-mii r" src="yui.webp" alt=""></div><div class="splash-tap">タップしてはじめる</div></div>
+    </div><img class="splash-mii r" src="yui.webp" alt=""><img class="splash-mii k" src="kon.webp" alt=""></div><div class="splash-tap">タップしてはじめる</div></div>
 
 <script>
 (()=>{
@@ -885,8 +891,11 @@ function renderCount(){
 }
 const TALK_BDAY={yui:{sai:["ゆいちゃん、誕生日おめでとう！","今日は主役はゆいちゃん！","ケーキ、どこで食べる？","誕生日に沖縄って最高じゃない？"],yui:["今日はわたしの誕生日〜！","沖縄で誕生日、うれしい！","ありがとう、さいけう！","ケーキ食べたいな…"]},
   sai:{sai:["今日はおれの誕生日！","ゆいちゃん、ありがとう！","沖縄で迎える誕生日、最高！","今日はDJやらせて"],yui:["さいけう、誕生日おめでとう！","今日の主役はさいけう！","何でも言ってね、今日だけは","ケーキ探しに行こう！"]}};
+const TALK_KON={before:["……","ワン！","さいけう、ともだちになろ","ゆい…？だれ？","沖縄、おれもいく","あと{d}日…ながい"],during:["ワンワン！","さいけう、あそぼ！","海、はいっていい？","ゆい…まあまあ","スタンプ、おれも押したい","DAY{d}、ガンガンいこう"],after:["ワン…","さいけう、また行こ","ゆい…ちょっと気になってきた","おみやげ、おれのは？","楽しかったワン"]};
 function talk(w){
-  const d=tripDay(),mode=d<1?"before":d<=6?"during":"after";let lines=TALK[mode][w];
+  const d=tripDay(),mode=d<1?"before":d<=6?"during":"after";
+  if(w==="kon"){const ls=TALK_KON[mode];say("kon",ls[Math.floor(Math.random()*ls.length)].replace("{d}",d<1?Math.ceil((START-Date.now())/864e5):d));return}
+  let lines=TALK[mode][w];
   const b=d>=1&&d<=6?bdayOf(DAYS()[d-1]):null;if(b&&Math.random()<.7)lines=TALK_BDAY[b][w];
   say(w,lines[Math.floor(Math.random()*lines.length)].replace("{d}",d<1?Math.ceil((START-Date.now())/864e5):d));
 }
@@ -897,7 +906,7 @@ function say(w,t){
   const img=host.querySelector("img");img.classList.remove("jump");void img.offsetWidth;img.classList.add("jump");
   clearTimeout(host._t);host._t=setTimeout(()=>{b.classList.remove("show");isl.classList.remove("talking")},2600);
 }
-document.querySelectorAll(".mii").forEach(m=>m.addEventListener("click",()=>talk(m.classList.contains("sai")?"sai":"yui")));
+document.querySelectorAll(".mii").forEach(m=>m.addEventListener("click",()=>talk(m.classList.contains("sai")?"sai":m.classList.contains("kon")?"kon":"yui")));
 
 /* ---------- タブ ---------- */
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
@@ -1552,7 +1561,7 @@ function renderResult(){
   ${HEAD("旅のリザルト","var(--ai)",final?"結果発表！":"最終日 11/24 にひらきます")}
   <div class="result ${final?"":"locked"}"><div class="rays"></div>
     <h3>${final?"RESULT":"COMING SOON"}</h3>
-    <div class="pair"><img src="${MII.sai}" alt="さいけう"><img src="${MII.yui}" alt="ゆいちゃん"></div>
+    <div class="pair"><img src="${MII.sai}" alt="さいけう"><img src="${MII.yui}" alt="ゆいちゃん"><img src="kon.webp" alt="こんぺき" style="height:75px"></div>
     <div class="rows">
       <div class="r"><span>あつめたスタンプ</span><b data-n="${st.stamped}">${final?0:"??"}</b></div>
       <div class="r"><span>クリアしたミッション</span><b data-n="${st.ms}">${final?0:"??"}</b></div>
@@ -1582,14 +1591,14 @@ async function saveResultCard(st,rank){
   try{await document.fonts.load('40px "Mochiy Pop One"');await document.fonts.load('30px "DotGothic16"')}catch{}
   const load=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src});
   try{
-    const [water,sai,yui]=await Promise.all([load("water.webp"),load(MII.sai),load(MII.yui)]);
+    const [water,sai,yui,kon]=await Promise.all([load("water.webp"),load(MII.sai),load(MII.yui),load("kon.webp")]);
     const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
     const pat=g.createPattern(water,"repeat");g.fillStyle="#13b5c8";g.fillRect(0,0,W,H);g.fillStyle=pat;g.fillRect(0,0,W,H);
     g.fillStyle="#fbe7b5";rr(g,50,70,W-100,H-140,44);g.fill();g.lineWidth=10;g.strokeStyle="#23314f";g.stroke();
     g.textAlign="center";g.fillStyle="#23314f";g.font='400 34px "DotGothic16",monospace';g.fillText("OKINAWA 2026.11.19 - 11.24",W/2,150);
     g.font='400 66px "Mochiy Pop One",sans-serif';g.fillStyle="#ee4b3a";g.fillText("おめでと島ぐらし",W/2,236);g.fillStyle="#23314f";g.font='400 36px "Mochiy Pop One",sans-serif';g.fillText("5泊6日 誕生日旅行のリザルト",W/2,300);
     const mh=400;const sw=sai.width*mh/sai.height,yw=yui.width*mh*.93/yui.height;
-    g.drawImage(sai,W/2-sw-10,330,sw,mh);g.drawImage(yui,W/2+10,330+mh*.07,yw,mh*.93);
+    g.drawImage(sai,W/2-sw-10,330,sw,mh);g.drawImage(yui,W/2+10,330+mh*.07,yw,mh*.93);const kh=mh*.5,kw=kon.width*kh/kon.height;g.drawImage(kon,W/2+yw+30,330+mh-kh,kw,kh);
     g.font='700 30px "Zen Maru Gothic",sans-serif';g.fillText("さいけう",W/2-sw/2-10,770);g.fillText("ゆいちゃん",W/2+yw/2+10,770);
     const rows=[["あつめたスタンプ",st.stamped],["クリアしたミッション",st.ms],["ひらいた交換日記",st.diaries],["ゲットしたグルメ",st.foods],["撮った写真",S.photos.length]];
     g.fillStyle="#fff";rr(g,110,800,W-220,290,28);g.fill();g.lineWidth=6;g.stroke();
@@ -1631,14 +1640,14 @@ function slideHTML(s){
   if(s.k==="title"){const d=s.d;return `<div class="sl title"><div>${d.n?`<div class="no">DAY ${d.n}</div><div class="dt">${esc(d.date||"")}${d.dow?`（${esc(d.dow)}）`:""}</div>`:""}<h2>${esc(d.title||"")}</h2><div class="th">${esc(d.theme||"")}</div>
     ${s.bday?`${CAKE("")}${/誕生日/.test(d.theme||"")?"":`<div class="th" style="margin-top:4px">${NAME[s.bday]}の誕生日！</div>`}`:""}
     <div class="th" style="margin-top:10px;opacity:.8">写真 ${s.photos}枚${s.ms?`・ミッション ${s.ms}クリア`:""}</div>
-    <div class="miis"><img src="${MII.sai}" alt=""><img src="${MII.yui}" alt=""></div></div></div>`}
+    <div class="miis"><img src="${MII.sai}" alt=""><img src="${MII.yui}" alt=""><img src="kon.webp" alt="" style="height:75px;align-self:flex-end"></div></div></div>`}
   if(s.k==="photo"){const p=s.p;const sp=SPOTS().find(x=>x.id===p.spot);const fd=p.food?FOODBY[p.food]:null;const r=()=>(Math.random()*4-2).toFixed(1)+"%";
     return `<div class="sl photo"><div class="bg" style="background-image:url('${blob(p.thumb)}')"></div><img class="main" alt="" src="${blob(p.thumb)}" data-full="${esc(p.full)}" style="--x0:${r()};--y0:${r()};--x1:${r()};--y1:${r()};--dur:${s.dur}ms">
       <div class="cap">${sp?esc(sp.n):fd?esc(fd.n)+"をゲット":""}<small>${NAME[p.who]||""}${p.at?"　"+fmtTime(p.at):""}${p.likes?.sai&&p.likes?.yui?"　♥ ふたりのお気に入り":""}</small></div></div>`}
   if(s.k==="diary"){const pg=w=>s.dy[w]?`<div class="pg"><h4><img src="${MII[w]}" alt="">${NAME[w]}の日記</h4>${esc(s.dy[w].text)}</div>`:"";return `<div class="sl diary"><div class="pages">${pg("sai")}${pg("yui")}</div></div>`}
   if(s.k==="ending"){const st=s.st;return `<div class="sl ending"><div><h2>おめでと島ぐらし</h2><div class="th" style="font-weight:900">5泊6日誕生日旅行のきろく</div>
     <div class="rows"><div><span>あつめたスタンプ</span><b>${st.stamped}</b></div><div><span>クリアしたミッション</span><b>${st.ms}</b></div><div><span>ひらいた交換日記</span><b>${st.diaries}</b></div><div><span>ゲットしたグルメ</span><b>${st.foods}</b></div><div><span>撮った写真</span><b>${S.photos.length}</b></div></div>
-    <div class="rank">${esc(s.rank.main)}</div><div class="miis" style="position:static;display:flex;justify-content:center;gap:10px;margin-top:14px"><img src="${MII.sai}" alt="" style="height:140px"><img src="${MII.yui}" alt="" style="height:140px"></div><div class="fin">— fin —</div></div></div>`}
+    <div class="rank">${esc(s.rank.main)}</div><div class="miis" style="position:static;display:flex;justify-content:center;align-items:flex-end;gap:10px;margin-top:14px"><img src="${MII.sai}" alt="" style="height:140px"><img src="${MII.yui}" alt="" style="height:130px"><img src="kon.webp" alt="" style="height:70px"></div><div class="fin">— fin —</div></div></div>`}
   return "";
 }
 function showUI(){const el=$("#show");el.classList.remove("hide-ui");clearTimeout(SH.uiT);SH.uiT=setTimeout(()=>{if(SH.on&&!SH.paused)el.classList.add("hide-ui")},3500)}
