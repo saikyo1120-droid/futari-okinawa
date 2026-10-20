@@ -300,6 +300,9 @@ main.enter section.view:not([hidden]){animation:enter .35s cubic-bezier(.2,1.2,.
 .login-form input{border:3px solid var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:16px;min-width:0;background:#fff}
 .foot{text-align:center;padding:10px 0 20px}
 .foot .linkbtn{color:#fff;opacity:.8;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+.pw-form{display:grid;gap:8px;margin-top:12px}
+.pw-form input{border:3px solid var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:16px;background:#fff}
+.pw-btns{display:flex;gap:8px;justify-content:center}
 /* ============ 画面の地（砂浜のボード） ============ */
 .board-wrap{background:var(--sand) url("sandtex.webp") 0 0/256px 256px;border:4px solid var(--ink);border-radius:28px;padding:18px clamp(12px,3.5vw,22px) 22px;margin-top:-18px;position:relative;z-index:4;box-shadow:0 6px 0 var(--ink),0 18px 40px rgba(0,30,60,.35)}
 .board-wrap::before{content:"";position:absolute;inset:0;border-radius:24px;box-shadow:inset 0 2px 0 rgba(255,255,255,.7),inset 0 -3px 0 rgba(180,140,80,.25);pointer-events:none}
@@ -516,7 +519,7 @@ section.view{position:relative}
 <input type="file" id="f-stamp" accept="image/*" hidden>
 <input type="file" id="f-food" accept="image/*" hidden>
 <div id="layer"></div>
-<div class="foot"><button class="linkbtn" id="logout">ログアウト</button></div>
+<div class="foot"><button class="linkbtn" id="chpw">あいことばを変える</button>　<button class="linkbtn" id="logout">ログアウト</button></div>
 <div id="splash" class="splash" hidden><div class="splash-in"><img class="splash-mii l" src="sai.webp" alt=""><div class="logo" id="logo-splash">
       <div class="lg-bubble">さいけうとゆいちゃんの</div>
       <img class="lg-blob" src="blob.webp" alt="" width="740" height="537" decoding="async">
@@ -1208,12 +1211,26 @@ function showLogin(msg){
     catch(err){console.warn(err);$("#login-err").textContent="つながりませんでした。電波を確認してもう一度";btn.disabled=false;btn.textContent="はいる"}};
 }
 async function logout(){await sb.auth.signOut();S.who=null;location.reload()}
+function showChangePw(){
+  if(!S.who){showLogin();return}
+  $("#layer").innerHTML=`<div class="modal"><div class="box login"><h2>あいことばを変える</h2><p class="small muted">${NAME[S.who]}のあいことばを新しくします（6文字以上）</p>
+  <form id="pw-form" class="pw-form"><input id="pw1" type="password" autocomplete="new-password" placeholder="新しいあいことば" minlength="6" required><input id="pw2" type="password" autocomplete="new-password" placeholder="もう一度" minlength="6" required>
+  <div class="pw-btns"><button class="btn ghost" type="button" id="pw-cancel">やめる</button><button class="btn sea" type="submit" id="pw-ok">変える</button></div></form>
+  <div id="pw-err" class="small" style="color:var(--shu);min-height:1.5em;font-weight:900"></div></div></div>`;
+  $("#pw-cancel").onclick=()=>{$("#layer").innerHTML=""};
+  $("#pw-form").onsubmit=async e=>{e.preventDefault();const a=$("#pw1").value,b=$("#pw2").value;if(a!==b){$("#pw-err").textContent="2つが同じではありません";return}
+    const btn=$("#pw-ok");btn.disabled=true;btn.textContent="…";
+    const {error}=await sb.auth.updateUser({password:a});
+    if(error){$("#pw-err").textContent="変えられませんでした："+(error.message||"");btn.disabled=false;btn.textContent="変える";return}
+    $("#layer").innerHTML="";toast("あいことばを変えました");beep("clear")};
+}
 
 /* ---------- オープニング・サウンド切替 ---------- */
 const sp=$("#splash");
 function closeSplash(){if(sp.hidden)return;sp.classList.add("out");setTimeout(()=>{sp.hidden=true},650);try{sessionStorage.setItem("seen","1")}catch{}}
 let seen=false;try{seen=!!sessionStorage.getItem("seen")}catch{}
 if(!seen){sp.hidden=false;sp.addEventListener("click",()=>{beep("open");closeSplash()});setTimeout(closeSplash,4200)}
+$("#chpw")?.addEventListener("click",showChangePw);
 $("#logout")?.addEventListener("click",()=>{if(confirmLogout){logout()}else{confirmLogout=true;$("#logout").textContent="もう一度押すとログアウト";setTimeout(()=>{confirmLogout=false;const b=$("#logout");if(b)b.textContent="ログアウト"},3000)}});let confirmLogout=false;
 const sndBtn=$("#snd");if(sndBtn){const upd=()=>{sndBtn.setAttribute("aria-pressed",SND.on);sndBtn.title=SND.on?"効果音をオフ":"効果音をオン"};upd();sndBtn.addEventListener("click",()=>{SND.on=!SND.on;ls.set("snd",SND.on?"on":"off");upd();if(SND.on)beep("tap")})}
 const wvBtn=$("#wave");if(wvBtn){const upd=()=>{wvBtn.setAttribute("aria-pressed",WAVE.on);wvBtn.title=WAVE.on?"波の音をとめる":"波の音をながす"};upd();
