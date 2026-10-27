@@ -115,8 +115,33 @@ body[data-sky="night"] .moonbig{opacity:1}
 .mii.yui img{animation-delay:-1.6s;height:calc(clamp(200px,56vw,280px)*.93)}
 .mii.kon img{animation:hop 2.1s ease-in-out infinite;animation-delay:-.7s;height:calc(clamp(200px,56vw,280px)*.5)}
 .mii.kon .nameplate{background:#dff3ff;font-size:11.5px;padding:0 9px}
-.mii.kon .bubble.talk{background:#eef7ff}.mii.kon .bubble.talk::after{background:#eef7ff}
+.mii.kon .bubble.talk{background:#eef7ff;left:auto;right:-6px;transform:translateX(0) scale(.6);transform-origin:85% 100%;max-width:min(170px,46vw)}.mii.kon .bubble.talk.show{transform:translateX(0) scale(1)}.mii.kon .bubble.talk::after{background:#eef7ff;left:auto;right:22px}
+.konlove{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;font-weight:900;margin-top:8px;color:var(--muted)}
+.konlove img{height:28px;width:auto}
+.konlove b{color:var(--hibiscus);letter-spacing:1px;font-size:15px}.konlove b i{color:#d9d9d9;font-style:normal}
+.konlove span{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:0 8px;color:var(--ink)}
+.konlove small{font-weight:700;font-size:10.5px;opacity:.8}
 .mii img.jump{animation:jump .6s cubic-bezier(.3,1.6,.5,1)}
+.mii img.bigjump{animation:bigjump .75s cubic-bezier(.3,1.5,.5,1)}
+@keyframes bigjump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-48px) scale(.94,1.1) rotate(-4deg)}60%{transform:translateY(-30px) scale(1,1) rotate(4deg)}100%{transform:translateY(0) scale(1.04,.96)}}
+.mii img.shake{animation:shake .6s ease-in-out}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg) translateX(-4px)}40%{transform:rotate(6deg) translateX(4px)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+.mii img.sway{animation:sway 2.4s ease-in-out}
+@keyframes sway{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg) translateY(2px)}70%{transform:rotate(3deg) translateY(2px)}}
+.mii img.hop2{animation:hop2 .7s ease-in-out}
+@keyframes hop2{0%,100%{transform:translateY(0)}25%{transform:translateY(-14px)}50%{transform:translateY(0) scale(1.03,.97)}75%{transform:translateY(-10px)}}
+.mii img.run{animation:run .22s ease-in-out 6}
+@keyframes run{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(.97,1.04)}}
+.mii{transition:transform .45s cubic-bezier(.3,1.3,.5,1);-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.mii img{-webkit-user-drag:none}
+.mii.look-l{transform:rotate(-4deg) translateX(-4px)}.mii.look-r{transform:rotate(4deg) translateX(4px)}
+.mii.kon{transition:transform .75s cubic-bezier(.3,1.3,.5,1)}
+.mii.kon.run{z-index:4}
+.fxp{position:absolute;top:6%;width:20px;height:20px;pointer-events:none;z-index:6;opacity:0;animation:fxfloat 1.5s ease-out forwards}
+.fxp svg{width:100%;height:100%;overflow:visible;display:block}
+.fxt{font-family:var(--pop);color:var(--ink);font-size:16px;line-height:1;text-shadow:0 0 4px #fff,0 0 4px #fff}
+.fxt.ex{color:var(--shu);font-size:28px}.fxt.q{color:var(--ai);font-size:26px}
+@keyframes fxfloat{0%{transform:translate(-50%,0) scale(.3) rotate(0);opacity:0}15%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),-80px) scale(1) rotate(var(--r));opacity:0}}
 @keyframes jump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-26px) scale(.96,1.06)}100%{transform:translateY(0) scale(1)}}
 .mii::after{content:"";position:absolute;bottom:22px;width:70%;height:14px;border-radius:50%;background:rgba(80,60,20,.18)}
 @keyframes hop{0%,82%,100%{transform:translateY(0) scale(1,1)}88%{transform:translateY(-14px) scale(.98,1.03)}94%{transform:translateY(0) scale(1.03,.97)}}
@@ -131,7 +156,7 @@ body[data-sky="night"] .moonbig{opacity:1}
 .bubble.count b{font-family:var(--pop);font-size:26px;color:var(--shu);font-weight:400;font-variant-numeric:tabular-nums}
 .bubble.count .th{display:block;font-size:11.5px;color:var(--sea-deep);letter-spacing:.08em;margin-top:-2px;font-weight:900}
 @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
-.bubble.talk{bottom:calc(100% - 10px);left:50%;transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .2s;z-index:5;background:#fffbe6}
+.bubble.talk{bottom:calc(100% - 10px);left:50%;transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .2s;z-index:5;background:#fffbe6;width:max-content;max-width:min(200px,56vw);white-space:normal;text-align:center;line-height:1.35;word-break:keep-all;overflow-wrap:anywhere}
 .bubble.talk::after{left:calc(50% - 8px);background:#fffbe6}
 .bubble.talk.show{opacity:1;transform:translateX(-50%) scale(1)}
 .mii.yui .bubble.talk{background:#fff0f5}.mii.yui .bubble.talk::after{background:#fff0f5}
@@ -523,50 +548,50 @@ section.view{position:relative}
 .modal{position:fixed;inset:0;z-index:60;background:rgba(10,60,80,.55);display:grid;place-items:center;padding:20px;overflow:auto}
 .modal.top{z-index:65}
 /* ============ 思い出ムービー ============ */
-.show{position:fixed;inset:0;z-index:80;background:#071a26;color:#fff;overflow:hidden;font-family:var(--body)}
-.show .sh-stage{position:absolute;inset:0}
-.show .sl{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .7s ease}
-.show .sl.in{opacity:1}.show .sl.out{opacity:0}
-.show .sl.photo .bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(26px) brightness(.55);transform:scale(1.1)}
-.show .sl.photo img.main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .5s}
-.show .sl.photo img.main.ready{opacity:1;animation:kb var(--dur,4s) ease-in-out forwards}
+.movie{position:fixed;inset:0;z-index:80;background:#071a26;color:#fff;overflow:hidden;font-family:var(--body)}
+.movie .sh-stage{position:absolute;inset:0}
+.movie .sl{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .7s ease}
+.movie .sl.in{opacity:1}.show .sl.out{opacity:0}
+.movie .sl.photo .bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(26px) brightness(.55);transform:scale(1.1)}
+.movie .sl.photo img.main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .5s}
+.movie .sl.photo img.main.ready{opacity:1;animation:kb var(--dur,4s) ease-in-out forwards}
 @keyframes kb{from{transform:scale(1.02) translate(var(--x0,0),var(--y0,0))}to{transform:scale(1.12) translate(var(--x1,0),var(--y1,0))}}
-.show .cap{position:absolute;left:0;right:0;bottom:calc(118px + env(safe-area-inset-bottom,0px));text-align:center;font-weight:900;font-size:16px;text-shadow:0 2px 6px rgba(0,0,0,.8);padding:0 16px}
-.show .cap small{display:block;font-size:12px;opacity:.85;font-weight:700}
-.show .sl.title{background:linear-gradient(160deg,#13b5c8,#2f4fb5);text-align:center;padding:24px}
-.show .sl.title .no{font-family:var(--pop);font-size:clamp(22px,8vw,40px);color:#ffd23f;letter-spacing:.06em}
-.show .sl.title .dt{font-size:16px;font-weight:900;opacity:.9;margin-top:4px}
-.show .sl.title h2{font-family:var(--pop);font-size:clamp(26px,9vw,52px);margin:10px 0 4px;line-height:1.2}
-.show .sl.title .th{font-size:15px;font-weight:900;opacity:.9}
-.show .sl.title .cake{width:64px;height:64px;margin-top:10px}
-.show .sl.title .miis{position:static;display:flex;justify-content:center;gap:10px;margin-top:18px}
-.show .sl.title .miis img{height:150px;width:auto;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
-.show .sl.intro{background:linear-gradient(180deg,#13b5c8 0%,#0a7f9c 60%,#fbe7b5 60%,#fbe7b5 100%)}
-.show .sl.intro .logo{position:relative;left:auto;top:auto;transform:none;width:min(78%,360px);margin:0 auto 10px;animation:none}
-.show .sl.intro .introcap{margin-top:16px;color:var(--ink);text-align:center;font-weight:900;font-size:16px}
-.show .sl.intro .introcap small{display:block;font-size:12px;opacity:.8}
-.show .sl.diary{background:linear-gradient(160deg,#ff5c93,#8a5cf6);padding:20px}
-.show .sl.diary .pages{display:grid;gap:12px;width:min(92%,640px)}
-.show .sl.diary .pg{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:36vh;overflow:auto}
-.show .sl.diary .pg h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-family:var(--pop);font-size:14px;color:var(--hibiscus)}
-.show .sl.diary .pg h4 img{height:34px;width:auto}
-.show .sl.ending{background:linear-gradient(180deg,#1d3a8a,#2f4fb5);text-align:center;padding:24px 24px 120px;overflow:auto}
-@media (max-height:720px){.show .sl.ending .miis img{height:90px!important}.show .sl.ending .rows{gap:4px}.show .sl.title .miis img{height:110px}}
-.show .sl.ending h2{font-family:var(--pop);font-size:clamp(24px,8vw,44px);color:#ffd23f;margin:0 0 8px}
-.show .sl.ending .rows{display:grid;gap:6px;width:min(88%,420px);margin:12px auto}
-.show .sl.ending .rows div{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 12px;font-weight:900}
-.show .sl.ending .rows b{font-family:var(--pixel);font-size:20px;color:#ffd23f}
-.show .sl.ending .rank{font-family:var(--pop);font-size:clamp(18px,6vw,30px);background:#ffd23f;color:var(--ink);border-radius:999px;padding:6px 18px;display:inline-block;margin-top:6px}
-.show .sl.ending .fin{margin-top:18px;font-family:var(--pop);letter-spacing:.3em;opacity:.8}
-.show .sh-top{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;z-index:2;gap:8px}
-.show .sh-top select,.show .sh-bot select{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:4px 10px;font:inherit;font-weight:900;font-size:12.5px}
-.show .sh-top button,.show .sh-bot button{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-weight:900;font-size:13px;min-height:36px}
-.show .sh-bot{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;z-index:2}
-.show .sh-bot .cnt{font-family:var(--pixel);font-size:13px;opacity:.85;min-width:60px;text-align:center}
-.show .sh-bot button.big{width:48px;height:48px;padding:0;font-size:18px;display:grid;place-items:center}
-.show .sh-bot button.on{background:var(--sun);color:var(--ink);border-color:var(--sun)}
-.show .sh-hint{position:absolute;left:0;right:0;top:calc(52px + env(safe-area-inset-top,0px));text-align:center;font-size:12px;opacity:.8;z-index:2;font-weight:700}
-.show.hide-ui .sh-top,.show.hide-ui .sh-bot,.show.hide-ui .sh-hint{opacity:0;pointer-events:none;transition:opacity .4s}
+.movie .cap{position:absolute;left:0;right:0;bottom:calc(118px + env(safe-area-inset-bottom,0px));text-align:center;font-weight:900;font-size:16px;text-shadow:0 2px 6px rgba(0,0,0,.8);padding:0 16px}
+.movie .cap small{display:block;font-size:12px;opacity:.85;font-weight:700}
+.movie .sl.title{background:linear-gradient(160deg,#13b5c8,#2f4fb5);text-align:center;padding:24px}
+.movie .sl.title .no{font-family:var(--pop);font-size:clamp(22px,8vw,40px);color:#ffd23f;letter-spacing:.06em}
+.movie .sl.title .dt{font-size:16px;font-weight:900;opacity:.9;margin-top:4px}
+.movie .sl.title h2{font-family:var(--pop);font-size:clamp(26px,9vw,52px);margin:10px 0 4px;line-height:1.2}
+.movie .sl.title .th{font-size:15px;font-weight:900;opacity:.9}
+.movie .sl.title .cake{width:64px;height:64px;margin-top:10px}
+.movie .sl.title .miis{position:static;display:flex;justify-content:center;gap:10px;margin-top:18px}
+.movie .sl.title .miis img{height:150px;width:auto;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+.movie .sl.intro{background:linear-gradient(180deg,#13b5c8 0%,#0a7f9c 60%,#fbe7b5 60%,#fbe7b5 100%)}
+.movie .sl.intro .logo{position:relative;left:auto;top:auto;transform:none;width:min(78%,360px);margin:0 auto 10px;animation:none}
+.movie .sl.intro .introcap{margin-top:16px;color:var(--ink);text-align:center;font-weight:900;font-size:16px}
+.movie .sl.intro .introcap small{display:block;font-size:12px;opacity:.8}
+.movie .sl.diary{background:linear-gradient(160deg,#ff5c93,#8a5cf6);padding:20px}
+.movie .sl.diary .pages{display:grid;gap:12px;width:min(92%,640px)}
+.movie .sl.diary .pg{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:36vh;overflow:auto}
+.movie .sl.diary .pg h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-family:var(--pop);font-size:14px;color:var(--hibiscus)}
+.movie .sl.diary .pg h4 img{height:34px;width:auto}
+.movie .sl.ending{background:linear-gradient(180deg,#1d3a8a,#2f4fb5);text-align:center;padding:24px 24px 120px;overflow:auto}
+@media (max-height:720px){.movie .sl.ending .miis img{height:90px!important}.movie .sl.ending .rows{gap:4px}.movie .sl.title .miis img{height:110px}}
+.movie .sl.ending h2{font-family:var(--pop);font-size:clamp(24px,8vw,44px);color:#ffd23f;margin:0 0 8px}
+.movie .sl.ending .rows{display:grid;gap:6px;width:min(88%,420px);margin:12px auto}
+.movie .sl.ending .rows div{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 12px;font-weight:900}
+.movie .sl.ending .rows b{font-family:var(--pixel);font-size:20px;color:#ffd23f}
+.movie .sl.ending .rank{font-family:var(--pop);font-size:clamp(18px,6vw,30px);background:#ffd23f;color:var(--ink);border-radius:999px;padding:6px 18px;display:inline-block;margin-top:6px}
+.movie .sl.ending .fin{margin-top:18px;font-family:var(--pop);letter-spacing:.3em;opacity:.8}
+.movie .sh-top{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;z-index:2;gap:8px}
+.movie .sh-top select,.movie .sh-bot select{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:4px 10px;font:inherit;font-weight:900;font-size:12.5px}
+.movie .sh-top button,.movie .sh-bot button{border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-weight:900;font-size:13px;min-height:36px}
+.movie .sh-bot{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;z-index:2}
+.movie .sh-bot .cnt{font-family:var(--pixel);font-size:13px;opacity:.85;min-width:60px;text-align:center}
+.movie .sh-bot button.big{width:48px;height:48px;padding:0;font-size:18px;display:grid;place-items:center}
+.movie .sh-bot button.on{background:var(--sun);color:var(--ink);border-color:var(--sun)}
+.movie .sh-hint{position:absolute;left:0;right:0;top:calc(52px + env(safe-area-inset-top,0px));text-align:center;font-size:12px;opacity:.8;z-index:2;font-weight:700}
+.movie.hide-ui .sh-top,.movie.hide-ui .sh-bot,.movie.hide-ui .sh-hint{opacity:0;pointer-events:none;transition:opacity .4s}
 .movie-box{margin-top:14px;background:linear-gradient(135deg,#ff5c93,#8a5cf6);color:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 5px 0 var(--ink)}
 .movie-box>div{flex:1 1 220px}
 .movie-box h3{font-size:17px;margin:0 0 2px}
@@ -652,7 +677,7 @@ section.view{position:relative}
 <input type="file" id="f-stamp" accept="image/*" hidden>
 <input type="file" id="f-food" accept="image/*" hidden>
 <div id="layer"></div><div id="layer2"></div>
-<div id="show" class="show" hidden></div><input type="file" id="f-music" accept="audio/*" hidden>
+<div id="show" class="movie" hidden></div><input type="file" id="f-music" accept="audio/*" hidden>
 <div class="foot"><button class="linkbtn" id="diag-open">せつぞくチェック</button>　<button class="linkbtn" id="chpw">あいことばを変える</button>　<button class="linkbtn" id="logout">ログアウト</button></div>
 <div id="splash" class="splash" hidden><div class="splash-in"><img class="splash-mii l" src="sai.webp" alt=""><div class="logo" id="logo-splash">
       <div class="lg-bubble">さいけうとゆいちゃんの</div>
@@ -793,13 +818,6 @@ function moonSVG(age,r=11){
 const moonName=age=>age>=13.8&&age<=15.8?"ほぼ満月":age>=11?"満月まぢか":age>=7?"半月すぎ":"三日月";
 const LETTER_OPEN=Date.UTC(2026,10,24,9); // 11/24 18:00 JST
 
-/* ---------- Miiのおしゃべり ---------- */
-const TALK={
- before:{sai:["沖縄、あと{d}日！","しおり、ちゃんと見た？","ゆいちゃん、何着ていく？","ガチャ、おためしで回してみる？","飛行機の時間、入れておいてね"],yui:["あと{d}日で沖縄〜！","美ら海水族館たのしみ！","ちんすこう、何味がいいかな","さいけう、運転よろしくね","ふたりの日記、楽しみにしてる"]},
- during:{sai:["今日はDAY{d}！","スタンプ、押しに行こう","写真いっぱい撮ろうね","今日のミッション、回した？","夜は日記、忘れずに！"],yui:["DAY{d}、楽しも〜！","海きれい〜！","おなかすいた…","今日もいい天気！","ミッション、クリアできるかな"]},
- after:{sai:["おかえり！","リザルト見た？","アルバム、見返そうよ","楽しかったね","また行こうね"],yui:["ただいま〜","楽しかった〜！","写真、見返したい","また沖縄行きたい！","ありがとう"]}
-};
-
 /* ---------- ユーティリティ ---------- */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -891,24 +909,240 @@ function renderCount(){
   else if(d<=6){const dd=DAYS()[d-1],b=bdayOf(dd);el.innerHTML=b?`${CAKE("s")} 今日は <b style="font-size:20px">${NAME[b]}</b> の誕生日！`:`島ぐらし <b>${d}</b> 日目！${dd?.theme?`<small class="th">${esc(dd.theme)}</small>`:""}`}
   else el.innerHTML=`おかえり！ リザルトを見てね`;
 }
+/* ---------- Miiのおしゃべり・リアクション ---------- */
 const TALK_BDAY={yui:{sai:["ゆいちゃん、誕生日おめでとう！","今日は主役はゆいちゃん！","ケーキ、どこで食べる？","誕生日に沖縄って最高じゃない？"],yui:["今日はわたしの誕生日〜！","沖縄で誕生日、うれしい！","ありがとう、さいけう！","ケーキ食べたいな…"]},
   sai:{sai:["今日はおれの誕生日！","ゆいちゃん、ありがとう！","沖縄で迎える誕生日、最高！","今日はDJやらせて"],yui:["さいけう、誕生日おめでとう！","今日の主役はさいけう！","何でも言ってね、今日だけは","ケーキ探しに行こう！"]}};
-const TALK_KON={before:["……","ワン！","さいけう、ともだちになろ","ゆい…？だれ？","沖縄、おれもいく","あと{d}日…ながい"],during:["ワンワン！","さいけう、あそぼ！","海、はいっていい？","ゆい…まあまあ","スタンプ、おれも押したい","DAY{d}、ガンガンいこう"],after:["ワン…","さいけう、また行こ","ゆい…ちょっと気になってきた","おみやげ、おれのは？","楽しかったワン"]};
+const MOOD={recent:[],visible:true,lastMutter:0,busyUntil:0,idleT:null};
+const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function miiCtx(){
+  const d=tripDay(),h=jstHour(),left=Math.max(0,Math.ceil((START-Date.now())/864e5));
+  const slot=h<5?"late":h<10?"morning":h<16?"day":h<19?"evening":"night";
+  const mode=d<1?"before":d<=6?"during":"after";
+  const day=d>=1&&d<=6?DAYS()[d-1]:(d<1?DAYS()[0]:DAYS()[5]);
+  const tags=day?dayTags(day):new Set();const st=stats();
+  const me=S.who||"sai",you=NAME[me];
+  const todaySpots=d>=1&&d<=6?SPOTS().filter(s=>s.d===d):[];
+  const todayStamped=todaySpots.filter(s=>{const p=spotPhotos(s.id);return p.sai&&p.yui}).length;
+  const draws=(S.missions["day"+d]?.draws)||[],msLeft=draws.filter(x=>!x.done).length;
+  const diaryMine=!!S.diary[`d${d}_${me}`],diaryPartner=!!S.diary[`d${d}_${other(me)}`];
+  const photosToday=S.photos.filter(p=>p.day===d).length;
+  const bday=d>=1&&d<=6?bdayOf(day):null;
+  const konLove=st.love<15?0:st.love<40?1:st.love<70?2:3;
+  return {d,h,slot,mode,day,tags,st,left,me,you,todaySpots,todayStamped,draws,msLeft,diaryMine,diaryPartner,photosToday,bday,konLove};
+}
+const fill=(s,c,x={})=>s.replace("{d}",c.d).replace("{left}",c.left).replace("{you}",c.you).replace("{ms}",c.msLeft).replace("{photos}",c.photosToday).replace("{total}",S.photos.length).replace("{next}",c.d+1).replace("{n}",x.n??"");
+const SEA=c=>c.tags.has("sea")||c.tags.has("beach");
+/* 台詞のプール：w=だれ, when=出る条件, wt=出やすさ, reply=相手の返事, fx=エフェクト, anim=動き */
+const POOL=[
+ /* ===== さいけう ===== */
+ {w:"sai",when:c=>c.mode==="before",lines:["沖縄、あと{left}日！","しおり、ちゃんと見た？","持ち物、チェックした？","レンタカー、何色かな","飛行機の時間、入れておいてね","ガチャ、おためしで回してみる？"]},
+ {w:"sai",when:c=>c.mode==="before",lines:["ゆいちゃん、何着ていく？"],reply:{w:"yui",lines:["ひみつ〜！","水着はもう決めた！","さいけうは何着るの？"]}},
+ {w:"sai",when:c=>c.mode==="before"&&c.left<=7&&c.left>1,wt:2,lines:["あと{left}日…そわそわする","もう荷物つめはじめた"],reply:{w:"yui",lines:["早すぎ〜！","わたしもそわそわ"]}},
+ {w:"sai",when:c=>c.mode==="before"&&c.left===1,wt:4,lines:["明日！明日だよ！","今日は早く寝よう","空港、何時集合だっけ"],reply:{w:"yui",lines:["寝れるかな…","わくわくして無理〜"]},fx:"sparkle"},
+ {w:"sai",when:c=>c.mode==="before"&&c.left===0,wt:5,lines:["今日だ！いってきます！","沖縄、まってろ〜！"],fx:"sparkle",anim:"bigjump"},
+ {w:"sai",when:c=>c.slot==="morning",lines:["おはよう！","朝ごはん食べた？","今日もいい日になりそう"]},
+ {w:"sai",when:c=>c.slot==="night"||c.slot==="late",lines:["そろそろ寝る？","おやすみ、ゆいちゃん","今日もおつかれさま"],fx:"zzz",anim:"sway"},
+ {w:"sai",when:c=>c.me==="yui",lines:["ゆいちゃん、いま見てるでしょ","ゆいちゃん、おーい","ゆいちゃん、だいすき"],fx:"hearts"},
+ {w:"sai",when:c=>c.mode==="during",lines:["今日はDAY{d}！","写真いっぱい撮ろう","スタンプ、押しに行こう","今日のミッション、回した？"]},
+ {w:"sai",when:c=>c.mode==="during"&&SEA(c),lines:["今日は海！日焼け止めぬった？","海、きれいだろうな"],reply:{w:"yui",lines:["ぬった！","さいけうも塗りなよ"]}},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("snorkel"),lines:["シュノーケル、魚いるかな","青の洞窟、ほんとに青いのかな"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("aquarium"),lines:["ジンベエザメ、でかいらしい","水族館、何時間いれるかな"]},
+ {w:"sai",when:c=>c.mode==="during"&&(c.tags.has("sunset")||c.tags.has("view")),lines:["夕日、どこで見る？","絶景ポイント、写真撮ろう"]},
+ {w:"sai",when:c=>c.mode==="during"&&(c.tags.has("food")||c.tags.has("market")),lines:["今日は食べる日！","沖縄そば、食べたい","ステーキもいいな"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("street"),lines:["お土産、だれに買う？","国際通り、歩くぞ"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("culture"),lines:["首里城、赤いんだよね","シーサー、どれが好き？"]},
+ {w:"sai",when:c=>c.mode==="during"&&(c.tags.has("bridge")||c.tags.has("island")),lines:["橋、まっすぐで気持ちいいらしい","島の空気、ちがうな"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("cafe"),lines:["ブルーシール、何味にする？","カフェでひと休みしよ"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("airport"),lines:["飛行機、乗りおくれないように","空港、広いな"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.tags.has("drive"),lines:["運転、まかせて","ナビ、たのむ"],reply:{w:"yui",lines:["安全運転でね","ナビはまかせて！"]}},
+ {w:"sai",when:c=>c.mode==="during"&&c.me==="yui"&&!c.diaryMine&&(c.slot==="night"||c.slot==="evening"),wt:3,lines:["ゆいちゃん、日記まだ？","今日の日記、楽しみにしてる"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.me==="yui"&&c.draws.length===0&&c.slot!=="night"&&c.slot!=="late",wt:2,lines:["ゆいちゃん、ガチャまだ回してないよ"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.msLeft>0,lines:["ミッション、あと{ms}こ","お題、クリアしに行こう"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.todaySpots.length>0&&c.todayStamped===0&&c.slot!=="morning",lines:["今日のスタンプ、まだゼロ！"]},
+ {w:"sai",when:c=>c.mode==="during"&&c.todaySpots.length>0&&c.todayStamped===c.todaySpots.length,wt:3,lines:["今日のスタンプ、コンプリート！"],fx:"sparkle",anim:"bigjump"},
+ {w:"sai",when:c=>c.mode==="during"&&c.photosToday>=20,lines:["今日もう{photos}枚も撮ってる"]},
+ {w:"sai",when:c=>c.mode==="after",lines:["おかえり！","リザルト見た？","アルバム、見返そうよ","楽しかったね","また行こうね","ムービー、もう見た？","{total}枚も撮ったんだ"]},
+ /* ===== ゆいちゃん ===== */
+ {w:"yui",when:c=>c.mode==="before",lines:["あと{left}日で沖縄〜！","美ら海水族館たのしみ！","ちんすこう、何味がいいかな","ふたりの日記、楽しみにしてる","水着、どれにしよう"]},
+ {w:"yui",when:c=>c.mode==="before",lines:["さいけう、運転よろしくね"],reply:{w:"sai",lines:["まかせて！","ゴールド免許（たぶん）"]}},
+ {w:"yui",when:c=>c.mode==="before"&&c.left<=7&&c.left>1,wt:2,lines:["あと{left}日！ねれない","荷物、入りきるかな"]},
+ {w:"yui",when:c=>c.mode==="before"&&c.left===1,wt:4,lines:["明日だ〜！","目覚まし、3つかけた"],reply:{w:"sai",lines:["おれは4つ","寝坊したら置いてく（うそ）"]},fx:"sparkle"},
+ {w:"yui",when:c=>c.mode==="before"&&c.left===0,wt:5,lines:["沖縄いくぞ〜！","今日だよ！今日！"],fx:"sparkle",anim:"bigjump"},
+ {w:"yui",when:c=>c.slot==="morning",lines:["おはよ〜","朝からいい天気！","今日なに食べよ"]},
+ {w:"yui",when:c=>c.slot==="night"||c.slot==="late",lines:["ねむい…","おやすみ〜","今日も楽しかった"],fx:"zzz",anim:"sway"},
+ {w:"yui",when:c=>c.me==="sai",lines:["さいけう、見てる？","さいけう、だいすき","さいけう、ちゃんと寝てる？"],fx:"hearts"},
+ {w:"yui",when:c=>c.mode==="during",lines:["DAY{d}、楽しも〜！","海きれい〜！","おなかすいた…","今日もいい天気！","写真撮って〜"]},
+ {w:"yui",when:c=>c.mode==="during"&&SEA(c),lines:["海！はやく入りたい","日焼け、しちゃうかな"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("snorkel"),lines:["魚と泳ぐ〜！","水、冷たいかな"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("aquarium"),lines:["ジンベエザメ！ジンベエザメ！","マナティも見たい"]},
+ {w:"yui",when:c=>c.mode==="during"&&(c.tags.has("sunset")||c.tags.has("view")),lines:["夕日、いっしょに見よ","絶景〜！"]},
+ {w:"yui",when:c=>c.mode==="during"&&(c.tags.has("food")||c.tags.has("market")),lines:["サーターアンダギー食べたい","タコライス！"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("street"),lines:["お土産いっぱい買う","かわいいお店ないかな"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("culture"),lines:["シーサー作ってみたい","首里城、きれいだね"]},
+ {w:"yui",when:c=>c.mode==="during"&&(c.tags.has("bridge")||c.tags.has("island")),lines:["橋、わたるの楽しみ","ハートロック見つけよ"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("cafe"),lines:["ブルーシールは紅いも！","カフェ、行こ？"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("airport"),lines:["飛行機、窓側がいい"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.tags.has("drive"),lines:["ナビはまかせて！","音楽かけていい？"],reply:{w:"sai",lines:["いいよ、何かける？","沖縄っぽいやつで"]}},
+ {w:"yui",when:c=>c.mode==="during"&&c.me==="sai"&&!c.diaryMine&&(c.slot==="night"||c.slot==="evening"),wt:3,lines:["さいけう、日記まだ？","日記、書いてから寝てね"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.me==="sai"&&c.draws.length===0&&c.slot!=="night"&&c.slot!=="late",wt:2,lines:["さいけう、ガチャ回そ？"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.msLeft>0,lines:["ミッション、あと{ms}こだよ"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.todaySpots.length>0&&c.todayStamped===0&&c.slot!=="morning",lines:["スタンプ、まだひとつも…"]},
+ {w:"yui",when:c=>c.mode==="during"&&c.todaySpots.length>0&&c.todayStamped===c.todaySpots.length,wt:3,lines:["今日のスタンプ、ぜんぶそろった！"],fx:"sparkle",anim:"bigjump"},
+ {w:"yui",when:c=>c.mode==="during"&&c.photosToday>=20,lines:["{photos}枚も撮ってる〜"]},
+ {w:"yui",when:c=>c.mode==="after",lines:["ただいま〜","楽しかった〜！","写真、見返したい","また沖縄行きたい！","ありがとう","ムービー、また見よ"]},
+ /* ===== こんぺき ===== */
+ {w:"kon",lines:["ワン！","……","ワンワン！"]},
+ {w:"kon",wt:2,lines:["さいけう、ともだちになろ","さいけう、あそぼ！","さいけう…すごく友達になりたい"],reply:{w:"sai",lines:["おう、友達だ！","こんぺき、おいで"]},fx:"hearts"},
+ {w:"kon",when:c=>c.konLove===0,wt:2,lines:["ゆい…？だれ？","……（ゆいを見ている）"],fx:"question"},
+ {w:"kon",when:c=>c.konLove===1,wt:2,lines:["ゆい…まあまあ","ゆい…悪いやつじゃない"]},
+ {w:"kon",when:c=>c.konLove===2,wt:2,lines:["ゆい、ちょっと気になる","ゆい…おやつくれる？"]},
+ {w:"kon",when:c=>c.konLove===3,wt:3,lines:["ゆいちゃん！あそぼ！","ゆいちゃん、だいすき"],fx:"hearts",anim:"bigjump"},
+ {w:"kon",when:c=>c.mode==="before",lines:["沖縄、おれもいく","あと{left}日…ながい","荷物、おれも入る？"]},
+ {w:"kon",when:c=>c.mode==="during"&&SEA(c),lines:["海！はいる！","おれ、泳げるワン","砂、ほる！"],anim:"bigjump"},
+ {w:"kon",when:c=>c.mode==="during"&&(c.tags.has("food")||c.tags.has("market")||c.tags.has("cafe")),lines:["ステーキ…","おれのぶんは？","くんくん…"],fx:"sweat"},
+ {w:"kon",when:c=>c.mode==="during"&&c.tags.has("aquarium"),lines:["でかい魚、こわい…","ジンベエ…つよそう"],fx:"sweat"},
+ {w:"kon",when:c=>c.mode==="during"&&c.tags.has("drive"),lines:["窓から顔だす！","ドライブ、すき"]},
+ {w:"kon",when:c=>c.mode==="during",lines:["DAY{d}、ガンガンいこう","スタンプ、おれも押したい","ミッション、ガンガンいこう"]},
+ {w:"kon",when:c=>c.slot==="night"||c.slot==="late",wt:2,lines:["ねむい…","zzz"],fx:"zzz",anim:"sway"},
+ {w:"kon",when:c=>c.slot==="morning",lines:["さんぽ！さんぽ！"],anim:"bigjump"},
+ {w:"kon",when:c=>c.mode==="after",lines:["さいけう、また行こ","楽しかったワン","おみやげ、おれのは？"]},
+ {w:"kon",when:c=>c.mode==="after"&&c.konLove<3,lines:["ゆい…ちょっと気になってきた"]},
+];
+const MUTTER={sai:["ふぅ","♪","いい天気","…"],yui:["ふんふん♪","ん〜","きもちいい","…"],kon:["ワン","…","くんくん","ハッハッ"]};
+function pickLine(w,c){
+  const pools=POOL.filter(p=>p.w===w&&(!p.when||p.when(c)));if(!pools.length)return null;
+  const tot=pools.reduce((s,p)=>s+(p.wt||1),0);let r=Math.random()*tot,pool=pools[0];for(const p of pools){r-=(p.wt||1);if(r<=0){pool=p;break}}
+  let lines=pool.lines.filter(l=>!MOOD.recent.includes(l));if(!lines.length)lines=pool.lines;const t=pick(lines);MOOD.recent.push(t);if(MOOD.recent.length>10)MOOD.recent.shift();
+  return {t:fill(t,c),pool};
+}
 function talk(w){
-  const d=tripDay(),mode=d<1?"before":d<=6?"during":"after";
-  if(w==="kon"){const ls=TALK_KON[mode];say("kon",ls[Math.floor(Math.random()*ls.length)].replace("{d}",d<1?Math.ceil((START-Date.now())/864e5):d));return}
-  let lines=TALK[mode][w];
-  const b=d>=1&&d<=6?bdayOf(DAYS()[d-1]):null;if(b&&Math.random()<.7)lines=TALK_BDAY[b][w];
-  say(w,lines[Math.floor(Math.random()*lines.length)].replace("{d}",d<1?Math.ceil((START-Date.now())/864e5):d));
+  const c=miiCtx();MOOD.busyUntil=Date.now()+4000;
+  if(c.bday&&w!=="kon"&&Math.random()<.6){say(w,pick(TALK_BDAY[c.bday][w]),{fx:"sparkle"});return}
+  if(c.bday&&w==="kon"&&Math.random()<.5){say("kon",c.bday==="sai"?"さいけう、おめでとう！！":(c.konLove>=2?"ゆい、おめでとう…ワン":"……（ケーキを見ている）"),{fx:c.bday==="sai"?"sparkle":"question",anim:c.bday==="sai"?"bigjump":"jump"});return}
+  const r=pickLine(w,c);if(!r)return;const {t,pool}=r;
+  say(w,t,{fx:pool.fx,anim:pool.anim});
+  if(pool.reply)setTimeout(()=>say(pool.reply.w,fill(pick(pool.reply.lines),c)),1100);
+  // ほかのふたりの反応
+  if(w==="sai"&&!pool.reply&&Math.random()<.4)setTimeout(()=>{konRun("sai");say("kon",pick(["ワン！","おれも！","さいけう！"]),{quiet:true})},1300);
+  if(w==="yui"&&!pool.reply&&Math.random()<.45){const L=[["……"],["…ふーん"],["ゆい、なに？"],["ワンワン！"]][c.konLove];setTimeout(()=>{if(c.konLove>=2)konRun("yui");say("kon",pick(L),{quiet:true,fx:c.konLove===3?"hearts":undefined})},1300)}
+  if(w==="kon"&&!pool.reply&&Math.random()<.35){const who=Math.random()<.6?"sai":"yui";const L=who==="sai"?["こんぺき、かわいい","よしよし","こっちおいで"]:(c.konLove>=2?["こんぺき、なついてきた？","かわいい〜"]:["こんぺき、こっち向いて？","わたしのこと、きらい…？"]);setTimeout(()=>say(who,pick(L),{quiet:true}),1200)}
+  look(w);
 }
-function cheer(a,b){say("sai",a);setTimeout(()=>say("yui",b||a),350)}
-function say(w,t){
+function cheer(a,b){say("sai",a,{fx:"sparkle"});setTimeout(()=>say("yui",b||a,{fx:"sparkle"}),350)}
+const ANIMS=["jump","bigjump","shake","sway","hop2","run"];
+function anim(host,name){const img=host.querySelector("img");if(!img||REDUCED)return;ANIMS.forEach(a=>img.classList.remove(a));void img.offsetWidth;img.classList.add(name);
+  const onEnd=e=>{if(e.animationName!==name)return;img.classList.remove(name);img.removeEventListener("animationend",onEnd)};img.addEventListener("animationend",onEnd);setTimeout(()=>{img.removeEventListener("animationend",onEnd);if(img.classList.contains(name))img.classList.remove(name)},4000)}
+const FX={hearts:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="#ff5c93" stroke="#23314f" stroke-width="1.5"/></svg>',
+  sparkle:'<svg viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="#ffd23f" stroke="#23314f" stroke-width="1.2"/></svg>',
+  notes:'<svg viewBox="0 0 24 24"><path d="M9 18a3 3 0 1 1-2-2.8V6l10-2v10a3 3 0 1 1-2-2.8V7.5L9 9z" fill="#2f4fb5" stroke="#23314f" stroke-width="1.2"/></svg>',
+  sweat:'<svg viewBox="0 0 24 24"><path d="M12 3c3 5 6 8 6 12a6 6 0 0 1-12 0c0-4 3-7 6-12z" fill="#8fd3f4" stroke="#23314f" stroke-width="1.5"/></svg>',
+  zzz:'<span class="fxt">z</span>',exclaim:'<span class="fxt ex">！</span>',question:'<span class="fxt q">？</span>'};
+function fx(host,kind,n){if(!host||REDUCED||!FX[kind])return;n=n||(kind==="zzz"?3:(kind==="exclaim"||kind==="question")?1:4);
+  for(let i=0;i<n;i++){const s=document.createElement("span");s.className="fxp "+kind;s.innerHTML=FX[kind];
+    s.style.setProperty("--dx",(kind==="zzz"?(18+i*12):(Math.random()*70-35))+"px");s.style.setProperty("--r",(Math.random()*40-20)+"deg");s.style.animationDelay=(i*130)+"ms";s.style.left=(kind==="zzz"?60:(35+Math.random()*30))+"%";if(kind==="zzz")s.style.fontSize=(13+i*5)+"px";
+    host.appendChild(s);setTimeout(()=>s.remove(),1900)}}
+function say(w,t,o={}){
   const host=document.querySelector(".mii."+w);if(!host)return;let b=host.querySelector(".talk");if(!b){b=document.createElement("div");b.className="bubble talk";host.appendChild(b)}
-  b.textContent=t;b.classList.remove("show");void b.offsetWidth;b.classList.add("show");beep("tap");const isl=$(".island");isl.classList.add("talking");
-  const img=host.querySelector("img");img.classList.remove("jump");void img.offsetWidth;img.classList.add("jump");
-  clearTimeout(host._t);host._t=setTimeout(()=>{b.classList.remove("show");isl.classList.remove("talking")},2600);
+  b.textContent=t;b.classList.remove("show");void b.offsetWidth;b.classList.add("show");if(!o.quiet)beep("tap");const isl=$(".island");isl.classList.add("talking");
+  anim(host,o.anim||"jump");if(o.fx)fx(host,o.fx);
+  clearTimeout(host._t);host._t=setTimeout(()=>{b.classList.remove("show");if(!document.querySelector(".bubble.talk.show"))isl.classList.remove("talking")},2600);
 }
-document.querySelectorAll(".mii").forEach(m=>m.addEventListener("click",()=>talk(m.classList.contains("sai")?"sai":m.classList.contains("kon")?"kon":"yui")));
+function look(speaker){
+  const map={sai:[["yui","look-l"]],yui:[["sai","look-r"]],kon:[["yui","look-r"],["sai","look-r"]]};
+  for(const [w,cls] of (map[speaker]||[])){const h=document.querySelector(".mii."+w);if(!h)continue;h.classList.remove("look-l","look-r");h.classList.add(cls);clearTimeout(h._lk);h._lk=setTimeout(()=>h.classList.remove(cls),1700)}
+}
+function konRun(target){
+  const kon=document.querySelector(".mii.kon"),t=document.querySelector(".mii."+target);if(!kon||!t||REDUCED||kon._running)return;
+  const kr=kon.getBoundingClientRect(),tr=t.getBoundingClientRect();const dx=((tr.left+tr.width/2)-(kr.left+kr.width/2))*0.72;
+  kon._running=true;kon.classList.add("run");kon.style.transform=`translate(${dx.toFixed(0)}px,8px) scale(1.06)`;anim(kon,"run");
+  setTimeout(()=>{kon.style.transform="";},1500);setTimeout(()=>{kon.classList.remove("run");kon._running=false},2400);
+}
+function surprise(w){const L={sai:["わっ！","びっくりした！","なに！？"],yui:["きゃっ！","びっくり〜！","もう！"],kon:["ワンッ！？","ひゃっ"]};say(w,pick(L[w]),{anim:"bigjump",fx:"exclaim"})}
+function tickle(w){const L={sai:["くすぐったい！","やめて〜ｗ","あはは"],yui:["くすぐったいってば！","あははは","もう〜！"],kon:["ワンワンワン！","ハッハッハッ","もっと！"]};say(w,pick(L[w]),{anim:"shake",fx:w==="kon"?"hearts":"notes"})}
+/* 画面の出来事への反応 */
+function react(kind,x={}){
+  const me=S.who||"sai",pa=other(me);MOOD.busyUntil=Date.now()+5000;
+  if(kind==="stamp"){cheer("スタンプゲット！","やったー！");fx($(".mii.sai"),"hearts");fx($(".mii.yui"),"hearts");setTimeout(()=>{konRun(me);say("kon","ワンワン！",{fx:"sparkle",anim:"bigjump"})},800)}
+  else if(kind==="mission"){say(me,"ミッションクリア！",{fx:"sparkle",anim:"bigjump"});setTimeout(()=>say(pa,pick(["やるじゃん！","すごい！","つぎもいこ！"])),900);setTimeout(()=>say("kon","ワン！",{quiet:true}),1500)}
+  else if(kind==="diary"){say(me,pick(["日記、書けた","今日のこと、書いたよ"]),{fx:"notes"});setTimeout(()=>say(pa,pick(["読むの楽しみ","あとで読むね",pa==="sai"?"おれも書かなきゃ":"わたしも書かなきゃ"])),900)}
+  else if(kind==="photos"){say(me,`${x.n}枚追加！`,{fx:"sparkle"});setTimeout(()=>say(pa,pick(["見せて〜","どんなの撮った？"])),900);if(x.n>=10)setTimeout(()=>say("kon","いっぱい！",{quiet:true,anim:"bigjump"}),1500)}
+  else if(kind==="gacha"){say(me,pick(["どんなお題かな","よし、やるぞ"]));setTimeout(()=>say("kon",pick(["ガチャ！","おれも回す！"]),{quiet:true}),900)}
+  else if(kind==="food"){setTimeout(()=>say("kon",pick(["おれのぶんは？","くんくん…"]),{fx:"sweat",quiet:true}),900)}
+  else if(kind==="letter"){say(me,pick(["手紙、しまった","最終日に読んでね"]),{fx:"hearts"});setTimeout(()=>say("kon","ないしょ…？",{quiet:true,fx:"question"}),1000)}
+  else if(kind==="items"){say(me,"準備かんぺき！",{fx:"sparkle",anim:"bigjump"});setTimeout(()=>say(pa,"はやい！"),900)}
+}
+/* 相手がなにかしたとき（リアルタイム・留守中のぶんも） */
+function partnerReact(ev){
+  const me=S.who||"sai",pa=other(me),PN=NAME[pa],MN=NAME[me];MOOD.busyUntil=Date.now()+6000;
+  const away=ev.away?"さっき":"";
+  if(ev.kind==="photos"){say(pa,`${away}写真あげたよ！${ev.n>1?ev.n+"枚":""}`,{fx:"sparkle",anim:"hop2"});setTimeout(()=>say(me,pick(["見る見る！","どんなの？","あとで見せて〜"]),{quiet:true}),1000);if(ev.n>=5)setTimeout(()=>{konRun(pa);say("kon","いっぱい！",{quiet:true,anim:"bigjump"})},1700)}
+  else if(ev.kind==="diary"){say(pa,`${away}日記、書いたよ`,{fx:"notes",anim:"hop2"});setTimeout(()=>say(me,S.diary[`d${ev.day}_${me}`]?pick(["読める！","見てくる！"]):(me==="sai"?"おれも書かなきゃ":"わたしも書かなきゃ"),{quiet:true}),1000)}
+  else if(ev.kind==="mission"){say(pa,`${away}ミッションクリア！`,{fx:"sparkle",anim:"bigjump"});setTimeout(()=>say(me,pick(["すごい！","やるじゃん！","負けてられない"]),{quiet:true}),1000);setTimeout(()=>say("kon","ワン！",{quiet:true}),1600)}
+  else if(ev.kind==="plan"){say(pa,`${away}予定、ちょっと直したよ`,{fx:"notes",anim:"hop2"});setTimeout(()=>say(me,pick(["見ておく！","どこ変えた？"]),{quiet:true}),1000)}
+  else if(ev.kind==="letter"){say(pa,`${away}手紙、しまったよ`,{fx:"hearts",anim:"hop2"});setTimeout(()=>say(me,pick(["…気になる","最終日まで待つ！"]),{quiet:true}),1000);setTimeout(()=>say("kon","ないしょ…？",{quiet:true,fx:"question"}),1600)}
+  else if(ev.kind==="items"){say(pa,`${away}持ち物、チェックした`,{anim:"hop2"});setTimeout(()=>say(me,pick(["はやい！","準備いいね"]),{quiet:true}),1000)}
+  else if(ev.kind==="food"){say(pa,`${away}${ev.name}、ゲットした！`,{fx:"sparkle",anim:"bigjump"});setTimeout(()=>say(me,pick(["いいな〜","おいしそう！"]),{quiet:true}),1000);setTimeout(()=>say("kon","おれのぶんは？",{quiet:true,fx:"sweat"}),1600)}
+}
+const PW={ready:false,q:[],t:null};
+function partnerWatch(){
+  const me=S.who||"sai",pa=other(me);
+  const snap=()=>({photos:S.photos.filter(p=>p.who===pa&&!p.food).length,foods:S.photos.filter(p=>p.who===pa&&p.food).map(p=>p.food),
+    diary:Object.keys(S.diary).filter(k=>k.endsWith("_"+pa)),ms:Object.values(S.missions).flatMap(m=>m.draws||[]).filter(x=>x.done&&x.by===pa).length,
+    plan:S.plan?.by===pa?(S.plan.updatedAt||0):0,letter:S.letters[pa]?.at||0,items:S.items?.by===pa?(S.items.at||0):0});
+  if(!PW.ready){PW.last=snap();PW.ready=true;PW.at=Date.now();return}
+  const a=PW.last,b=snap();PW.last=b;const away=document.hidden||Date.now()-PW.at>60000;PW.at=Date.now();const evs=[];
+  if(b.photos>a.photos)evs.push({kind:"photos",n:b.photos-a.photos});
+  const nf=b.foods.filter(f=>!a.foods.includes(f));if(nf.length)evs.push({kind:"food",name:FOODBY[nf[0]]?.n||"グルメ"});
+  const nd=b.diary.filter(k=>!a.diary.includes(k));if(nd.length)evs.push({kind:"diary",day:+nd[0].slice(1).split("_")[0]});
+  if(b.ms>a.ms)evs.push({kind:"mission"});
+  if(b.plan>a.plan)evs.push({kind:"plan"});
+  if(b.letter>a.letter)evs.push({kind:"letter"});
+  if(b.items>a.items)evs.push({kind:"items"});
+  if(!evs.length)return;
+  evs.forEach(e=>e.away=away);PW.q.push(...evs.slice(0,3));
+  const run=()=>{const e=PW.q.shift();if(!e){PW.t=null;return}if(MOOD.visible&&!document.hidden)partnerReact(e);PW.t=setTimeout(run,5200)};
+  if(!PW.t)PW.t=setTimeout(run,600);
+}
+/* 開いたときのあいさつ（1回だけ） */
+function greet(){
+  const c=miiCtx(),me=c.me,pa=other(me),MN=NAME[me];let line;
+  if(c.mode==="before")line=c.left===0?"今日だ！いってきます！":c.left===1?"明日！準備できた？":c.slot==="morning"?`おはよう！沖縄まであと${c.left}日`:c.slot==="night"||c.slot==="late"?`おやすみ前にチェック？あと${c.left}日`:`沖縄まであと${c.left}日！`;
+  else if(c.mode==="during")line=c.bday===me?(me==="sai"?"今日はおれの誕生日！":"今日はわたしの誕生日！"):c.bday===pa?`今日は${NAME[pa]}の誕生日！`:c.slot==="morning"?`おはよう！DAY${c.d}、いこう！`:c.slot==="night"||c.slot==="late"?`DAY${c.d}おつかれ！日記書いた？`:`DAY${c.d}、楽しんでる？`;
+  else line=c.slot==="morning"?"おはよう！写真、見返そ":"おかえり！";
+  say(me,line,{fx:c.mode==="during"?"sparkle":undefined,anim:"hop2"});
+  setTimeout(()=>say(pa,pick([`${MN}、きた！`,"まってたよ〜",`${MN}、おはよ`.replace("おはよ",c.slot==="morning"?"おはよ":"やっほー")]),{quiet:true}),1000);
+  setTimeout(()=>{konRun(me);say("kon",me==="sai"?pick(["さいけう！","ワンワン！"]):(c.konLove>=2?"ゆいちゃん！":"……"),{quiet:true})},1800);
+  look(me);
+}
+/* こんぺきの「ゆいちゃん好き度」（ふたりの仲良し度で上がる） */
+const KON_LV=["顔見知り","まあまあ","気になる","だいすき"];
+function checkKonLove(){const c=miiCtx();const prev=S.konLv??(ls.get("konLv")!=null?+ls.get("konLv"):null);
+  if(prev!=null&&c.konLove>prev){setTimeout(()=>{konRun("yui");say("kon",["","ゆい…まあまあ、かな","ゆい…ちょっと好きかも","ゆいちゃん、だいすき！"][c.konLove],{fx:"hearts",anim:"bigjump"})},1200)}
+  S.konLv=c.konLove;ls.set("konLv",c.konLove)}
+/* ひとりでに動く（画面が見えているときだけ） */
+function idleTick(){
+  MOOD.idleT=setTimeout(idleTick,9000+Math.random()*10000);
+  if(document.hidden||!MOOD.visible||REDUCED||Date.now()<MOOD.busyUntil)return;
+  const c=miiCtx(),hosts=[...document.querySelectorAll(".mii")];if(!hosts.length)return;const r=Math.random();
+  if(c.slot==="night"||c.slot==="late"){if(r<.55){const h=pick(hosts);fx(h,"zzz");anim(h,"sway")}else if(r<.7)look(pick(["sai","yui"]));return}
+  if(r<.28){anim(pick(hosts),"hop2")}
+  else if(r<.5){fx(pick(hosts),pick(["notes","sparkle"]))}
+  else if(r<.64){konRun(pick(["sai","yui"]))}
+  else if(r<.8){look(pick(["sai","yui","kon"]))}
+  else if(Date.now()-MOOD.lastMutter>45000){MOOD.lastMutter=Date.now();const w=pick(["sai","yui","kon"]);say(w,pick(MUTTER[w]),{quiet:true,anim:"hop2"})}
+}
+if(window.IntersectionObserver){new IntersectionObserver(es=>{MOOD.visible=es[0].isIntersecting},{threshold:.2}).observe($(".island"))}
+setTimeout(idleTick,6000);
+document.querySelectorAll(".mii").forEach(m=>{const w=m.classList.contains("sai")?"sai":m.classList.contains("kon")?"kon":"yui";let pt=null,long=false;
+  m.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;long=false;clearTimeout(pt);pt=setTimeout(()=>{long=true;tickle(w)},520)});
+  const up=()=>clearTimeout(pt);m.addEventListener("pointerup",up);m.addEventListener("pointercancel",up);m.addEventListener("pointerleave",up);
+  m.addEventListener("contextmenu",e=>e.preventDefault());
+  m.addEventListener("click",()=>{if(long){long=false;return}const now=Date.now();if(now<(m._cool||0))return;m._taps=(m._taps||[]).filter(x=>now-x<6000);m._taps.push(now);
+    if(m._taps.length>=5){m._taps=[];m._cool=now+2600;say(w,pick({sai:["そんなに押さないでｗ","おれ、こわれる","はいはい"],yui:["押しすぎ〜！","もう、なに？","くすぐったいよ"],kon:["ワンワンワンワン！","目がまわる…","もっと！"]}[w]),{anim:"shake",fx:"sweat"});return}
+    if(now-(m._lastTap||0)<380){m._lastTap=0;surprise(w);return}m._lastTap=now;talk(w)});
+  m.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();talk(w)}});
+});
 
 /* ---------- タブ ---------- */
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
@@ -926,7 +1160,8 @@ document.querySelector("main").addEventListener("input",e=>{const el=e.target;if
 function render(){S.pendingRender=false;const keep={};
   document.querySelectorAll("main textarea[id],main input[id]:not([type=checkbox]):not([type=file])").forEach(el=>{if(el.value!==el.defaultValue)keep[el.id]=el.value});
   ({plan:renderPlan,stamp:renderStamp,diary:renderDiary,album:renderAlbum,zukan:renderZukan,result:renderResult})[S.view]();
-  for(const [id,v] of Object.entries(keep)){const el=document.getElementById(id);if(el&&el.value!==v)el.value=v}}
+  for(const [id,v] of Object.entries(keep)){const el=document.getElementById(id);if(el&&el.value!==v)el.value=v}
+  if(S.db&&S.db.ready)checkKonLove()}
 
 /* ---------- 沖縄グルメ図鑑 ---------- */
 let pendingFood=null;
@@ -954,7 +1189,7 @@ $("#v-zukan").addEventListener("click",e=>{
 });
 $("#f-food").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingFood)return;
   const id=pendingFood,fd=FOODBY[id];if(!fd)return;S.busy=S.busy||{};if(S.busy["food:"+id])return;S.busy["food:"+id]=true;if(S.view==="zukan")renderZukan();toast(`「${fd.n}」をアップロード中…`);const day=tripDay()>=1&&tripDay()<=6?tripDay():0;
-  try{await uploadPhoto(f,{food:id,day});confetti();beep("stamp");say(S.who||"sai",`${fd.n}ゲット！`);
+  try{await uploadPhoto(f,{food:id,day});confetti();beep("stamp");say(S.who||"sai",`${fd.n}ゲット！`,{fx:"sparkle",anim:"bigjump"});react("food");
     if(FOODS.every(x=>foodPhoto(x.id)))setTimeout(()=>{beep("open");cheer("グルメマスター！","ぜんぶ食べた〜！")},600)}catch(err){upErr(err)}
   finally{delete S.busy["food:"+id];if(S.view==="zukan")safeRender()}});
 function dayPicker(sel,attr){const td=tripDay();return `<div class="daytabs">${DAYS().map(d=>`<button class="${d.n===td?"today":""} ${bdayOf(d)?"bday-tab":""}" style="--c:${DC(d.n)}" data-${attr}="${d.n}" aria-pressed="${d.n===sel}">${esc(d.date)}<small>DAY${d.n}</small></button>`).join("")}</div>`}
@@ -975,7 +1210,8 @@ function statusHTML(){
   const st=stats();
   const card=w=>{const p=st[w],lv=lvOf(p);return `<div class="pcard ${w}"><img src="${MII[w]}" alt=""><div class="pc-in"><div class="pc-name">${NAME[w]}<span class="lv">Lv.${lv}</span></div><div class="pc-stats"><span class="stat" style="--c:var(--sea)"><i>写真</i><b>${p.photos}</b></span><span class="stat" style="--c:var(--hibiscus)"><i>日記</i><b>${p.diary}</b></span><span class="stat ink" style="--c:var(--sun)"><i>ミッション</i><b>${p.missions}</b></span></div></div></div>`};
   return `<div class="status">${card("sai")}${card("yui")}
-    <div class="love"><div class="love-h"><span>ふたりの仲良し度</span><b>${st.love}%</b></div><div class="love-bar"><i style="width:${st.love}%"></i></div><div class="love-s"><span>スタンプ<b>${st.stamped}/${st.spots}</b></span><span>日記<b>${st.diaries}/6</b></span><span>ミッション<b>${st.ms}</b></span><span>グルメ<b>${st.foods}/${FOODS.length}</b></span></div></div></div>`;
+    <div class="love"><div class="love-h"><span>ふたりの仲良し度</span><b>${st.love}%</b></div><div class="love-bar"><i style="width:${st.love}%"></i></div><div class="love-s"><span>スタンプ<b>${st.stamped}/${st.spots}</b></span><span>日記<b>${st.diaries}/6</b></span><span>ミッション<b>${st.ms}</b></span><span>グルメ<b>${st.foods}/${FOODS.length}</b></span></div>
+    ${(()=>{const lv=st.love<15?0:st.love<40?1:st.love<70?2:3;return `<div class="konlove"><img src="kon-v2.webp" alt="">こんぺき → ゆいちゃん<b>${"♥".repeat(lv+1)}<i>${"♥".repeat(3-lv)}</i></b><span>${KON_LV[lv]}</span><small>ふたりの仲良し度で変わります</small></div>`})()}</div></div>`;
 }
 
 /* ---------- 島ニュース（できごと） ---------- */
@@ -1199,7 +1435,7 @@ function itemsHTML(){
     ${S.canWrite?`<form class="iadd" id="iadd"><input id="iadd-in" maxlength="40" placeholder="持ち物を追加（例：酔い止め）"><select id="iadd-who"><option value="both">ふたり</option><option value="sai">さいけう</option><option value="yui">ゆいちゃん</option></select><button class="btn mini" type="submit">追加</button></form>`:""}
   </div>`;
 }
-async function saveItems(items){try{await S.db.doc("prep/items").set({items,at:Date.now()})}catch(err){writeErr(err)}}
+async function saveItems(items){try{await S.db.doc("prep/items").set({items,at:Date.now(),by:S.who})}catch(err){writeErr(err)}}
 const stopMapUrl=s=>{const c=coordOf(s);return (s.pinned&&c)?mapUrl(`${c.lat},${c.lng}`):s.q?mapUrl(s.q):c?mapUrl(`${c.lat},${c.lng}`):""};
 const stopNo=(d,id)=>{let n=0;for(const s of (d.stops||[])){if(coordOf(s))n++;if(s.id===id)return coordOf(s)?n:0}return 0};
 function driveTotalHTML(d){
@@ -1258,9 +1494,9 @@ $("#v-plan").addEventListener("click",async e=>{
   if(t.id==="trial"){spin(()=>{const m=pickMission(d,[],true);S.trial={n:d.n,id:m.id};beep("gacha");renderPlan()});return}
   if(t.id==="draw"){const n=d.n,ref=S.db.doc("missions/day"+n),cur=(S.missions["day"+n]||{draws:[]}).draws||[];if(cur.length>=3)return;
     t.disabled=true;spin(async()=>{const m=pickMission(d,cur,cur.length===0);if(!m){toast("お題がもうありません");return}
-      try{await ref.set({draws:[...cur,{id:m.id,by:S.who,at:Date.now(),done:false}]});beep("gacha")}catch(err){writeErr(err);t.disabled=false}});return}
+      try{await ref.set({draws:[...cur,{id:m.id,by:S.who,at:Date.now(),done:false}]});beep("gacha");react("gacha")}catch(err){writeErr(err);t.disabled=false}});return}
   if(t.dataset.done){const [n,i]=t.dataset.done.split(":").map(Number),cur=JSON.parse(JSON.stringify(S.missions["day"+n].draws));
-    cur[i].done=!cur[i].done;if(cur[i].done){cur[i].doneAt=Date.now();cur[i].by=cur[i].by||S.who;confetti();beep("clear");say(S.who||"sai","ミッションクリア！")}else delete cur[i].doneAt;try{await S.db.doc("missions/day"+n).set({draws:cur})}catch(err){writeErr(err)}}
+    cur[i].done=!cur[i].done;if(cur[i].done){cur[i].doneAt=Date.now();cur[i].by=cur[i].by||S.who;confetti();beep("clear");react("mission")}else delete cur[i].doneAt;try{await S.db.doc("missions/day"+n).set({draws:cur})}catch(err){writeErr(err)}}
   if(t.dataset.idel){const id=t.dataset.idel;
     if(S.confirmDel!==id){S.confirmDel=id;beep("tap");renderPlan();clearTimeout(S._cd);S._cd=setTimeout(()=>{if(S.confirmDel===id){S.confirmDel=null;if(S.view==="plan")safeRender()}},4000);return}
     S.confirmDel=null;const items=ITEMS().filter(i=>i.id!==id);await saveItems(items);beep("clear");toast("持ち物を消しました")}
@@ -1270,6 +1506,7 @@ $("#v-plan").addEventListener("change",async e=>{
   const items=JSON.parse(JSON.stringify(ITEMS()));const it=items.find(i=>i.id===c.dataset.item);if(!it)return;
   it.done=it.done||{};it.done[c.dataset.w]=c.checked;if(c.checked)beep("tap");
   const li=c.closest(".item");if(li&&it.done.sai&&it.done.yui){li.classList.add("both");beep("clear")}
+  const me=S.who,mine=items.filter(i=>i.who==="both"||i.who===me);if(c.checked&&me&&mine.length>2&&mine.every(i=>i.done?.[me]))react("items");
   await saveItems(items);
 });
 $("#v-plan").addEventListener("submit",async e=>{
@@ -1408,7 +1645,7 @@ function renderStamp(){
     ${S.isOwner&&!all?`<details style="margin-top:6px"><summary class="small">宝箱のメッセージを書きかえる（さいけうだけに見えています）</summary><textarea id="secret-in" maxlength="1000" aria-label="宝箱のメッセージ">${esc(S.drafts.secret??S.secret??DEFAULT_SECRET)}</textarea><button class="btn" id="secret-save" style="margin-top:8px">保存</button></details>`:""}</div>
   </div>`;
   const newly=done.filter(id=>!seen.has(id));
-  if(newly.length){ls.set("seenStamps",done.join(","));confetti();beep("stamp");cheer("スタンプゲット！","やったー！");if(all)setTimeout(()=>{toast("全スタンプ制覇！宝箱がひらいたよ");beep("open");cheer("ぜんぶ集めた！","宝箱ひらいた！")},700)}
+  if(newly.length){ls.set("seenStamps",done.join(","));confetti();beep("stamp");react("stamp");if(all)setTimeout(()=>{toast("全スタンプ制覇！宝箱がひらいたよ");beep("open");cheer("ぜんぶ集めた！","宝箱ひらいた！")},700)}
 }
 let pendingSpot=null;
 $("#v-stamp").addEventListener("click",async e=>{
@@ -1450,9 +1687,9 @@ $("#v-diary").addEventListener("click",async e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.dataset.dd){beep("tap");S.diaryDay=+t.dataset.dd;renderDiary();return}
   if(t.id==="diary-save"){const v=$("#diary-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
-    try{await S.db.doc(`diary/d${S.diaryDay}_${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts["diary:"+S.diaryDay];toast("保存しました");beep("clear");if(S.diary[`d${S.diaryDay}_${other(S.who)}`]){confetti();beep("open");cheer("日記がひらいた！","見せて見せて！")}}catch(err){writeErr(err)}}
+    try{await S.db.doc(`diary/d${S.diaryDay}_${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts["diary:"+S.diaryDay];toast("保存しました");beep("clear");if(S.diary[`d${S.diaryDay}_${other(S.who)}`]){confetti();beep("open");cheer("日記がひらいた！","見せて見せて！")}else react("diary")}catch(err){writeErr(err)}}
   if(t.id==="letter-save"){const v=$("#letter-in").value.trim();if(!v){toast("一言だけでも書いてね");return}
-    try{await S.db.doc(`letters/${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts.letter;toast("手紙をしまいました。最終日の夜にひらきます");beep("clear")}catch(err){writeErr(err)}}
+    try{await S.db.doc(`letters/${S.who}`).set({text:v,who:S.who,at:Date.now()});delete S.drafts.letter;toast("手紙をしまいました。最終日の夜にひらきます");beep("clear");react("letter")}catch(err){writeErr(err)}}
 });
 function letterHTML(){
   const open=Date.now()>=LETTER_OPEN,me=S.who,o=other(me||"sai");const mine=S.letters[me],theirs=S.letters[o];
@@ -1507,7 +1744,7 @@ $("#f-album").addEventListener("change",async e=>{
   const msg=fail?`${files.length-fail}枚追加。${fail}枚は追加できませんでした${decodeFail<fail?"（電波を確認してもう一度）":"（読み込めない写真でした）"}`:`${files.length}枚追加しました`;
   setP(msg);setTimeout(()=>{if(S.progText===msg)setP("")},8000);
   if(fail&&decodeFail<fail)writeErr(lastErr);
-  if(!fail){confetti();beep("clear")}
+  if(!fail){confetti();beep("clear");react("photos",{n:files.length})}
 });
 
 /* ---------- 画像 ---------- */
@@ -1914,9 +2151,13 @@ async function start(session){
   db.doc("config/secret").onSnapshot(d=>{S.secret=d.exists?d.data().msg:null;if(S.view==="stamp")safeRender()});
   db.doc("prep/items").onSnapshot(d=>{S.items=d.exists?d.data():null;if(S.view==="plan")safeRender()});
   sub("letters",s=>{S.letters={};s.docs.forEach(d=>S.letters[d.id]=d.data());if(S.view==="diary"||S.view==="plan")safeRender()});
+  // 相手の動きに反応（上の購読のあとに登録するので、S.* は更新済み）
+  for(const c of ["photos","missions","diary","letters"])db.collection(c).onSnapshot(()=>{if(db.ready)partnerWatch()});
+  db.doc("trip/plan").onSnapshot(()=>{if(db.ready)partnerWatch()});db.doc("prep/items").onSnapshot(()=>{if(db.ready)partnerWatch()});
   db.subscribe();   // 読み込み中の変更も取りこぼさないよう、先に購読
   render();
-  try{await db.load();S.canWrite=true;setSysbar(null)}catch(e){console.warn(e);const i=errInfo(e,"db");S.lastErr={at:Date.now(),where:"db(load)",msg:i.msg,raw:String(e?.message||e)};
+  try{await db.load();S.canWrite=true;setSysbar(null);let g=false;try{g=!!sessionStorage.getItem("greeted");sessionStorage.setItem("greeted","1")}catch{}
+    if(!g){const wait=()=>{const spl=$("#splash");if((spl&&!spl.hidden)||$("#layer").innerHTML){setTimeout(wait,400);return}setTimeout(greet,900)};setTimeout(wait,600)}}catch(e){console.warn(e);const i=errInfo(e,"db");S.lastErr={at:Date.now(),where:"db(load)",msg:i.msg,raw:String(e?.message||e)};
     setSysbar(i.kind==="setup"?`保存先の設定がまだのようです：${i.msg}`:i.kind==="network"?"電波がとどかず、データを読み込めませんでした（読み込めるまで保存はできません）":"データを読み込めませんでした："+i.msg,i.kind==="network"?"retry":"diag");
     if(i.kind==="network")setTimeout(async()=>{if(await db.refresh()){S.canWrite=true;setSysbar(null);render()}},4000)}
   setTimeout(geocodeMissing,4000);
