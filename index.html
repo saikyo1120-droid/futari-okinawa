@@ -446,6 +446,9 @@ section.view{position:relative}
 .mission.kon{background:#eef7ff;border-color:var(--sea-deep)}
 .mission.kon .cap{width:32px;height:32px;background:#e3f3ff url(kon-v2.webp) 50% 18%/auto 230% no-repeat;border-color:var(--sea-deep)}
 .konbadge{display:block;width:max-content;font-size:10px;font-weight:900;color:#fff;background:var(--sea-deep);border-radius:999px;padding:0 7px;margin:0 0 3px}
+.wxs-loc{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-top:2px}
+.lnk{border:0;background:none;color:var(--sea-deep);text-decoration:underline;font-weight:900;font-size:inherit;padding:0 2px;cursor:pointer}
+.wx-src{display:grid;gap:8px}.src-list{display:grid;gap:6px}.src-row{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 10px;font-size:12.5px;line-height:1.4}.src-row>a,.src-row>b{font-weight:900;color:var(--sea-deep)}.src-st{font-size:12px;margin-top:2px}.src-st .ok{color:#1d8a3c}.src-st .ng{color:var(--shu)}.src-st .warn{color:#b36b00}
 /* ============ 当日モード ============ */
 .today{background:#fff;border:3px solid var(--ink);border-left:12px solid var(--c);border-radius:20px;padding:10px 12px 12px;margin-bottom:14px;box-shadow:0 5px 0 var(--ink)}
 .td-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
@@ -1568,6 +1571,16 @@ async function wxGet(key,url,ttl=WX.ttl){
 const wxKey=(lat,lng)=>lat.toFixed(2)+","+lng.toFixed(2);
 /* その日の天気の場所：その日の最初の行き先（なければ那覇） */
 function dayCoord(d){for(const s of (d?.stops||[])){const c=coordOf(s);if(c)return c}return {lat:26.21,lng:127.68}}
+// 旅行中の「きょう」だけ、現在地（端末のGPS）で予報を取れる。ほかの日は、その日の最初の行き先
+const geoFresh=()=>S.geo&&Date.now()-S.geo.at<30*60e3;
+function geoAllowed(d){const td=tripDay();return td>=1&&td<=6&&d?.n===td}
+function wxCoordFor(d){if(S.geoOn&&geoAllowed(d)&&geoFresh())return {lat:S.geo.lat,lng:S.geo.lng,geo:true};return dayCoord(d)}
+function wxPlaceName(d){const c=wxCoordFor(d);if(c.geo)return `現在地（誤差${S.geo.acc?Math.round(S.geo.acc)+"m":"?"}）`;const s=(d?.stops||[]).find(x=>coordOf(x));return s?`${s.n} 付近`:"那覇 付近"}
+function getGeo(){return new Promise(res=>{if(!navigator.geolocation){toast("この端末では現在地が使えません");return res(false)}
+  navigator.geolocation.getCurrentPosition(p=>{S.geo={lat:+p.coords.latitude.toFixed(3),lng:+p.coords.longitude.toFixed(3),acc:p.coords.accuracy,at:Date.now()};res(true)},
+    e=>{toast(e&&e.code===1?"位置情報の許可がオフです。ブラウザの設定で許可してね":"現在地を取得できませんでした");res(false)},{enableHighAccuracy:false,timeout:12000,maximumAge:5*60e3})})}
+async function toggleGeo(){if(S.geoOn){S.geoOn=false;ls.set("wxGeo","0")}else{if(!geoFresh()&&!(await getGeo()))return;S.geoOn=true;ls.set("wxGeo","1")}
+  if(S.view==="plan")safeRender();const n=WXV.n;if(n&&$("#wx-body"))openWeather(n)}
 function wxDate(n){return `2026-11-${String(18+n).padStart(2,"0")}`}
 function jstDateStr(ms=Date.now()){return new Date(ms+9*3600e3).toISOString().slice(0,10)}
 async function wxLoad(lat,lng){
@@ -1634,17 +1647,17 @@ function wxNote(s){ // こんぺき・ふたりの一言
 }
 /* しおりに出す小さな帯 */
 function wxStripHTML(d){
-  const c=dayCoord(d),key=wxKey(c.lat,c.lng),date=wxDate(d.n);const w=WX.data[key];
+  const c=wxCoordFor(d),key=wxKey(c.lat,c.lng),date=wxDate(d.n);const w=WX.data[key];
   if(!w){if(!WX.loading[key]&&navigator.onLine!==false)wxLoad(c.lat,c.lng).then(()=>{if(S.view==="plan")safeRender()}).catch(()=>{});return `<div class="wxs loading"><span class="wxi">${WXI.cloud}</span><span class="small muted">天気を読み込み中…</span></div>`}
   const s=wxSummary(key,date);
   if(!s||s.none){const today=jstDateStr();const diff=Math.round((Date.parse(date)-Date.parse(today))/864e5);
     return `<div class="wxs none"><span class="wxi">${WXI.suncloud}</span><div><b>${diff>16?`予報は${diff-16}日後（11/${18+d.n-16}ごろ）から見られます`:"この日の予報はまだありません"}</b><div class="small muted">11月の那覇の平年：最高${WX_NORMAL.tmax}℃・最低${WX_NORMAL.tmin}℃・海水温${WX_NORMAL.sst}℃</div></div><button class="btn mini ghost" data-wx="${d.n}">いまの天気</button></div>`}
-  return `<div class="wxs" data-wxday="${d.n}"><span class="wxi">${WXI[s.icon]||WXI.cloud}</span><div class="wxs-in"><b>${esc(s.label)}</b><span class="wxs-row"><i>${wxFmt.t(s.tmax)}<small>/${wxFmt.t(s.tmin)}</small></i><i>☔ ${wxFmt.p(s.pop)}</i>${s.wave!=null?`<i>🌊 ${wxFmt.m(s.wave)}</i>`:""}${s.uv!=null?`<i>UV ${Math.round(s.uv)}</i>`:""}${s.jma?.rel?`<i class="rel">信頼度 ${esc(s.jma.rel)}</i>`:""}</span>${wxNote(s)?`<span class="wxs-note">${esc(wxNote(s))}</span>`:""}</div><button class="btn mini ghost" data-wx="${d.n}">くわしく</button></div>`;
+  return `<div class="wxs" data-wxday="${d.n}"><span class="wxi">${WXI[s.icon]||WXI.cloud}</span><div class="wxs-in"><b>${esc(s.label)}</b><span class="wxs-row"><i>${wxFmt.t(s.tmax)}<small>/${wxFmt.t(s.tmin)}</small></i><i>☔ ${wxFmt.p(s.pop)}</i>${s.wave!=null?`<i>🌊 ${wxFmt.m(s.wave)}</i>`:""}${s.uv!=null?`<i>UV ${Math.round(s.uv)}</i>`:""}${s.jma?.rel?`<i class="rel">信頼度 ${esc(s.jma.rel)}</i>`:""}</span>${wxNote(s)?`<span class="wxs-note">${esc(wxNote(s))}</span>`:""}<span class="wxs-loc">📍 ${esc(wxPlaceName(d))}${geoAllowed(d)?` <button class="lnk" data-wxgeo="1">${S.geoOn?"予定の場所にする":"現在地にする"}</button>`:""}</span></div><button class="btn mini ghost" data-wx="${d.n}">くわしく</button></div>`;
 }
 /* くわしい天気（モーダル） */
-const WXV={tab:"hour"};
+const WXV={tab:"hour"};S.geoOn=ls.get("wxGeo")==="1";
 async function openWeather(n){
-  const d=DAYS()[n-1]||DAYS()[0];const c=dayCoord(d),key=wxKey(c.lat,c.lng);let date=wxDate(n);
+  const d=DAYS()[n-1]||DAYS()[0];const c=wxCoordFor(d),key=wxKey(c.lat,c.lng);let date=wxDate(n);
   const L=$("#layer2");L.innerHTML=`<div class="modal top"><div class="box wx"><div class="ed-head"><h2>天気　DAY${n} ${esc(d.date||"")}</h2><button class="x" id="wx-close" aria-label="とじる">×</button></div><div class="small muted" id="wx-sub">読み込み中…</div><div id="wx-body"><div class="wx-wait">${WXI.suncloud}<div>気象庁・ECMWF・NOAA・DWD の予報を集めています…</div></div></div></div></div>`;
   $("#wx-close").onclick=()=>{L.innerHTML="";if(WXV.map){try{WXV.map.remove()}catch{}WXV.map=null}};
   try{await wxLoad(c.lat,c.lng)}catch(e){console.warn(e)}
@@ -1656,8 +1669,9 @@ async function openWeather(n){
 }
 function drawWeather(){
   const {key,date,n,coord:c,day:d}=WXV;const w=WX.data[key];const s=wxSummary(key,date);
-  const sub=$("#wx-sub");if(sub)sub.innerHTML=`${WXV.fallback?`<b>この日の予報はまだ出ていません。</b>いまの沖縄（${esc(date.slice(5).replace("-","/"))}）の天気を表示しています。　`:""}場所：${esc(d.stops?.find(x=>coordOf(x))?.n||"那覇")}付近　更新：${wxAge(w.at)}${s?.stale?"（電波がなく、前回の情報）":""}${w.err?`　<span style="color:var(--shu)">一部取得できず</span>`:""}`;
-  const tabs=[["hour","1日の流れ"],["cmp","各国くらべ"],["jma","気象庁"],["radar","雨雲"]];
+  const sub=$("#wx-sub");if(sub)sub.innerHTML=`${WXV.fallback?`<b>この日の予報はまだ出ていません。</b>いまの沖縄（${esc(date.slice(5).replace("-","/"))}）の天気を表示しています。　`:""}場所：${esc(wxPlaceName(d))}（北緯${c.lat.toFixed(2)} 東経${c.lng.toFixed(2)}）${geoAllowed(d)?` <button class="lnk" data-wxgeo="1">${S.geoOn?"予定の場所にする":"現在地にする"}</button>`:""}　更新：${wxAge(w.at)}${s?.stale?"（電波がなく、前回の情報）":""}${w.err?`　<span style="color:var(--shu)">一部取得できず（「出どころ」で確認）</span>`:""}`;
+  if(sub)sub.querySelector("[data-wxgeo]")?.addEventListener("click",()=>{beep("tap");toggleGeo()});
+  const tabs=[["hour","1日の流れ"],["cmp","各国くらべ"],["jma","気象庁"],["radar","雨雲"],["src","出どころ"]];
   const body=$("#wx-body");if(!body)return;
   body.innerHTML=`<div class="wx-tabs">${tabs.map(([k,l])=>`<button class="${WXV.tab===k?"on":""}" data-wxtab="${k}">${l}</button>`).join("")}</div><div class="wx-pane" id="wx-pane"></div>`;
   body.querySelectorAll("[data-wxtab]").forEach(b=>b.onclick=()=>{WXV.tab=b.dataset.wxtab;if(WXV.map){try{WXV.map.remove()}catch{}WXV.map=null}drawWeather()});
@@ -1665,7 +1679,26 @@ function drawWeather(){
   if(WXV.tab==="hour")pane.innerHTML=wxHourHTML(w,s,date);
   else if(WXV.tab==="cmp")pane.innerHTML=wxCompareHTML(w,s,date);
   else if(WXV.tab==="jma")pane.innerHTML=wxJmaHTML(w,s,date);
+  else if(WXV.tab==="src")pane.innerHTML=wxSourcesHTML(w,c);
   else {pane.innerHTML=`<div class="wx-radar"><div id="wx-map" class="wx-map"></div><div class="wx-rbar"><button class="btn mini" id="wx-play">▶</button><input type="range" id="wx-time" min="0" max="0" value="0"><span id="wx-tlabel" class="small"></span></div><div class="small muted" id="wx-rsrc">雨雲を読み込み中…</div></div>`;radarInit(c)}
+}
+function wxSourcesHTML(w,c){
+  const fmtAt=at=>{const d=new Date(at+9*3600e3);return d.toISOString().slice(5,16).replace("T"," ").replace("-","/")};
+  const st=r=>!r?`<b class="ng">取得できず</b>`:r.stale?`<b class="warn">前回の情報（${fmtAt(r.at)}取得）</b>`:`<b class="ok">取得OK（${fmtAt(r.at)}）</b>`;
+  const jmaAt=r=>{const x=Array.isArray(r?.data)?r.data[0]:r?.data;const rd=x?.reportDatetime;return rd?`　気象庁の発表：${esc(String(rd).slice(0,16).replace("T"," "))}`:""};
+  const omRun=r=>{const d=r?.data;return d?.daily?.time?.length?`　予報の範囲：${esc(d.daily.time[0])}〜${esc(d.daily.time[d.daily.time.length-1])}`:""};
+  const rows=[
+    ["Open-Meteo 総合予報（best_match）","時間ごと・日ごとの気温、降水確率、風、UV、雲量",w.main,omRun(w.main),"https://open-meteo.com/en/docs"],
+    ["Open-Meteo 各国モデル","気象庁(JMA)・ECMWF(欧州)・GFS(米NOAA)・ICON(独DWD) の予報値をそのまま取得",w.models,omRun(w.models),"https://open-meteo.com/en/docs"],
+    ["Open-Meteo Marine","波の高さ・周期・海水温",w.marine,omRun(w.marine),"https://open-meteo.com/en/docs/marine-weather-api"],
+    ["気象庁 府県天気予報（沖縄本島地方・本島中南部）","3日分の天気・降水確率・気温と、週間予報・信頼度A/B/C（那覇）",w.jma,jmaAt(w.jma),"https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=471000"],
+    ["気象庁 天気概況","沖縄気象台の概況文",w.jmaOv,jmaAt(w.jmaOv),"https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=471000"],
+    ["気象庁 注意報・警報","沖縄本島地方の注意報・警報",w.warn,jmaAt(w.warn),"https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=471000"],
+  ];
+  return `<div class="wx-src"><div class="small">予報地点：<b>北緯${c.lat.toFixed(3)} 東経${c.lng.toFixed(3)}</b>（${c.geo?"端末の現在地":"その日の最初の行き先"}）。各サービスから直接取得し、30分（気象庁は10〜20分）キャッシュします。</div>
+    <div class="src-list">${rows.map(([n,what,r,extra,url])=>`<div class="src-row"><a href="${url}" target="_blank" rel="noopener">${esc(n)}</a><div class="small muted">${esc(what)}</div><div class="src-st">${st(r)}${extra}</div></div>`).join("")}
+    <div class="src-row"><b>雨雲レーダー</b><div class="small muted">気象庁 高解像度降水ナウキャスト（取れないときは RainViewer）。地図は国土地理院</div><div class="src-st">${esc(WXV.radarSrc||"「雨雲」タブをひらくと取得")}</div></div></div>
+    <div class="small muted">「しおり」の帯の天気・気温・降水確率は、気象庁の予報がある日は気象庁の値、それより先の日は Open-Meteo（各国モデルの平均に近い best_match）の値です。「各国くらべ」で予報が割れている日は、当日の朝にもう一度見るのがおすすめ。</div></div>`;
 }
 function wxHourHTML(w,s,date){
   const hs=omHours(w.main?.data,date);const mh=omHours(w.marine?.data,date);mh.forEach(m=>{const h=hs.find(x=>x.h===m.h);if(h){h.wave=m.wave;h.sst=m.sst;h.wp=m.wp}});
@@ -1729,8 +1762,8 @@ async function radarInit(c){
   if(!frames.length){try{const rv=await wxGet("rv","https://api.rainviewer.com/public/weather-maps.json",4*60e3);const host=rv.data.host||"https://tilecache.rainviewer.com";
       frames=[...(rv.data.radar?.past||[]),...(rv.data.radar?.nowcast||[]).map(x=>({...x,fc:true}))].map(x=>({t:new Date(x.time*1000),url:`${host}${x.path}/256/{z}/{x}/{y}/2/1_1.png`,fc:!!x.fc}));
       if(frames.length)src="RainViewer（気象庁などのレーダーを合成・10分ごと）"}catch(e){console.warn("rainviewer",e)}}
-  const srcEl=$("#wx-rsrc");if(!frames.length){if(srcEl)srcEl.textContent="雨雲レーダーを取得できませんでした（電波を確認してね）";return}
-  if(srcEl)srcEl.textContent="出典："+src+"　色が濃いほど強い雨";
+  const srcEl=$("#wx-rsrc");if(!frames.length){if(srcEl)srcEl.textContent="雨雲レーダーを取得できませんでした（電波を確認してね）";WXV.radarSrc="取得できず（気象庁ナウキャスト・RainViewer とも）";return}
+  if(srcEl)srcEl.textContent="出典："+src+"　色が濃いほど強い雨";WXV.radarSrc="取得OK："+src;
   const layers=frames.map(f=>L.tileLayer(f.url,{opacity:.75,maxNativeZoom:10,maxZoom:14,tileSize:256,attribution:""}));
   let cur=-1;const fmt=f=>{const t=f.t instanceof Date?f.t:new Date(Date.UTC(+f.t.slice(0,4),+f.t.slice(4,6)-1,+f.t.slice(6,8),+f.t.slice(8,10),+f.t.slice(10,12)));const j=new Date(t.getTime()+9*3600e3);return `${String(j.getUTCHours()).padStart(2,"0")}:${String(j.getUTCMinutes()).padStart(2,"0")}${f.fc?"（予想）":""}`};
   const show=i=>{if(cur>=0)map.removeLayer(layers[cur]);cur=i;layers[cur].addTo(map);const r=$("#wx-time"),lb=$("#wx-tlabel");if(r)r.value=i;if(lb)lb.textContent=fmt(frames[i])};
@@ -1852,7 +1885,7 @@ function outfitCtx(n=outfitDayN()){
   const td=tripDay();const d=DAYS()[n-1];const j=new Date(Date.now()+9*3600e3);const h=j.getUTCHours(),nowMin=h*60+j.getUTCMinutes();
   const mode=td<1?"before":td<=6?"during":"after";const countdown=Math.max(0,Math.ceil((START-Date.now())/864e5));
   const slotIdx=h<10?0:h<15?1:h<19?2:3;const night=h>=19||h<5;const late=h>=22||h<5;
-  const c=dayCoord(d),key=wxKey(c.lat,c.lng);const wx=WX.data[key]?wxSummary(key,wxDate(n)):null;
+  const c=wxCoordFor(d),key=wxKey(c.lat,c.lng);const wx=WX.data[key]?wxSummary(key,wxDate(n)):null;
   const rain=!!(wx&&!wx.none&&((wx.pop!=null&&wx.pop>=60)||/雨/.test(wx.label||"")));const uv=wx&&!wx.none?wx.uv:null;
   return {d,tags:dayTags(d),stopTags:mode==="during"&&td===n?curStopTags(d,nowMin):null,slotIdx,rain,uv,night,late,bday:bdayOf(d),mode,countdown};
 }
@@ -1880,7 +1913,7 @@ function todayHTML(d,preview){
   const me=S.who||"sai";const spots=SPOTS().filter(s=>s.d===d.n);const stamped=spots.filter(s=>{const p=spotPhotos(s.id);return p.sai&&p.yui}).length;
   const draws=(S.missions["day"+d.n]?.draws)||[];const msLeft=draws.filter(x=>!x.done).length;const photos=S.photos.filter(p=>p.day===d.n).length;
   const diaryMine=!!S.diary[`d${d.n}_${me}`];const best=S.best?.[`d${d.n}_${me}`];
-  const c=dayCoord(d),key=wxKey(c.lat,c.lng);const wxs=WX.data[key]?wxSummary(key,wxDate(d.n)):null;const note=wxNote(wxs);
+  const c=wxCoordFor(d),key=wxKey(c.lat,c.lng);const wxs=WX.data[key]?wxSummary(key,wxDate(d.n)):null;const note=wxNote(wxs);
   const line=stops.map(s=>{const state=cur&&s.id===cur.id?"now":next&&s.id===next.id?"next":(s.min!=null&&s.min<nowMin)?"done":"";const nav=navUrl(s);const sp=spots.find(x=>x.id===s.id);const pp=sp?spotPhotos(s.id):null;
     return `<li class="${state}"><span class="tt">${esc(s.t||"")}</span><div class="tn"><b>${esc(s.n)}</b>${s.d?`<small>${esc(s.d)}</small>`:""}${state==="now"?`<em>いまここ</em>`:state==="next"?`<em>つぎ・${leftTx}</em>`:""}</div><span class="tb">${nav?`<a class="btn mini sea" href="${nav}" target="_blank" rel="noopener">ナビ</a>`:""}${sp?`<button class="btn mini ${pp?.sai&&pp?.yui?"ghost":"pink"}" data-go-spot="${s.id}">${pp?.sai&&pp?.yui?"済":(pp?.[me]?"相手待ち":"写真")}</button>`:""}</span></li>`}).join("");
   return `<section class="today" style="--c:${DC(d.n)}">
@@ -1999,6 +2032,7 @@ $("#v-plan").addEventListener("click",async e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.id==="mapzoom"){beep("tap");S.mapAll=!S.mapAll;S.mapView=null;renderPlan();return}
   if(t.dataset.wx){beep("tap");openWeather(+t.dataset.wx);return}
+  if(t.dataset.wxgeo){beep("tap");toggleGeo();return}
   if(t.id==="td-try"){beep("open");S.todayPreview=S.planDay;renderPlan();window.scrollTo({top:document.querySelector("main").offsetTop-10,behavior:"smooth"});return}
   if(t.id==="td-close"){beep("tap");S.todayPreview=0;renderPlan();return}
   if(t.dataset.goSpot){beep("tap");S.stampFocus=t.dataset.goSpot;document.querySelector('.tab[data-v="stamp"]').click();setTimeout(()=>{const el=document.querySelector(`.spot[data-spot="${CSS.escape(t.dataset.goSpot)}"]`);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash")}},80);return}
