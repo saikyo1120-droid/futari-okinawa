@@ -991,6 +991,24 @@ const POOL=[
  {w:"yui",when:c=>c.mode==="during"&&c.todaySpots.length>0&&c.todayStamped===c.todaySpots.length,wt:3,lines:["今日のスタンプ、ぜんぶそろった！"],fx:"sparkle",anim:"bigjump"},
  {w:"yui",when:c=>c.mode==="during"&&c.photosToday>=20,lines:["{photos}枚も撮ってる〜"]},
  {w:"yui",when:c=>c.mode==="after",lines:["ただいま〜","楽しかった〜！","写真、見返したい","また沖縄行きたい！","ありがとう","ムービー、また見よ"]},
+ /* ===== 3人共通：決めゼリフ「こんぺきにーず！」→「こんぺきにーざー！」、口ぐせ「〜だよね」 ===== */
+ {w:"sai",wt:2,lines:["こんぺきにーず！"],reply:{w:["yui","kon"],lines:["こんぺきにーざー！"]},fx:"sparkle",anim:"bigjump"},
+ {w:"sai",lines:["こんぺきにーざー！"],reply:{w:["yui","kon"],lines:["こんぺきにーず！"]},fx:"sparkle",anim:"hop2"},
+ {w:"yui",wt:2,lines:["こんぺきにーず！"],reply:{w:["sai","kon"],lines:["こんぺきにーざー！"]},fx:"sparkle",anim:"bigjump"},
+ {w:"yui",lines:["こんぺきにーざー！"],reply:{w:["sai","kon"],lines:["こんぺきにーず！"]},fx:"sparkle",anim:"hop2"},
+ {w:"kon",wt:2,lines:["こんぺきにーず！"],reply:{w:["sai","yui"],lines:["こんぺきにーざー！"]},fx:"sparkle",anim:"bigjump"},
+ {w:"kon",lines:["こんぺきにーざー！"],reply:{w:["sai","yui"],lines:["こんぺきにーず！"]},fx:"sparkle",anim:"hop2"},
+ {w:"sai",wt:2,lines:["沖縄、楽しみだよね","ゆいちゃん、かわいいよね","こんぺき、かわいいよね","海、きれいだよね","今日もいい天気だよね","おなかすくよね","こんぺきにーず、最高だよね"],reply:{w:["yui","kon"],lines:["だよね！","だよね〜","うん、だよね"]}},
+ {w:"sai",when:c=>c.mode==="after",lines:["楽しかったよね","また行きたいよね","写真、見返したくなるよね"],reply:{w:["yui","kon"],lines:["だよね！","だよね〜"]}},
+ {w:"yui",wt:2,lines:["沖縄、楽しみだよね","さいけう、やさしいよね","こんぺき、かわいいよね","海、きれいだよね","今日もいい天気だよね","おなかすくよね","こんぺきにーず、最高だよね"],reply:{w:["sai","kon"],lines:["だよね！","だよね〜","うん、だよね"]}},
+ {w:"yui",when:c=>c.mode==="after",lines:["楽しかったよね","また行きたいよね","写真、見返したくなるよね"],reply:{w:["sai","kon"],lines:["だよね！","だよね〜"]}},
+ {w:"kon",wt:2,lines:["さいけう、いいやつだよね","海、気持ちいいよね","ステーキ、おいしそうだよね","おれ、かわいいよね","こんぺきにーず、最強だよね"],reply:{w:["sai","yui"],lines:["だよね！","だよね〜","うん、だよね"]}},
+ {w:"kon",when:c=>c.konLove>=1,lines:["ゆい…まあ、いいやつだよね"],reply:{w:"yui",lines:["えっ、だよね？","うれしい、だよね！"]}},
+ {w:"kon",when:c=>c.konLove>=3,lines:["ゆいちゃん、だいすきだよね"],reply:{w:"yui",lines:["だよね〜！"]},fx:"hearts"},
+ /* ===== ゆいちゃんだけ：「こんちゃーす」 ===== */
+ {w:"yui",wt:2,lines:["こんちゃーす！","こんちゃーす、さいけう！"],reply:{w:"sai",lines:["おっす！","うす","こんにちは〜"]},anim:"hop2"},
+ {w:"yui",lines:["こんちゃーす！こんぺき！"],reply:{w:"kon",lines:["ワン！","……ワン"]},anim:"hop2"},
+ {w:"yui",when:c=>c.slot==="morning",lines:["こんちゃーす！朝だよ〜"],reply:{w:"sai",lines:["朝からげんきだな","おはよ〜"]}},
  /* ===== こんぺき ===== */
  {w:"kon",lines:["ワン！","……","ワンワン！"]},
  {w:"kon",wt:2,lines:["さいけう、ともだちになろ","さいけう、あそぼ！","さいけう…すごく友達になりたい"],reply:{w:"sai",lines:["おう、友達だ！","こんぺき、おいで"]},fx:"hearts"},
@@ -1009,7 +1027,7 @@ const POOL=[
  {w:"kon",when:c=>c.mode==="after",lines:["さいけう、また行こ","楽しかったワン","おみやげ、おれのは？"]},
  {w:"kon",when:c=>c.mode==="after"&&c.konLove<3,lines:["ゆい…ちょっと気になってきた"]},
 ];
-const MUTTER={sai:["ふぅ","♪","いい天気","…"],yui:["ふんふん♪","ん〜","きもちいい","…"],kon:["ワン","…","くんくん","ハッハッ"]};
+const MUTTER={sai:["ふぅ","♪","いい天気","…","こんぺきにーず…"],yui:["ふんふん♪","ん〜","きもちいい","…","こんちゃーす…"],kon:["ワン","…","くんくん","ハッハッ","にーず…"]};
 function pickLine(w,c){
   const pools=POOL.filter(p=>p.w===w&&(!p.when||p.when(c)));if(!pools.length)return null;
   const tot=pools.reduce((s,p)=>s+(p.wt||1),0);let r=Math.random()*tot,pool=pools[0];for(const p of pools){r-=(p.wt||1);if(r<=0){pool=p;break}}
@@ -1022,7 +1040,8 @@ function talk(w){
   if(c.bday&&w==="kon"&&Math.random()<.5){say("kon",c.bday==="sai"?"さいけう、おめでとう！！":(c.konLove>=2?"ゆい、おめでとう…ワン":"……（ケーキを見ている）"),{fx:c.bday==="sai"?"sparkle":"question",anim:c.bday==="sai"?"bigjump":"jump"});return}
   const r=pickLine(w,c);if(!r)return;const {t,pool}=r;
   say(w,t,{fx:pool.fx,anim:pool.anim});
-  if(pool.reply)setTimeout(()=>say(pool.reply.w,fill(pick(pool.reply.lines),c)),1100);
+  if(pool.reply){const rw=Array.isArray(pool.reply.w)?pick(pool.reply.w):pool.reply.w;const rl=pick(pool.reply.lines);setTimeout(()=>say(rw,fill(rl,c),{fx:/にーず|にーざー/.test(rl)?"sparkle":undefined,anim:/にーず|にーざー/.test(rl)?"bigjump":undefined}),1100)}
+  if(pool.reply&&/にーず|にーざー/.test(t)){const third=["sai","yui","kon"].filter(x=>x!==w&&!(Array.isArray(pool.reply.w)?pool.reply.w:[pool.reply.w]).includes(x));const tw=third[0];if(tw)setTimeout(()=>{if(tw==="kon")konRun(w);say(tw,/にーず/.test(t)?"こんぺきにーざー！":"こんぺきにーず！",{fx:"sparkle",anim:"bigjump",quiet:true})},2000)}
   // ほかのふたりの反応
   if(w==="sai"&&!pool.reply&&Math.random()<.4)setTimeout(()=>{konRun("sai");say("kon",pick(["ワン！","おれも！","さいけう！"]),{quiet:true})},1300);
   if(w==="yui"&&!pool.reply&&Math.random()<.45){const L=[["……"],["…ふーん"],["ゆい、なに？"],["ワンワン！"]][c.konLove];setTimeout(()=>{if(c.konLove>=2)konRun("yui");say("kon",pick(L),{quiet:true,fx:c.konLove===3?"hearts":undefined})},1300)}
@@ -1110,8 +1129,9 @@ function greet(){
   if(c.mode==="before")line=c.left===0?"今日だ！いってきます！":c.left===1?"明日！準備できた？":c.slot==="morning"?`おはよう！沖縄まであと${c.left}日`:c.slot==="night"||c.slot==="late"?`おやすみ前にチェック？あと${c.left}日`:`沖縄まであと${c.left}日！`;
   else if(c.mode==="during")line=c.bday===me?(me==="sai"?"今日はおれの誕生日！":"今日はわたしの誕生日！"):c.bday===pa?`今日は${NAME[pa]}の誕生日！`:c.slot==="morning"?`おはよう！DAY${c.d}、いこう！`:c.slot==="night"||c.slot==="late"?`DAY${c.d}おつかれ！日記書いた？`:`DAY${c.d}、楽しんでる？`;
   else line=c.slot==="morning"?"おはよう！写真、見返そ":"おかえり！";
+  if(me==="yui"&&Math.random()<.5)line="こんちゃーす！"+line.replace(/^おはよう！/,"");
   say(me,line,{fx:c.mode==="during"?"sparkle":undefined,anim:"hop2"});
-  setTimeout(()=>say(pa,pick([`${MN}、きた！`,"まってたよ〜",`${MN}、おはよ`.replace("おはよ",c.slot==="morning"?"おはよ":"やっほー")]),{quiet:true}),1000);
+  setTimeout(()=>say(pa,pick(pa==="yui"?["こんちゃーす！",`こんちゃーす、${MN}！`,`${MN}、きた！`,"まってたよ〜"]:[`${MN}、きた！`,"まってたよ〜",`${MN}、${c.slot==="morning"?"おはよ":"やっほー"}`]),{quiet:true}),1000);
   setTimeout(()=>{konRun(me);say("kon",me==="sai"?pick(["さいけう！","ワンワン！"]):(c.konLove>=2?"ゆいちゃん！":"……"),{quiet:true})},1800);
   look(me);
 }
